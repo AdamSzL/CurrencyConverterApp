@@ -7,7 +7,7 @@ import okhttp3.MediaType.Companion.toMediaType
 import retrofit2.Retrofit
 
 interface AppContainer {
-
+    val currencyConverterRepository: CurrencyConverterRepository
 }
 
 class DefaultAppContainer: AppContainer {
@@ -21,5 +21,9 @@ class DefaultAppContainer: AppContainer {
 
     private val retrofitService: CurrencyConverterApiService by lazy {
         retrofit.create(CurrencyConverterApiService::class.java)
+    }
+
+    override val currencyConverterRepository: CurrencyConverterRepository by lazy {
+        NetworkCurrencyConverterRepository(retrofitService)
     }
 }
