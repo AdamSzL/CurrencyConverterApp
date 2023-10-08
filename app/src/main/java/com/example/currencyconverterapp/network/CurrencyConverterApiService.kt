@@ -11,7 +11,7 @@ interface CurrencyConverterApiService {
 
     @GET("latest")
     suspend fun getLatestExchangeRates(
-        @Query("base_currency") baseCurrency: String,
-        @Query("currencies") currencies: String
+        @Query("base_currency") baseCurrency: String = "",
+        @Query("currencies") currencies: String = ""
     ): LatestExchangeRatesApiResponse
 }

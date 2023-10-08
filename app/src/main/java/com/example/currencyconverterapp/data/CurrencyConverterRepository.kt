@@ -7,7 +7,7 @@ import com.example.currencyconverterapp.network.CurrencyConverterApiService
 interface CurrencyConverterRepository {
     suspend fun getCurrencies(): CurrenciesApiResponse
 
-    suspend fun getLatestExchangeRates(baseCurrency: String, currencies: String): LatestExchangeRatesApiResponse
+    suspend fun getLatestExchangeRates(baseCurrency: String = "", currencies: String = ""): LatestExchangeRatesApiResponse
 }
 
 class NetworkCurrencyConverterRepository(
