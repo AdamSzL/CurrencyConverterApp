@@ -1,5 +1,6 @@
 package com.example.currencyconverterapp.data
 
+import com.example.currencyconverterapp.BuildConfig
 import com.example.currencyconverterapp.network.CurrencyConverterApiService
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import kotlinx.serialization.json.Json
@@ -19,7 +20,7 @@ class DefaultAppContainer: AppContainer {
     private val apiKeyInterceptor = Interceptor { chain ->
         val originalRequest = chain.request()
         val modifiedRequest = originalRequest.newBuilder()
-            .header("apikey", System.getenv("API_KEY")!!)
+            .header("apikey", BuildConfig.API_KEY)
             .build()
         chain.proceed(modifiedRequest)
     }

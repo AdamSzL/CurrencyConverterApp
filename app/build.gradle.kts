@@ -19,15 +19,12 @@ android {
         vectorDrawables {
             useSupportLibrary = true
         }
+        buildConfigField("String", "API_KEY", "${project.property("API_KEY")}")
     }
 
     buildTypes {
-        debug {
-            buildConfigField("String", "API_KEY", "\"${System.getenv("API_KEY")}\"")
-        }
         release {
             isMinifyEnabled = false
-            buildConfigField("String", "API_KEY", "\"${System.getenv("API_KEY")}\"")
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
