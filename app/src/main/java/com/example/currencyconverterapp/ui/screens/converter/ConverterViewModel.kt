@@ -12,6 +12,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import java.io.IOException
 
 class ConverterViewModel(
     private val currencyConverterRepository: CurrencyConverterRepository
@@ -35,12 +36,17 @@ class ConverterViewModel(
 
     private fun fetchExchangeRates() {
         viewModelScope.launch {
-            val latestExchangeRates = currencyConverterRepository.getLatestExchangeRates(
-                baseCurrency = defaultBaseCurrency.code,
-                currencies = defaultTargetCurrencies.joinToString(",")
-            ).data.values.toList()
+            val exchangeRatesStatus = try {
+                val latestExchangeRates = currencyConverterRepository.getLatestExchangeRates(
+                    baseCurrency = defaultBaseCurrency.code,
+                    currencies = defaultTargetCurrencies.joinToString(",")
+                ).data.values.toList()
+                ExchangeRatesStatus.Success(latestExchangeRates)
+            } catch (e: IOException) {
+                ExchangeRatesStatus.Error
+            }
             _converterUiState.update {
-                it.copy(exchangeRates = latestExchangeRates)
+                it.copy(exchangeRatesStatus = exchangeRatesStatus)
             }
         }
     }
