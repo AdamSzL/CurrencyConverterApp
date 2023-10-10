@@ -17,6 +17,8 @@ class DefaultAppContainer: AppContainer {
     private val baseUrl =
         "https://api.currencyapi.com/v3/"
 
+    private val json = Json { ignoreUnknownKeys = true }
+
     private val apiKeyInterceptor = Interceptor { chain ->
         val originalRequest = chain.request()
         val modifiedRequest = originalRequest.newBuilder()
@@ -30,7 +32,7 @@ class DefaultAppContainer: AppContainer {
         .build()
 
     private val retrofit = Retrofit.Builder()
-        .addConverterFactory(Json.asConverterFactory("application/json".toMediaType()))
+        .addConverterFactory(json.asConverterFactory("application/json".toMediaType()))
         .baseUrl(baseUrl)
         .client(okHttpClient)
         .build()
