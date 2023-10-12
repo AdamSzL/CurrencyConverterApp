@@ -5,8 +5,9 @@ import com.example.currencyconverterapp.model.ExchangeRate
 
 data class ConverterUiState(
     val baseCurrency: Currency = defaultBaseCurrency,
+    val baseCurrencyValue: Double = defaultBaseCurrencyValue,
     val targetCurrencies: List<Currency> = defaultTargetCurrencies,
-    val availableCurrencies: List<Currency> = listOf(),
+    val availableCurrencies: List<Currency> = defaultAvailableCurrencies,
     val exchangeRatesStatus: ExchangeRatesStatus = ExchangeRatesStatus.Loading
 )
 

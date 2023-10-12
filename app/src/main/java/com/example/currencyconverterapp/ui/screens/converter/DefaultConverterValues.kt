@@ -41,3 +41,7 @@ val defaultBaseCurrency = Currency(
     code =  "EUR",
     namePlural = "Euros"
 )
+
+val defaultAvailableCurrencies = defaultTargetCurrencies + defaultBaseCurrency
+
+val defaultBaseCurrencyValue = 0.0

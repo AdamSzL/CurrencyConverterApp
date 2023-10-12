@@ -1,4 +1,6 @@
 <resources>
     <string name="app_name">CurrencyConverterApp</string>
     <string name="currency_converter">Currency Converter</string>
+    <string name="base_currency">Base Currency</string>
+    <string name="value">Value</string>
 </resources>

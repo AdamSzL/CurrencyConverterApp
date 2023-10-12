@@ -32,7 +32,9 @@ fun CurrencyConverterApp() {
             val converterViewModel: ConverterViewModel = viewModel(factory = ConverterViewModel.Factory)
             val converterUiState = converterViewModel.converterUiState.collectAsState().value
             ConverterScreen(
-                converterUiState = converterUiState
+                converterUiState = converterUiState,
+                onBaseCurrencySelection = converterViewModel::selectBaseCurrency,
+                onBaseCurrencyValueChange = converterViewModel::setBaseCurrencyValue,
             )
         }
     }

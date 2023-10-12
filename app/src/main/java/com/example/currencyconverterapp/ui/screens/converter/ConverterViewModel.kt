@@ -8,6 +8,7 @@ import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.currencyconverterapp.CurrencyConverterApplication
 import com.example.currencyconverterapp.data.CurrencyConverterRepository
+import com.example.currencyconverterapp.model.Currency
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
@@ -48,6 +49,18 @@ class ConverterViewModel(
             _converterUiState.update {
                 it.copy(exchangeRatesStatus = exchangeRatesStatus)
             }
+        }
+    }
+
+    fun selectBaseCurrency(currency: Currency) {
+        _converterUiState.update {
+            it.copy(baseCurrency = currency)
+        }
+    }
+
+    fun setBaseCurrencyValue(value: Double) {
+        _converterUiState.update {
+            it.copy(baseCurrencyValue = value)
         }
     }
 
