@@ -2,8 +2,6 @@ package com.example.currencyconverterapp.ui.screens.converter
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.content.res.Resources
-import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
@@ -11,14 +9,12 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuBoxScope
 import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.MenuItemColors
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -34,16 +30,14 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.currencyconverterapp.R
 import com.example.currencyconverterapp.model.Currency
 import com.example.currencyconverterapp.ui.theme.CurrencyConverterAppTheme
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ConverterBaseCurrencyInput(
+fun BaseCurrencyController(
     currencies: List<Currency>,
     baseCurrency: Currency,
     baseCurrencyValue: Double,
@@ -61,34 +55,16 @@ fun ConverterBaseCurrencyInput(
             currencies = currencies,
             baseCurrency = baseCurrency,
             onBaseCurrencySelection = onBaseCurrencySelection,
+            modifier = Modifier.weight(3f),
         )
         Spacer(modifier = Modifier.width(dimensionResource(R.dimen.converter_input_gap)))
-        BaseCurrencyValueTextField(
-            baseCurrencyValue = baseCurrencyValue,
-            onBaseCurrencyValueChange = onBaseCurrencyValueChange,
+        CurrencyValueTextField(
+            currency = baseCurrency,
+            currencyValue = baseCurrencyValue,
+            onValueChange = onBaseCurrencyValueChange,
+            modifier = Modifier.weight(2f),
         )
     }
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun BaseCurrencyValueTextField(
-    baseCurrencyValue: Double,
-    onBaseCurrencyValueChange: (Double) -> Unit,
-) {
-    val pattern = remember { Regex("\\d+\\.\\d+") }
-
-    OutlinedTextField(
-        value = baseCurrencyValue.toString(),
-        singleLine = true,
-        onValueChange = {
-            if (it.matches(pattern)) {
-                onBaseCurrencyValueChange(it.toDouble())
-            }
-        },
-        label = { Text(stringResource(R.string.value)) },
-        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
-    )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -97,11 +73,13 @@ fun CurrenciesDropdownMenu(
     currencies: List<Currency>,
     baseCurrency: Currency,
     onBaseCurrencySelection: (Currency) -> Unit,
+    modifier: Modifier = Modifier
 ) {
-    var expanded by remember { mutableStateOf(true) }
+    var expanded by remember { mutableStateOf(false) }
     ExposedDropdownMenuBox(
         expanded = expanded,
-        onExpandedChange = { expanded = !expanded }
+        onExpandedChange = { expanded = !expanded },
+        modifier = modifier,
     ) {
         BaseCurrencyTextField(
             baseCurrency = baseCurrency,
@@ -141,6 +119,7 @@ fun ExposedDropdownMenuBoxScope.BaseCurrencyTextField(
         label = {
             Text(stringResource(R.string.base_currency))
         },
+        textStyle = MaterialTheme.typography.displaySmall,
         leadingIcon = {
             val resource = getFlagResourceByCurrencyCode(LocalContext.current, baseCurrency.code.lowercase())
             Image(
@@ -161,6 +140,7 @@ fun ExposedDropdownMenuBoxScope.BaseCurrencyTextField(
 fun CurrencyDropdownMenuItem(
     onItemClicked: () -> Unit,
     currency: Currency,
+    modifier: Modifier = Modifier
 ) {
     DropdownMenuItem(
         text = {
@@ -181,21 +161,28 @@ fun CurrencyDropdownMenuItem(
                     )
                     Spacer(
                         modifier = Modifier
-                            .width(dimensionResource(R.dimen.dropdown_menu_item_gap))
+                            .width(dimensionResource(R.dimen.dropdown_menu_item_flag_code_gap))
                     )
                     Text(
                         text = currency.code,
                         style = MaterialTheme.typography.displaySmall,
                     )
                 }
+                Spacer(
+                    modifier = Modifier
+                        .width(dimensionResource(R.dimen.dropdown_menu_item_code_name_gap))
+                )
                 Text(
                     text = currency.name,
                     style = MaterialTheme.typography.bodyLarge,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
                 )
             }
         },
         onClick = onItemClicked,
         contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding,
+        modifier = modifier
     )
 }
 
@@ -225,9 +212,9 @@ fun getFlagResourceByCurrencyCode(
 
 @Preview(showBackground = true)
 @Composable
-fun ConverterBaseCurrencyInputPreview() {
+fun BaseCurrencyControllerPreview() {
     CurrencyConverterAppTheme {
-        ConverterBaseCurrencyInput(
+        BaseCurrencyController(
             currencies = defaultAvailableCurrencies,
             baseCurrency = defaultBaseCurrency,
             baseCurrencyValue = defaultBaseCurrencyValue,

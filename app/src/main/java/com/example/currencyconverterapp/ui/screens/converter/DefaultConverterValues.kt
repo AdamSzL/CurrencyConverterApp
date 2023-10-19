@@ -1,6 +1,7 @@
 package com.example.currencyconverterapp.ui.screens.converter
 
 import com.example.currencyconverterapp.model.Currency
+import com.example.currencyconverterapp.model.ExchangeRate
 
 val defaultTargetCurrencies: List<Currency> = listOf(
     Currency(
@@ -44,4 +45,6 @@ val defaultBaseCurrency = Currency(
 
 val defaultAvailableCurrencies = defaultTargetCurrencies + defaultBaseCurrency
 
-val defaultBaseCurrencyValue = 0.0
+val defaultBaseCurrencyValue = 1.23
+
+val defaultExchangeRates: List<ExchangeRate> = listOf()

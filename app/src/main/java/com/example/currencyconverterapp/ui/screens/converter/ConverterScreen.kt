@@ -17,7 +17,7 @@ fun ConverterScreen(
     Column(
         modifier = modifier
     ) {
-        ConverterBaseCurrencyInput(
+        BaseCurrencyController(
             currencies = converterUiState.availableCurrencies,
             baseCurrency = converterUiState.baseCurrency,
             baseCurrencyValue = converterUiState.baseCurrencyValue,

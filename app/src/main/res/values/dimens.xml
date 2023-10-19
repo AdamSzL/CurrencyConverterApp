@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="dropdown_menu_item_gap">8dp</dimen>
+    <dimen name="dropdown_menu_item_flag_code_gap">8dp</dimen>
+    <dimen name="dropdown_menu_item_code_name_gap">8dp</dimen>
     <dimen name="converter_input_margin">16dp</dimen>
     <dimen name="converter_input_gap">8dp</dimen>
 </resources>

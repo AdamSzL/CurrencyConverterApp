@@ -8,7 +8,7 @@ data class ConverterUiState(
     val baseCurrencyValue: Double = defaultBaseCurrencyValue,
     val targetCurrencies: List<Currency> = defaultTargetCurrencies,
     val availableCurrencies: List<Currency> = defaultAvailableCurrencies,
-    val exchangeRatesStatus: ExchangeRatesStatus = ExchangeRatesStatus.Loading
+    val exchangeRatesStatus: ExchangeRatesStatus = ExchangeRatesStatus.Success(defaultExchangeRates),
 )
 
 sealed interface ExchangeRatesStatus {
