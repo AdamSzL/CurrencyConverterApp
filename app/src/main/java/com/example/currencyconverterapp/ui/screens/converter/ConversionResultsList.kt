@@ -10,8 +10,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.Card
+import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.material3.Divider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -36,12 +36,12 @@ fun ConversionResultsList(
     modifier: Modifier = Modifier
 ) {
     LazyColumn(
-        verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.conversion_result_list_gap)),
         modifier = modifier
             .fillMaxWidth()
             .padding(dimensionResource(R.dimen.converter_margin))
     ) {
-        items(exchangeRates) { exchangeRate ->
+        itemsIndexed(exchangeRates) { index, exchangeRate ->
+            Divider()
             ConversionResultsListItem(
                 baseCurrency = baseCurrency,
                 targetCurrency = currencies.find { it.code == exchangeRate.code }!!,
@@ -50,6 +50,9 @@ fun ConversionResultsList(
                 modifier = Modifier
                     .fillMaxWidth()
             )
+            if (index == exchangeRates.size - 1) {
+                Divider()
+            }
         }
     }
 }
@@ -62,51 +65,47 @@ fun ConversionResultsListItem(
     exchangeRate: ExchangeRate,
     modifier: Modifier = Modifier
 ) {
-    Card(
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
         modifier = modifier
+            .padding(dimensionResource(R.dimen.conversion_result_item_margin))
     ) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = modifier
-                .padding(dimensionResource(R.dimen.conversion_result_item_margin))
-        ) {
-            val targetCurrencyFormat = getCurrencyFormat(targetCurrency)
-            val baseCurrencyFormat = getCurrencyFormat(baseCurrency)
+        val targetCurrencyFormat = getCurrencyFormat(targetCurrency)
+        val baseCurrencyFormat = getCurrencyFormat(baseCurrency)
 
-            val context = LocalContext.current
-            Image(
-                painter = painterResource(getFlagResourceByCurrencyCode(context, exchangeRate.code.lowercase())),
-                contentDescription = null,
-                modifier = Modifier.size(dimensionResource(R.dimen.flag_size)),
-            )
-            Spacer(modifier = Modifier.width(dimensionResource(R.dimen.conversion_result_item_flag_gap)))
-            Row(
-                horizontalArrangement = Arrangement.SpaceBetween,
-                modifier = modifier.weight(1f)
+        val context = LocalContext.current
+        Image(
+            painter = painterResource(getFlagResourceByCurrencyCode(context, exchangeRate.code.lowercase())),
+            contentDescription = null,
+            modifier = Modifier.size(dimensionResource(R.dimen.flag_size)),
+        )
+        Spacer(modifier = Modifier.width(dimensionResource(R.dimen.conversion_result_item_flag_gap)))
+        Row(
+            horizontalArrangement = Arrangement.SpaceBetween,
+            modifier = modifier.weight(1f)
+        ) {
+            Column {
+                Text(
+                    text = targetCurrency.code,
+                    style = MaterialTheme.typography.displaySmall,
+                )
+                Text(
+                    text = targetCurrency.name,
+                    style = MaterialTheme.typography.bodyLarge,
+                )
+            }
+            Column(
+                horizontalAlignment = Alignment.End
             ) {
-                Column {
-                    Text(
-                        text = targetCurrency.code,
-                        style = MaterialTheme.typography.displaySmall,
-                    )
-                    Text(
-                        text = targetCurrency.name,
-                        style = MaterialTheme.typography.bodyLarge,
-                    )
-                }
-                Column(
-                    horizontalAlignment = Alignment.End
-                ) {
-                    Text(
-                        text = targetCurrencyFormat.format(baseCurrencyValue * exchangeRate.value),
-                        style = MaterialTheme.typography.displaySmall,
-                    )
-                    Text(
-                        text = "${targetCurrencyFormat.format(1)} " +
-                                "= ${baseCurrencyFormat.format(1 / exchangeRate.value)}",
-                        style = MaterialTheme.typography.bodyLarge,
-                    )
-                }
+                Text(
+                    text = targetCurrencyFormat.format(baseCurrencyValue * exchangeRate.value),
+                    style = MaterialTheme.typography.displaySmall,
+                )
+                Text(
+                    text = "${targetCurrencyFormat.format(1)} " +
+                            "= ${baseCurrencyFormat.format(1 / exchangeRate.value)}",
+                    style = MaterialTheme.typography.bodyLarge,
+                )
             }
         }
     }

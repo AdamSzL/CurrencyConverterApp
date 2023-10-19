@@ -2,6 +2,7 @@ package com.example.currencyconverterapp.ui.screens.converter
 
 import android.annotation.SuppressLint
 import android.content.Context
+import androidx.annotation.StringRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
@@ -33,7 +34,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import com.example.currencyconverterapp.R
 import com.example.currencyconverterapp.model.Currency
 import com.example.currencyconverterapp.ui.theme.CurrencyConverterAppTheme
@@ -55,8 +55,9 @@ fun BaseCurrencyController(
     ) {
         CurrenciesDropdownMenu(
             currencies = currencies,
-            baseCurrency = baseCurrency,
-            onBaseCurrencySelection = onBaseCurrencySelection,
+            textLabel = R.string.base_currency,
+            selectedCurrency = baseCurrency,
+            onCurrencySelection = onBaseCurrencySelection,
             modifier = Modifier.weight(3f),
         )
         Spacer(modifier = Modifier.width(dimensionResource(R.dimen.converter_input_gap)))
@@ -73,8 +74,9 @@ fun BaseCurrencyController(
 @Composable
 fun CurrenciesDropdownMenu(
     currencies: List<Currency>,
-    baseCurrency: Currency,
-    onBaseCurrencySelection: (Currency) -> Unit,
+    @StringRes textLabel: Int,
+    selectedCurrency: Currency,
+    onCurrencySelection: (Currency) -> Unit,
     modifier: Modifier = Modifier
 ) {
     var expanded by remember { mutableStateOf(false) }
@@ -84,7 +86,8 @@ fun CurrenciesDropdownMenu(
         modifier = modifier,
     ) {
         BaseCurrencyTextField(
-            baseCurrency = baseCurrency,
+            baseCurrency = selectedCurrency,
+            label = textLabel,
             expanded = expanded,
         )
         ExposedDropdownMenu(
@@ -95,7 +98,7 @@ fun CurrenciesDropdownMenu(
                 CurrencyDropdownMenuItem(
                     currency = currency,
                     onItemClicked = {
-                        onBaseCurrencySelection(currency)
+                        onCurrencySelection(currency)
                         expanded = false
                     },
                 )
@@ -109,6 +112,7 @@ fun CurrenciesDropdownMenu(
 @Composable
 fun ExposedDropdownMenuBoxScope.BaseCurrencyTextField(
     baseCurrency: Currency,
+    @StringRes label: Int,
     expanded: Boolean,
     modifier: Modifier = Modifier,
 ) {
@@ -119,7 +123,7 @@ fun ExposedDropdownMenuBoxScope.BaseCurrencyTextField(
         value = baseCurrency.code,
         onValueChange = {},
         label = {
-            Text(stringResource(R.string.base_currency))
+            Text(stringResource(label))
         },
         textStyle = MaterialTheme.typography.displaySmall,
         leadingIcon = {

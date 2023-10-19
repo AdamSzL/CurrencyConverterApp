@@ -64,6 +64,18 @@ class ConverterViewModel(
         }
     }
 
+    fun selectTargetCurrency(currency: Currency) {
+        _converterUiState.update {
+            it.copy(selectedTargetCurrency = currency)
+        }
+    }
+
+    fun addTargetCurrency(currency: Currency) {
+        _converterUiState.update {
+            it.copy(targetCurrencies = it.targetCurrencies + currency)
+        }
+    }
+
     companion object {
         val Factory: ViewModelProvider.Factory = viewModelFactory {
             initializer {

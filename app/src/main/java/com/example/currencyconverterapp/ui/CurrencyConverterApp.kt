@@ -16,13 +16,11 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.currencyconverterapp.R
 import com.example.currencyconverterapp.ui.screens.converter.ConverterScreen
 import com.example.currencyconverterapp.ui.screens.converter.ConverterViewModel
-import com.example.currencyconverterapp.ui.theme.Montserrat
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CurrencyConverterApp() {
     Scaffold(
-        topBar = { CurrencyConverterTopAppBar() }
+        topBar = { CurrencyConverterTopAppBar() },
     ) {
         Surface(
             modifier = Modifier
@@ -35,6 +33,8 @@ fun CurrencyConverterApp() {
                 converterUiState = converterUiState,
                 onBaseCurrencySelection = converterViewModel::selectBaseCurrency,
                 onBaseCurrencyValueChange = converterViewModel::setBaseCurrencyValue,
+                onTargetCurrencySelection = converterViewModel::selectTargetCurrency,
+                onTargetCurrencyAddition = converterViewModel::addTargetCurrency,
             )
         }
     }

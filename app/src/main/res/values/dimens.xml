@@ -4,9 +4,11 @@
     <dimen name="dropdown_menu_item_code_name_gap">8dp</dimen>
     <dimen name="converter_margin">16dp</dimen>
     <dimen name="converter_input_gap">8dp</dimen>
-    <dimen name="conversion_result_item_margin">8dp</dimen>
+    <dimen name="conversion_result_item_margin">16dp</dimen>
     <dimen name="conversion_result_list_gap">16dp</dimen>
     <dimen name="flag_size">32dp</dimen>
     <dimen name="small_flag_size">24dp</dimen>
     <dimen name="conversion_result_item_flag_gap">8dp</dimen>
+    <dimen name="bottom_sheet_padding">8dp</dimen>
+    <dimen name="sheet_form_horizontal_padding">16dp</dimen>
 </resources>
