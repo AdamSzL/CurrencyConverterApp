@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -32,6 +33,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import com.example.currencyconverterapp.R
 import com.example.currencyconverterapp.model.Currency
 import com.example.currencyconverterapp.ui.theme.CurrencyConverterAppTheme
@@ -49,7 +51,7 @@ fun BaseCurrencyController(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Center,
         modifier = modifier
-            .padding(dimensionResource(R.dimen.converter_input_margin))
+            .padding(dimensionResource(R.dimen.converter_margin))
     ) {
         CurrenciesDropdownMenu(
             currencies = currencies,
@@ -126,6 +128,7 @@ fun ExposedDropdownMenuBoxScope.BaseCurrencyTextField(
                 painter = painterResource(resource),
                 colorFilter = determineColorFilter(resource, MaterialTheme.colorScheme.onBackground),
                 contentDescription = baseCurrency.name,
+                modifier = Modifier.size(dimensionResource(R.dimen.small_flag_size))
             )
         },
         trailingIcon = {
@@ -158,6 +161,7 @@ fun CurrencyDropdownMenuItem(
                         painter = painterResource(resource),
                         colorFilter = determineColorFilter(resource, MaterialTheme.colorScheme.onBackground),
                         contentDescription = currency.name,
+                        modifier = Modifier.size(dimensionResource(R.dimen.small_flag_size))
                     )
                     Spacer(
                         modifier = Modifier

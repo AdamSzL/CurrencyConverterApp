@@ -43,8 +43,21 @@ val defaultBaseCurrency = Currency(
     namePlural = "Euros"
 )
 
-val defaultAvailableCurrencies = defaultTargetCurrencies + defaultBaseCurrency
-
 val defaultBaseCurrencyValue = 1.23
 
-val defaultExchangeRates: List<ExchangeRate> = listOf()
+val defaultAvailableCurrencies = defaultTargetCurrencies + defaultBaseCurrency
+
+val defaultExchangeRates: List<ExchangeRate> = listOf(
+    ExchangeRate(
+        code = "USD",
+        value = 1.23,
+    ),
+    ExchangeRate(
+        code = "PLN",
+        value = 4.45,
+    ),
+    ExchangeRate(
+        code = "GBP",
+        value = 0.87,
+    )
+)
