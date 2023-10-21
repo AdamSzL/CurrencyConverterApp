@@ -22,6 +22,8 @@ fun ConverterScreen(
     onBaseCurrencyValueChange: (Double) -> Unit,
     onTargetCurrencySelection: (Currency) -> Unit,
     onTargetCurrencyAddition: (Currency) -> Unit,
+    onSelectionModeToggle: () -> Unit,
+    onConversionEntryToggle: (String, Boolean) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val bottomSheetScaffoldState = rememberBottomSheetScaffoldState(
@@ -64,30 +66,48 @@ fun ConverterScreen(
                 modifier = Modifier
                     .padding(it)
             ) {
-                BaseCurrencyController(
+                val baseCurrencyData = BaseCurrencyData(
                     currencies = converterUiState.availableCurrencies,
                     baseCurrency = converterUiState.baseCurrency,
-                    baseCurrencyValue = converterUiState.baseCurrencyValue,
+                    baseCurrencyValue = converterUiState.baseCurrencyValue
+                )
+
+                val selectionData = SelectionData(
+                    isSelectionModeEnabled = converterUiState.isSelectionModeEnabled,
+                    toggleSelectionMode = onSelectionModeToggle,
+                    toggleConversionEntry = onConversionEntryToggle,
+                )
+
+                BaseCurrencyController(
+                    baseCurrencyData = baseCurrencyData,
                     onBaseCurrencyValueChange = onBaseCurrencyValueChange,
                     onBaseCurrencySelection = onBaseCurrencySelection,
                     modifier = Modifier
                         .fillMaxWidth()
                 )
 
-                when (converterUiState.exchangeRatesStatus) {
-                    is ExchangeRatesStatus.Error -> ExchangeRatesErrorScreen()
-                    is ExchangeRatesStatus.Loading -> ExchangeRatesLoadingScreen()
-                    is ExchangeRatesStatus.Success -> ConversionResultsList(
-                        currencies = converterUiState.availableCurrencies,
-                        baseCurrency = converterUiState.baseCurrency,
-                        baseCurrencyValue = converterUiState.baseCurrencyValue,
-                        exchangeRates = converterUiState.exchangeRatesStatus.exchangeRates,
-                    )
-                }
+                ConversionResultsList(
+                    baseCurrencyData = baseCurrencyData,
+                    exchangeRates = converterUiState.exchangeRates,
+                    selectionData = selectionData,
+                    selectedConversionEntries = converterUiState.selectedConversionEntryCodes,
+                )
             }
         }
     }
 }
+
+data class BaseCurrencyData(
+    val currencies: List<Currency>,
+    val baseCurrency: Currency,
+    val baseCurrencyValue: Double
+)
+
+data class SelectionData(
+    val isSelectionModeEnabled: Boolean,
+    val toggleSelectionMode: () -> Unit,
+    val toggleConversionEntry: (String, Boolean) -> Unit,
+)
 
 @Composable
 fun ExchangeRatesErrorScreen(

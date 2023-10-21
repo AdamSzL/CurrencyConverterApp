@@ -1,9 +1,13 @@
 package com.example.currencyconverterapp.ui.screens.converter
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -11,6 +15,8 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.material3.Checkbox
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Divider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -25,14 +31,15 @@ import com.example.currencyconverterapp.R
 import com.example.currencyconverterapp.model.Currency
 import com.example.currencyconverterapp.model.ExchangeRate
 import com.example.currencyconverterapp.ui.theme.CurrencyConverterAppTheme
+import java.nio.file.Files.find
 import java.text.NumberFormat
 
 @Composable
 fun ConversionResultsList(
-    currencies: List<Currency>,
-    baseCurrency: Currency,
-    baseCurrencyValue: Double,
+    baseCurrencyData: BaseCurrencyData,
     exchangeRates: List<ExchangeRate>,
+    selectionData: SelectionData,
+    selectedConversionEntries: List<String>,
     modifier: Modifier = Modifier
 ) {
     LazyColumn(
@@ -43,10 +50,12 @@ fun ConversionResultsList(
         itemsIndexed(exchangeRates) { index, exchangeRate ->
             Divider()
             ConversionResultsListItem(
-                baseCurrency = baseCurrency,
-                targetCurrency = currencies.find { it.code == exchangeRate.code }!!,
-                baseCurrencyValue = baseCurrencyValue,
+                baseCurrency = baseCurrencyData.baseCurrency,
+                baseCurrencyValue = baseCurrencyData.baseCurrencyValue,
+                targetCurrency = baseCurrencyData.currencies.find { it.code == exchangeRate.code }!!,
                 exchangeRate = exchangeRate,
+                isSelected = exchangeRate.code in selectedConversionEntries,
+                selectionData = selectionData,
                 modifier = Modifier
                     .fillMaxWidth()
             )
@@ -57,46 +66,101 @@ fun ConversionResultsList(
     }
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun ConversionResultsListItem(
     baseCurrency: Currency,
-    targetCurrency: Currency,
     baseCurrencyValue: Double,
+    targetCurrency: Currency,
+    exchangeRate: ExchangeRate,
+    isSelected: Boolean,
+    selectionData: SelectionData,
+    modifier: Modifier = Modifier
+) {
+    Box(
+        modifier = modifier
+            .combinedClickable(
+                onClick = {},
+                onLongClick = {
+                    selectionData.toggleSelectionMode()
+                    selectionData.toggleConversionEntry(exchangeRate.code, !isSelected)
+                },
+                onDoubleClick = {}
+            )
+    ) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = modifier
+                .padding(dimensionResource(R.dimen.conversion_result_item_margin))
+        ) {
+            val context = LocalContext.current
+
+            if (selectionData.isSelectionModeEnabled) {
+                Checkbox(
+                    checked = isSelected,
+                    onCheckedChange = { selected ->
+                        selectionData.toggleConversionEntry(exchangeRate.code, selected)
+                    },
+                )
+            }
+
+            Image(
+                painter = painterResource(getFlagResourceByCurrencyCode(context, exchangeRate.code.lowercase())),
+                contentDescription = null,
+                modifier = Modifier.size(dimensionResource(R.dimen.flag_size)),
+            )
+            Spacer(modifier = Modifier.width(dimensionResource(R.dimen.conversion_result_item_flag_gap)))
+            ConversionMainContent(
+                baseCurrency = baseCurrency,
+                baseCurrencyValue = baseCurrencyValue,
+                targetCurrency = targetCurrency,
+                exchangeRate = exchangeRate
+            )
+        }
+    }
+}
+
+@Composable
+fun RowScope.ConversionMainContent(
+    baseCurrency: Currency,
+    baseCurrencyValue: Double,
+    targetCurrency: Currency,
     exchangeRate: ExchangeRate,
     modifier: Modifier = Modifier
 ) {
-    Row(
-        verticalAlignment = Alignment.CenterVertically,
-        modifier = modifier
-            .padding(dimensionResource(R.dimen.conversion_result_item_margin))
-    ) {
-        val targetCurrencyFormat = getCurrencyFormat(targetCurrency)
-        val baseCurrencyFormat = getCurrencyFormat(baseCurrency)
+    val targetCurrencyFormat = getCurrencyFormat(targetCurrency)
+    val baseCurrencyFormat = getCurrencyFormat(baseCurrency)
 
-        val context = LocalContext.current
-        Image(
-            painter = painterResource(getFlagResourceByCurrencyCode(context, exchangeRate.code.lowercase())),
-            contentDescription = null,
-            modifier = Modifier.size(dimensionResource(R.dimen.flag_size)),
-        )
-        Spacer(modifier = Modifier.width(dimensionResource(R.dimen.conversion_result_item_flag_gap)))
-        Row(
-            horizontalArrangement = Arrangement.SpaceBetween,
-            modifier = modifier.weight(1f)
+    Row(
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = modifier.weight(1f)
+    ) {
+        Column {
+            Text(
+                text = targetCurrency.code,
+                style = MaterialTheme.typography.displaySmall,
+            )
+            Text(
+                text = targetCurrency.name,
+                style = MaterialTheme.typography.bodyLarge,
+            )
+        }
+        Column(
+            horizontalAlignment = Alignment.End,
+            verticalArrangement = Arrangement.Center,
         ) {
-            Column {
-                Text(
-                    text = targetCurrency.code,
-                    style = MaterialTheme.typography.displaySmall,
-                )
-                Text(
-                    text = targetCurrency.name,
-                    style = MaterialTheme.typography.bodyLarge,
-                )
-            }
-            Column(
-                horizontalAlignment = Alignment.End
-            ) {
+            if (exchangeRate.value == null) {
+                Box(
+                    modifier = Modifier.size(dimensionResource(R.dimen.loading_icon_size))
+                ) {
+                    CircularProgressIndicator(
+                        strokeWidth = dimensionResource(R.dimen.progress_indicator_stroke_width),
+                        color = MaterialTheme.colorScheme.surfaceVariant,
+                        trackColor = MaterialTheme.colorScheme.secondary,
+                    )
+                }
+            } else {
                 Text(
                     text = targetCurrencyFormat.format(baseCurrencyValue * exchangeRate.value),
                     style = MaterialTheme.typography.displaySmall,
@@ -121,26 +185,71 @@ fun getCurrencyFormat(currency: Currency): NumberFormat {
 
 @Preview(showBackground = true)
 @Composable
-fun ConversionResultsListPreview() {
+fun ConversionResultsListPreview(
+    isSelectionModeEnabled: Boolean = false,
+) {
     CurrencyConverterAppTheme {
         ConversionResultsList(
-            currencies = defaultAvailableCurrencies,
-            baseCurrency = defaultBaseCurrency,
-            baseCurrencyValue = defaultBaseCurrencyValue,
+            baseCurrencyData = defaultBaseCurrencyData,
             exchangeRates = defaultExchangeRates,
+            selectionData = defaultSelectionData.copy(isSelectionModeEnabled = isSelectionModeEnabled),
+            selectedConversionEntries = listOf(),
         )
     }
 }
 
 @Preview(showBackground = true)
 @Composable
-fun ConversionResultsListItemPreview() {
+fun ConversionResultsListSelectionModePreview() {
+    ConversionResultsListPreview(
+        isSelectionModeEnabled = true
+    )
+}
+
+@Preview(showBackground = true)
+@Composable
+fun ConversionResultsListItemPreview(
+    isLoading: Boolean = false,
+    isSelectionModeEnabled: Boolean = false,
+    isSelected: Boolean = false,
+) {
     CurrencyConverterAppTheme {
         ConversionResultsListItem(
             baseCurrency = defaultBaseCurrency,
             targetCurrency = defaultAvailableCurrencies.find { it.code == "GBP" }!!,
             baseCurrencyValue = defaultBaseCurrencyValue,
-            exchangeRate = defaultExchangeRates.first(),
+            exchangeRate = if (isLoading) {
+                defaultExchangeRates.first().copy(value = null)
+            } else {
+                defaultExchangeRates.first()
+            },
+            selectionData = defaultSelectionData.copy(isSelectionModeEnabled = isSelectionModeEnabled),
+            isSelected = isSelected,
         )
     }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun ConversionResultsListItemSelectionModePreview() {
+    ConversionResultsListItemPreview(
+        isSelectionModeEnabled = true
+    )
+}
+
+@Preview(showBackground = true)
+@Composable
+fun ConversionResultsListItemSelectionModeSelectedPreview() {
+    ConversionResultsListItemPreview(
+        isSelectionModeEnabled = true,
+        isSelected = true,
+    )
+}
+
+@Preview(showBackground = true)
+@Composable
+fun ConversionResultsLoadingListItemPreview() {
+    ConversionResultsListItemPreview(
+        isLoading = true,
+    )
 }

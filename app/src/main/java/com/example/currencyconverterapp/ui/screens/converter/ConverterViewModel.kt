@@ -9,10 +9,12 @@ import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.currencyconverterapp.CurrencyConverterApplication
 import com.example.currencyconverterapp.data.CurrencyConverterRepository
 import com.example.currencyconverterapp.model.Currency
+import com.example.currencyconverterapp.model.ExchangeRate
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import okhttp3.internal.connection.Exchange
 import java.io.IOException
 
 class ConverterViewModel(
@@ -37,24 +39,24 @@ class ConverterViewModel(
 
     private fun fetchExchangeRates() {
         viewModelScope.launch {
-            val exchangeRatesStatus = try {
-                val latestExchangeRates = currencyConverterRepository.getLatestExchangeRates(
-                    baseCurrency = defaultBaseCurrency.code,
-                    currencies = defaultTargetCurrencies.joinToString(",")
-                ).data.values.toList()
-                ExchangeRatesStatus.Success(latestExchangeRates)
-            } catch (e: IOException) {
-                ExchangeRatesStatus.Error
-            }
+            val latestExchangeRates = currencyConverterRepository.getLatestExchangeRates(
+                baseCurrency = defaultBaseCurrency.code,
+                currencies = defaultExchangeRates.joinToString(",") { it.code }
+            ).data.values.toList()
             _converterUiState.update {
-                it.copy(exchangeRatesStatus = exchangeRatesStatus)
+                it.copy(exchangeRates = latestExchangeRates)
             }
         }
     }
 
     fun selectBaseCurrency(currency: Currency) {
         _converterUiState.update {
-            it.copy(baseCurrency = currency)
+            it.copy(
+                baseCurrency = currency,
+                exchangeRates = it.exchangeRates.filter { exchangeRate ->
+                    exchangeRate.code != currency.code
+                }
+            )
         }
     }
 
@@ -72,7 +74,42 @@ class ConverterViewModel(
 
     fun addTargetCurrency(currency: Currency) {
         _converterUiState.update {
-            it.copy(targetCurrencies = it.targetCurrencies + currency)
+            it.copy(
+                exchangeRates = it.exchangeRates + ExchangeRate(
+                    currency.code,
+                    null
+                )
+            )
+        }
+    }
+
+    fun toggleSelectionMode() {
+        _converterUiState.update {
+            it.copy(isSelectionModeEnabled = !it.isSelectionModeEnabled)
+        }
+    }
+
+    fun toggleConversionEntrySelection(code: String, shouldAdd: Boolean) {
+        _converterUiState.update {
+            if (shouldAdd) {
+                it.copy(selectedConversionEntryCodes = it.selectedConversionEntryCodes + code)
+            } else {
+                it.copy(selectedConversionEntryCodes = it.selectedConversionEntryCodes
+                    .filter { targetCode ->
+                        targetCode != code
+                    }
+                )
+            }
+        }
+    }
+
+    fun removeSelectedConversionEntries() {
+        _converterUiState.update {
+            it.copy(exchangeRates = it.exchangeRates
+                .filter { exchangeRate ->
+                    exchangeRate.code !in it.selectedConversionEntryCodes
+                }
+            )
         }
     }
 

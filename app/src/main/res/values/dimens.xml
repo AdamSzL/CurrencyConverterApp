@@ -11,4 +11,8 @@
     <dimen name="conversion_result_item_flag_gap">8dp</dimen>
     <dimen name="bottom_sheet_padding">8dp</dimen>
     <dimen name="sheet_form_horizontal_padding">16dp</dimen>
+    <dimen name="loading_icon_size">24dp</dimen>
+    <dimen name="progress_indicator_stroke_width">3dp</dimen>
+    <dimen name="app_bar_icons_gap">8dp</dimen>
+    <dimen name="top_bar_icon_size">32dp</dimen>
 </resources>

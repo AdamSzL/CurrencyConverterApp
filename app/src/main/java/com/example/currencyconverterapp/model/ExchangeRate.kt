@@ -5,5 +5,5 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class ExchangeRate(
     val code: String,
-    val value: Double,
+    val value: Double?,
 )

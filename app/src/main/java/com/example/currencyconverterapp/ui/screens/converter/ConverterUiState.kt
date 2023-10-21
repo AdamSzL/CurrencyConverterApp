@@ -6,14 +6,9 @@ import com.example.currencyconverterapp.model.ExchangeRate
 data class ConverterUiState(
     val baseCurrency: Currency = defaultBaseCurrency,
     val baseCurrencyValue: Double = defaultBaseCurrencyValue,
-    val targetCurrencies: List<Currency> = defaultTargetCurrencies,
     val selectedTargetCurrency: Currency = defaultBaseCurrency,
     val availableCurrencies: List<Currency> = defaultAvailableCurrencies,
-    val exchangeRatesStatus: ExchangeRatesStatus = ExchangeRatesStatus.Success(defaultExchangeRates),
+    val exchangeRates: List<ExchangeRate> = defaultExchangeRates,
+    val selectedConversionEntryCodes: List<String> = listOf(),
+    val isSelectionModeEnabled: Boolean = false,
 )
-
-sealed interface ExchangeRatesStatus {
-    data class Success(val exchangeRates: List<ExchangeRate>): ExchangeRatesStatus
-    object Error: ExchangeRatesStatus
-    object Loading: ExchangeRatesStatus
-}

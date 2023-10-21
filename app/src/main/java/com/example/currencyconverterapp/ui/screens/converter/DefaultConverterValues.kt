@@ -3,7 +3,17 @@ package com.example.currencyconverterapp.ui.screens.converter
 import com.example.currencyconverterapp.model.Currency
 import com.example.currencyconverterapp.model.ExchangeRate
 
-val defaultTargetCurrencies: List<Currency> = listOf(
+val defaultBaseCurrency = Currency(
+    symbol = "€",
+    name = "Euro",
+    symbolNative = "€",
+    decimalDigits = 2,
+    rounding = 0,
+    code =  "EUR",
+    namePlural = "Euros"
+)
+
+val defaultAvailableCurrencies: List<Currency> = listOf(
     Currency(
         symbol = "£",
         name = "British Pound Sterling",
@@ -31,21 +41,9 @@ val defaultTargetCurrencies: List<Currency> = listOf(
         code = "USD",
         namePlural = "US dollars"
     ),
-)
-
-val defaultBaseCurrency = Currency(
-    symbol = "€",
-    name = "Euro",
-    symbolNative = "€",
-    decimalDigits = 2,
-    rounding = 0,
-    code =  "EUR",
-    namePlural = "Euros"
-)
+) + defaultBaseCurrency
 
 val defaultBaseCurrencyValue = 1.23
-
-val defaultAvailableCurrencies = defaultTargetCurrencies + defaultBaseCurrency
 
 val defaultExchangeRates: List<ExchangeRate> = listOf(
     ExchangeRate(
@@ -60,4 +58,16 @@ val defaultExchangeRates: List<ExchangeRate> = listOf(
         code = "GBP",
         value = 0.87,
     )
+)
+
+val defaultBaseCurrencyData = BaseCurrencyData(
+    currencies = defaultAvailableCurrencies,
+    baseCurrency = defaultBaseCurrency,
+    baseCurrencyValue = defaultBaseCurrencyValue
+)
+
+val defaultSelectionData = SelectionData(
+    isSelectionModeEnabled = false,
+    toggleSelectionMode = {},
+    toggleConversionEntry = { _, _ -> },
 )
