@@ -1,4 +1,4 @@
-package com.example.currencyconverterapp.ui.screens.converter
+package com.example.currencyconverterapp.ui.screens.converter.base_controller
 
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.MaterialTheme

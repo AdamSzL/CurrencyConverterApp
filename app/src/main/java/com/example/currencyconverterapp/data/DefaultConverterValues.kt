@@ -1,7 +1,9 @@
-package com.example.currencyconverterapp.ui.screens.converter
+package com.example.currencyconverterapp.data
 
 import com.example.currencyconverterapp.model.Currency
 import com.example.currencyconverterapp.model.ExchangeRate
+import com.example.currencyconverterapp.ui.screens.converter.BaseCurrencyData
+import com.example.currencyconverterapp.ui.screens.converter.SelectionData
 
 val defaultBaseCurrency = Currency(
     symbol = "€",

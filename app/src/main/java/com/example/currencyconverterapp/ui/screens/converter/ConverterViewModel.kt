@@ -8,14 +8,14 @@ import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.currencyconverterapp.CurrencyConverterApplication
 import com.example.currencyconverterapp.data.CurrencyConverterRepository
+import com.example.currencyconverterapp.data.defaultBaseCurrency
+import com.example.currencyconverterapp.data.defaultExchangeRates
 import com.example.currencyconverterapp.model.Currency
 import com.example.currencyconverterapp.model.ExchangeRate
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import okhttp3.internal.connection.Exchange
-import java.io.IOException
 
 class ConverterViewModel(
     private val currencyConverterRepository: CurrencyConverterRepository
