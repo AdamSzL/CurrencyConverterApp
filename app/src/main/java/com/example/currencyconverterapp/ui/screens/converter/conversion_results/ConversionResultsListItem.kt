@@ -1,8 +1,11 @@
 package com.example.currencyconverterapp.ui.screens.converter.conversion_results
 
+import android.util.Log
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -16,6 +19,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
@@ -46,17 +50,13 @@ fun ConversionResultsListItem(
     Box(
         modifier = modifier
             .combinedClickable(
-                onClick = {
-                    if (selectionData.isSelectionModeEnabled) {
-                        selectionData.toggleConversionEntry(exchangeRate.code, !isSelected)
-                    }
-                },
+                onClick = {},
                 onLongClick = {
                     selectionData.toggleSelectionMode()
                     selectionData.toggleConversionEntry(exchangeRate.code, !isSelected)
                 },
                 onDoubleClick = {}
-            ),
+            )
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
