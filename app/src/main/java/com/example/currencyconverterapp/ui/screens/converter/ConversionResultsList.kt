@@ -18,9 +18,12 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Divider
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.LocalMinimumInteractiveComponentEnforcement
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -66,7 +69,7 @@ fun ConversionResultsList(
     }
 }
 
-@OptIn(ExperimentalFoundationApi::class)
+@OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun ConversionResultsListItem(
     baseCurrency: Currency,
@@ -96,12 +99,15 @@ fun ConversionResultsListItem(
             val context = LocalContext.current
 
             if (selectionData.isSelectionModeEnabled) {
-                Checkbox(
-                    checked = isSelected,
-                    onCheckedChange = { selected ->
-                        selectionData.toggleConversionEntry(exchangeRate.code, selected)
-                    },
-                )
+                CompositionLocalProvider(LocalMinimumInteractiveComponentEnforcement provides false) {
+                    Checkbox(
+                        checked = isSelected,
+                        onCheckedChange = { selected ->
+                            selectionData.toggleConversionEntry(exchangeRate.code, selected)
+                        },
+                    )
+                    Spacer(modifier = Modifier.width(dimensionResource(R.dimen.conversion_result_item_flag_gap)))
+                }
             }
 
             Image(
