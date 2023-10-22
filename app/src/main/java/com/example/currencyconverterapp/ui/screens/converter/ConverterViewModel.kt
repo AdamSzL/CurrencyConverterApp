@@ -107,10 +107,12 @@ class ConverterViewModel(
 
     fun removeSelectedConversionEntries() {
         _converterUiState.update {
-            it.copy(exchangeRates = it.exchangeRates
-                .filter { exchangeRate ->
-                    exchangeRate.code !in it.selectedConversionEntryCodes
-                }
+            it.copy(
+                exchangeRates = it.exchangeRates
+                    .filter { exchangeRate ->
+                        exchangeRate.code !in it.selectedConversionEntryCodes
+                    },
+                selectedConversionEntryCodes = emptyList()
             )
         }
     }

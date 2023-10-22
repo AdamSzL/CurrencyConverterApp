@@ -35,6 +35,7 @@ import com.example.currencyconverterapp.R
 import com.example.currencyconverterapp.ui.screens.charts.ChartsScreen
 import com.example.currencyconverterapp.ui.screens.converter.ConverterScreen
 import com.example.currencyconverterapp.ui.screens.converter.ConverterViewModel
+import com.example.currencyconverterapp.ui.screens.converter.CurrencyConverterTopAppBar
 import com.example.currencyconverterapp.ui.screens.converter.navigation.BottomNavigationBar
 
 enum class CurrencyConverterScreen(
@@ -117,56 +118,4 @@ fun CurrencyConverterApp(
             }
         }
     }
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun CurrencyConverterTopAppBar(
-    currentScreen: CurrencyConverterScreen,
-    isSelectionModeEnabled: Boolean,
-    onSelectionModeToggle: () -> Unit,
-    onSelectedTargetCurrenciesDeletion: () -> Unit,
-    modifier: Modifier = Modifier
-) {
-    TopAppBar(
-        title = {
-            Box(
-                modifier = modifier.fillMaxSize()
-            ) {
-                Text(
-                    text = stringResource(currentScreen.title),
-                    style = MaterialTheme.typography.headlineSmall,
-                    modifier = Modifier.align(Alignment.CenterStart),
-                )
-                if (currentScreen.route == CurrencyConverterScreen.Converter.route && isSelectionModeEnabled) {
-                    Row(
-                        horizontalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.app_bar_icons_gap)),
-                        modifier = Modifier
-                            .align(Alignment.CenterEnd)
-                            .padding(end = dimensionResource(R.dimen.app_bar_icons_gap)),
-                    ) {
-                        Icon(
-                            imageVector = Icons.Filled.Close,
-                            contentDescription = stringResource(R.string.close),
-                            modifier = Modifier
-                                .clickable {
-                                    onSelectionModeToggle()
-                                }
-                                .size(dimensionResource(R.dimen.top_bar_icon_size))
-                        )
-                        Icon(
-                            imageVector = Icons.Filled.Delete,
-                            contentDescription = stringResource(R.string.delete),
-                            modifier = Modifier
-                                .clickable {
-                                    onSelectedTargetCurrenciesDeletion()
-                                }
-                                .size(dimensionResource(R.dimen.top_bar_icon_size))
-                        )
-                    }
-                }
-            }
-        },
-        modifier = modifier
-    )
 }
