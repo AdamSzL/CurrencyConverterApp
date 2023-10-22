@@ -16,9 +16,11 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalTextInputService
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -71,30 +73,32 @@ fun ExposedDropdownMenuBoxScope.BaseCurrencyTextField(
     expanded: Boolean,
     modifier: Modifier = Modifier,
 ) {
-    OutlinedTextField(
-        modifier = modifier.menuAnchor(),
-        readOnly = true,
-        singleLine = true,
-        value = baseCurrency.code,
-        onValueChange = {},
-        label = {
-            Text(stringResource(label))
-        },
-        textStyle = MaterialTheme.typography.displaySmall,
-        leadingIcon = {
-            val resource = getFlagResourceByCurrencyCode(LocalContext.current, baseCurrency.code.lowercase())
-            Image(
-                painter = painterResource(resource),
-                colorFilter = determineColorFilter(resource, MaterialTheme.colorScheme.onBackground),
-                contentDescription = baseCurrency.name,
-                modifier = Modifier.size(dimensionResource(R.dimen.small_flag_size))
-            )
-        },
-        trailingIcon = {
-            ExposedDropdownMenuDefaults
-                .TrailingIcon(expanded = expanded)
-        },
-    )
+    CompositionLocalProvider(LocalTextInputService provides null) {
+        OutlinedTextField(
+            modifier = modifier.menuAnchor(),
+            readOnly = true,
+            singleLine = true,
+            value = baseCurrency.code,
+            onValueChange = {},
+            label = {
+                Text(stringResource(label))
+            },
+            textStyle = MaterialTheme.typography.displaySmall,
+            leadingIcon = {
+                val resource = getFlagResourceByCurrencyCode(LocalContext.current, baseCurrency.code.lowercase())
+                Image(
+                    painter = painterResource(resource),
+                    colorFilter = determineColorFilter(resource, MaterialTheme.colorScheme.onBackground),
+                    contentDescription = baseCurrency.name,
+                    modifier = Modifier.size(dimensionResource(R.dimen.small_flag_size))
+                )
+            },
+            trailingIcon = {
+                ExposedDropdownMenuDefaults
+                    .TrailingIcon(expanded = expanded)
+            },
+        )
+    }
 }
 
 @Preview(showBackground = true)
