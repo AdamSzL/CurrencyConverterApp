@@ -17,7 +17,7 @@ import com.example.currencyconverterapp.ui.screens.converter.base_controller.Bas
 fun CurrenciesDropdownMenu(
     currencies: List<Currency>,
     @StringRes textLabel: Int,
-    selectedCurrency: Currency,
+    selectedCurrency: Currency?,
     onCurrencySelection: (Currency) -> Unit,
     modifier: Modifier = Modifier
 ) {

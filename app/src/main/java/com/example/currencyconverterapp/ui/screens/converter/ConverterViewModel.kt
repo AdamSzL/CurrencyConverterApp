@@ -10,6 +10,7 @@ import com.example.currencyconverterapp.CurrencyConverterApplication
 import com.example.currencyconverterapp.data.CurrencyConverterRepository
 import com.example.currencyconverterapp.data.defaultBaseCurrency
 import com.example.currencyconverterapp.data.defaultExchangeRates
+import com.example.currencyconverterapp.data.defaultTargetCurrency
 import com.example.currencyconverterapp.model.Currency
 import com.example.currencyconverterapp.model.ExchangeRate
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -78,7 +79,8 @@ class ConverterViewModel(
                 exchangeRates = it.exchangeRates + ExchangeRate(
                     currency.code,
                     null
-                )
+                ),
+                selectedTargetCurrency = null,
             )
         }
     }

@@ -58,6 +58,16 @@ val defaultExchangeRates: List<ExchangeRate> = listOf(
     ),
 )
 
+val defaultTargetCurrency = Currency(
+    symbol = "",
+    name = "",
+    symbolNative = "",
+    decimalDigits = 2,
+    rounding = 0,
+    code = "FLAG",
+    namePlural = ""
+)
+
 val defaultBaseCurrencyData = BaseCurrencyData(
     currencies = defaultAvailableCurrencies,
     baseCurrency = defaultBaseCurrency,

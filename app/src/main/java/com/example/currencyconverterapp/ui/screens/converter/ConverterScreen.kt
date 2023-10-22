@@ -39,7 +39,8 @@ fun ConverterScreen(
 
     AddCurrencyBottomSheet(
         currencies = converterUiState.availableCurrencies.filter { currency ->
-            currency.code !in converterUiState.exchangeRates.map { rate -> rate.code }
+            currency.code !in
+                    (converterUiState.exchangeRates.map { rate -> rate.code } + converterUiState.baseCurrency.code)
         },
         selectedTargetCurrency = converterUiState.selectedTargetCurrency,
         sheetScaffoldState = bottomSheetScaffoldState,
@@ -50,7 +51,7 @@ fun ConverterScreen(
             }
         },
         onSubmit = {
-            onTargetCurrencyAddition(converterUiState.selectedTargetCurrency)
+            onTargetCurrencyAddition(converterUiState.selectedTargetCurrency!!)
             scope.launch {
                 bottomSheetScaffoldState.bottomSheetState.hide()
             }

@@ -68,7 +68,7 @@ fun BaseCurrencyController(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ExposedDropdownMenuBoxScope.BaseCurrencyTextField(
-    baseCurrency: Currency,
+    baseCurrency: Currency?,
     @StringRes label: Int,
     expanded: Boolean,
     modifier: Modifier = Modifier,
@@ -78,18 +78,18 @@ fun ExposedDropdownMenuBoxScope.BaseCurrencyTextField(
             modifier = modifier.menuAnchor(),
             readOnly = true,
             singleLine = true,
-            value = baseCurrency.code,
+            value = baseCurrency?.code ?: "",
             onValueChange = {},
             label = {
                 Text(stringResource(label))
             },
             textStyle = MaterialTheme.typography.displaySmall,
             leadingIcon = {
-                val resource = getFlagResourceByCurrencyCode(LocalContext.current, baseCurrency.code.lowercase())
+                val resource = getFlagResourceByCurrencyCode(LocalContext.current, baseCurrency?.code?.lowercase() ?: "FLAG")
                 Image(
                     painter = painterResource(resource),
                     colorFilter = determineColorFilter(resource, MaterialTheme.colorScheme.onBackground),
-                    contentDescription = baseCurrency.name,
+                    contentDescription = baseCurrency?.name ?: "Empty flag",
                     modifier = Modifier.size(dimensionResource(R.dimen.small_flag_size))
                 )
             },

@@ -25,7 +25,7 @@ import com.example.currencyconverterapp.ui.screens.converter.currencies_dropdown
 @Composable
 fun AddCurrencyBottomSheet(
     currencies: List<Currency>,
-    selectedTargetCurrency: Currency,
+    selectedTargetCurrency: Currency?,
     sheetScaffoldState: BottomSheetScaffoldState,
     onTargetCurrencySelection: (Currency) -> Unit,
     onCancel: () -> Unit,
@@ -77,7 +77,7 @@ fun SheetHeader(
 @Composable
 fun SheetForm(
     currencies: List<Currency>,
-    selectedTargetCurrency: Currency,
+    selectedTargetCurrency: Currency?,
     onTargetCurrencySelection: (Currency) -> Unit,
     onCancel: () -> Unit,
     onSubmit: () -> Unit,
@@ -95,6 +95,7 @@ fun SheetForm(
             onCurrencySelection = onTargetCurrencySelection
         )
         SheetActionButtons(
+            selectedTargetCurrency = selectedTargetCurrency,
             onCancel = onCancel,
             onSubmit = onSubmit
         )
@@ -103,6 +104,7 @@ fun SheetForm(
 
 @Composable
 fun SheetActionButtons(
+    selectedTargetCurrency: Currency?,
     onCancel: () -> Unit,
     onSubmit: () -> Unit,
     modifier: Modifier = Modifier,
@@ -120,7 +122,8 @@ fun SheetActionButtons(
             )
         }
         Button(
-            onClick = onSubmit
+            onClick = onSubmit,
+            enabled = selectedTargetCurrency != null,
         ) {
             Text(
                 text = stringResource(R.string.add)
