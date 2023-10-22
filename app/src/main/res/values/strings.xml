@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">CurrencyConverterApp</string>
     <string name="currency_converter">Currency Converter</string>
+    <string name="currency_charts">Currency Charts</string>
     <string name="base_currency">Base Currency</string>
     <string name="value">Value</string>
     <string name="add_target_currency">Add Target Currency</string>
