@@ -38,7 +38,9 @@ fun ConverterScreen(
     val scope = rememberCoroutineScope()
 
     AddCurrencyBottomSheet(
-        currencies = converterUiState.availableCurrencies,
+        currencies = converterUiState.availableCurrencies.filter { currency ->
+            currency.code !in converterUiState.exchangeRates.map { rate -> rate.code }
+        },
         selectedTargetCurrency = converterUiState.selectedTargetCurrency,
         sheetScaffoldState = bottomSheetScaffoldState,
         onTargetCurrencySelection = onTargetCurrencySelection,

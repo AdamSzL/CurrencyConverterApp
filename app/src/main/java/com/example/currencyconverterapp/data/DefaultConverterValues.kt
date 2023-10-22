@@ -56,10 +56,6 @@ val defaultExchangeRates: List<ExchangeRate> = listOf(
         code = "PLN",
         value = 4.45,
     ),
-    ExchangeRate(
-        code = "GBP",
-        value = 0.87,
-    )
 )
 
 val defaultBaseCurrencyData = BaseCurrencyData(
