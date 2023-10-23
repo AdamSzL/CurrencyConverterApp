@@ -24,7 +24,7 @@ object BaseControllerHelpers {
         code: String
     ): Int {
         val flagResourceId = context.resources.getIdentifier(
-            code,
+            if (code == "try") "resource_try" else code,
             "drawable",
             context.packageName,
         )

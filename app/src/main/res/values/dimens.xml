@@ -15,4 +15,6 @@
     <dimen name="progress_indicator_stroke_width">3dp</dimen>
     <dimen name="app_bar_icons_gap">8dp</dimen>
     <dimen name="top_bar_icon_size">32dp</dimen>
+    <dimen name="dropdown_width">300dp</dimen>
+    <dimen name="dropdown_height">300dp</dimen>
 </resources>
