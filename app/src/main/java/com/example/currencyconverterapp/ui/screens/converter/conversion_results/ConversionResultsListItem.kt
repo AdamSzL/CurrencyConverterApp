@@ -1,5 +1,6 @@
 package com.example.currencyconverterapp.ui.screens.converter.conversion_results
 
+import android.util.Log
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.combinedClickable
@@ -48,8 +49,10 @@ fun ConversionResultsListItem(
             .combinedClickable(
                 onClick = {},
                 onLongClick = {
+                    if (!selectionData.isSelectionModeEnabled) {
+                        selectionData.toggleConversionEntry(exchangeRate.code, !isSelected)
+                    }
                     selectionData.toggleSelectionMode()
-                    selectionData.toggleConversionEntry(exchangeRate.code, !isSelected)
                 },
                 onDoubleClick = {}
             )

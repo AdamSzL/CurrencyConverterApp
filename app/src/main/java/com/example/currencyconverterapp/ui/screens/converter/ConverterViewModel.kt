@@ -104,7 +104,12 @@ class ConverterViewModel(
 
     fun toggleSelectionMode() {
         _converterUiState.update {
-            it.copy(isSelectionModeEnabled = !it.isSelectionModeEnabled)
+            val updatedIsSelectionModeEnabled = !it.isSelectionModeEnabled
+            val selectedItems = if (updatedIsSelectionModeEnabled) it.selectedConversionEntryCodes else emptyList()
+            it.copy(
+                isSelectionModeEnabled = updatedIsSelectionModeEnabled,
+                selectedConversionEntryCodes = selectedItems
+            )
         }
     }
 
