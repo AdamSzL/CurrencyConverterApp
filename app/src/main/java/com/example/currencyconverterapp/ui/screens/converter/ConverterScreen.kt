@@ -23,7 +23,7 @@ fun ConverterScreen(
     onBaseCurrencySelection: (Currency) -> Unit,
     onBaseCurrencyValueChange: (Double) -> Unit,
     onTargetCurrencySelection: (Currency) -> Unit,
-    onTargetCurrencyAddition: (Currency) -> Unit,
+    onTargetCurrencyAddition: (Currency, Currency) -> Unit,
     onSelectionModeToggle: () -> Unit,
     onConversionEntryToggle: (String, Boolean) -> Unit,
     modifier: Modifier = Modifier
@@ -51,7 +51,7 @@ fun ConverterScreen(
             }
         },
         onSubmit = {
-            onTargetCurrencyAddition(converterUiState.selectedTargetCurrency!!)
+            onTargetCurrencyAddition(converterUiState.baseCurrency, converterUiState.selectedTargetCurrency!!)
             scope.launch {
                 bottomSheetScaffoldState.bottomSheetState.hide()
             }

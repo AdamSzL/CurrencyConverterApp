@@ -10,7 +10,6 @@ import com.example.currencyconverterapp.CurrencyConverterApplication
 import com.example.currencyconverterapp.data.CurrencyConverterRepository
 import com.example.currencyconverterapp.data.defaultBaseCurrency
 import com.example.currencyconverterapp.data.defaultExchangeRates
-import com.example.currencyconverterapp.data.defaultTargetCurrency
 import com.example.currencyconverterapp.model.Currency
 import com.example.currencyconverterapp.model.ExchangeRate
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -38,11 +37,14 @@ class ConverterViewModel(
         }
     }
 
-    private fun fetchExchangeRates() {
+    private fun fetchExchangeRates(
+        baseCurrency: Currency = defaultBaseCurrency,
+        previousExchangeRates: List<ExchangeRate> = defaultExchangeRates
+    ) {
         viewModelScope.launch {
             val latestExchangeRates = currencyConverterRepository.getLatestExchangeRates(
-                baseCurrency = defaultBaseCurrency.code,
-                currencies = defaultExchangeRates.joinToString(",") { it.code }
+                baseCurrency = baseCurrency.code,
+                currencies = previousExchangeRates.joinToString(",") { it.code }
             ).data.values.toList()
             _converterUiState.update {
                 it.copy(exchangeRates = latestExchangeRates)
@@ -51,14 +53,20 @@ class ConverterViewModel(
     }
 
     fun selectBaseCurrency(currency: Currency) {
+        var updatedExchangeRates: List<ExchangeRate> = listOf()
         _converterUiState.update {
+            updatedExchangeRates = it.exchangeRates.filter { exchangeRate ->
+                exchangeRate.code != currency.code
+            }
             it.copy(
                 baseCurrency = currency,
-                exchangeRates = it.exchangeRates.filter { exchangeRate ->
-                    exchangeRate.code != currency.code
-                }
+                exchangeRates = updatedExchangeRates,
             )
         }
+        fetchExchangeRates(
+            baseCurrency = currency,
+            previousExchangeRates = updatedExchangeRates
+        )
     }
 
     fun setBaseCurrencyValue(value: Double) {
@@ -73,16 +81,25 @@ class ConverterViewModel(
         }
     }
 
-    fun addTargetCurrency(currency: Currency) {
+    fun addTargetCurrency(
+        baseCurrency: Currency,
+        currency: Currency
+    ) {
+        var updatedExchangeRates: List<ExchangeRate> = listOf()
         _converterUiState.update {
+            updatedExchangeRates = it.exchangeRates + ExchangeRate(
+                currency.code,
+                null
+            )
             it.copy(
-                exchangeRates = it.exchangeRates + ExchangeRate(
-                    currency.code,
-                    null
-                ),
+                exchangeRates = updatedExchangeRates,
                 selectedTargetCurrency = null,
             )
         }
+        fetchExchangeRates(
+            baseCurrency = baseCurrency,
+            previousExchangeRates = updatedExchangeRates
+        )
     }
 
     fun toggleSelectionMode() {

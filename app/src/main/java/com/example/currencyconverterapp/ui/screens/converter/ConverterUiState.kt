@@ -4,7 +4,6 @@ import com.example.currencyconverterapp.data.defaultAvailableCurrencies
 import com.example.currencyconverterapp.data.defaultBaseCurrency
 import com.example.currencyconverterapp.data.defaultBaseCurrencyValue
 import com.example.currencyconverterapp.data.defaultExchangeRates
-import com.example.currencyconverterapp.data.defaultTargetCurrency
 import com.example.currencyconverterapp.model.Currency
 import com.example.currencyconverterapp.model.ExchangeRate
 
