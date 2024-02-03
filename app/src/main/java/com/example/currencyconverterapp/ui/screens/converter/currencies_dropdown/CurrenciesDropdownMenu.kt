@@ -50,7 +50,10 @@ fun CurrenciesDropdownMenu(
                 modifier = Modifier.size(width = dropdownWidth, height = dimensionResource(R.dimen.dropdown_height))
             ) {
                 LazyColumn {
-                    items(currencies) { currency ->
+                    items(
+                        currencies,
+                        key = { it.code }
+                    ) { currency ->
                         CurrencyDropdownMenuItem(
                             currency = currency,
                             onItemClicked = {

@@ -58,6 +58,7 @@ fun CurrencyConverterApp(
     )
 
     val converterUiState = converterViewModel.converterUiState.collectAsState().value
+    val chartsUiState = chartsViewModel.chartsUiState.collectAsState().value
 
     Scaffold(
         topBar = {
@@ -111,7 +112,10 @@ fun CurrencyConverterApp(
                         val sharedViewModel = entry.sharedViewModel<SharedViewModel>(navController,)
                         val currencies by sharedViewModel.currencies.collectAsState()
                         ChartsScreen(
+                            chartsUiState = chartsUiState,
                             currencies = currencies,
+                            onBaseCurrencySelection = chartsViewModel::selectBaseCurrency,
+                            onTargetCurrencySelection = chartsViewModel::selectTargetCurrency
                         )
                     }
                 }
