@@ -20,6 +20,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun ConverterScreen(
     converterUiState: ConverterUiState,
+    availableCurrencies: List<Currency>,
     onBaseCurrencySelection: (Currency) -> Unit,
     onBaseCurrencyValueChange: (Double) -> Unit,
     onTargetCurrencySelection: (Currency) -> Unit,
@@ -38,7 +39,7 @@ fun ConverterScreen(
     val scope = rememberCoroutineScope()
 
     AddCurrencyBottomSheet(
-        currencies = converterUiState.availableCurrencies.filter { currency ->
+        currencies = availableCurrencies.filter { currency ->
             currency.code !in
                     (converterUiState.exchangeRates.map { rate -> rate.code } + converterUiState.baseCurrency.code)
         },
@@ -72,7 +73,7 @@ fun ConverterScreen(
                     .padding(it)
             ) {
                 val baseCurrencyData = BaseCurrencyData(
-                    currencies = converterUiState.availableCurrencies,
+                    currencies = availableCurrencies,
                     baseCurrency = converterUiState.baseCurrency,
                     baseCurrencyValue = converterUiState.baseCurrencyValue
                 )

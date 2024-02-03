@@ -9,14 +9,21 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.ViewModel
+import androidx.navigation.NavBackStackEntry
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
 import com.example.currencyconverterapp.R
+import com.example.currencyconverterapp.ui.screens.SharedViewModel
 import com.example.currencyconverterapp.ui.screens.charts.ChartsScreen
+import com.example.currencyconverterapp.ui.screens.charts.ChartsViewModel
 import com.example.currencyconverterapp.ui.screens.converter.ConverterScreen
 import com.example.currencyconverterapp.ui.screens.converter.ConverterViewModel
 import com.example.currencyconverterapp.ui.screens.converter.CurrencyConverterTopAppBar
@@ -41,7 +48,8 @@ enum class CurrencyConverterScreen(
 
 @Composable
 fun CurrencyConverterApp(
-    converterViewModel: ConverterViewModel = viewModel(factory = ConverterViewModel.Factory)
+    converterViewModel: ConverterViewModel = hiltViewModel(),
+    chartsViewModel: ChartsViewModel = hiltViewModel()
 ) {
     val navController = rememberNavController()
     val backStackEntry by navController.currentBackStackEntryAsState()
@@ -77,29 +85,48 @@ fun CurrencyConverterApp(
 
             NavHost(
                 navController = navController,
-                startDestination = CurrencyConverterScreen.Converter.name,
+                startDestination = "currency_converter",
                 modifier = Modifier
             ) {
+                navigation(
+                    startDestination = CurrencyConverterScreen.Converter.name,
+                    route = "currency_converter"
+                ) {
+                    composable(route = CurrencyConverterScreen.Converter.name) { entry ->
+                        val sharedViewModel = entry.sharedViewModel<SharedViewModel>(navController,)
+                        val currencies by sharedViewModel.currencies.collectAsState()
+                        ConverterScreen(
+                            converterUiState = converterUiState,
+                            availableCurrencies = currencies,
+                            onBaseCurrencySelection = converterViewModel::selectBaseCurrency,
+                            onBaseCurrencyValueChange = converterViewModel::setBaseCurrencyValue,
+                            onTargetCurrencySelection = converterViewModel::selectTargetCurrency,
+                            onTargetCurrencyAddition = converterViewModel::addTargetCurrency,
+                            onSelectionModeToggle = converterViewModel::toggleSelectionMode,
+                            onConversionEntryToggle = converterViewModel::toggleConversionEntrySelection,
+                        )
+                    }
 
-                composable(route = CurrencyConverterScreen.Converter.name) {
-                    ConverterScreen(
-                        converterUiState = converterUiState,
-                        onBaseCurrencySelection = converterViewModel::selectBaseCurrency,
-                        onBaseCurrencyValueChange = converterViewModel::setBaseCurrencyValue,
-                        onTargetCurrencySelection = converterViewModel::selectTargetCurrency,
-                        onTargetCurrencyAddition = converterViewModel::addTargetCurrency,
-                        onSelectionModeToggle = converterViewModel::toggleSelectionMode,
-                        onConversionEntryToggle = converterViewModel::toggleConversionEntrySelection,
-                    )
+                    composable(route = CurrencyConverterScreen.Charts.name) { entry ->
+                        val sharedViewModel = entry.sharedViewModel<SharedViewModel>(navController,)
+                        val currencies by sharedViewModel.currencies.collectAsState()
+                        ChartsScreen(
+                            currencies = currencies,
+                        )
+                    }
                 }
-
-                composable(route = CurrencyConverterScreen.Charts.name) {
-                    ChartsScreen(
-
-                    )
-                }
-
             }
         }
     }
+}
+
+@Composable
+inline fun <reified T : ViewModel> NavBackStackEntry.sharedViewModel(
+    navController: NavHostController,
+): T {
+    val navGraphRoute = destination.parent?.route ?: return hiltViewModel()
+    val parentEntry = remember(this) {
+        navController.getBackStackEntry(navGraphRoute)
+    }
+    return hiltViewModel(parentEntry)
 }

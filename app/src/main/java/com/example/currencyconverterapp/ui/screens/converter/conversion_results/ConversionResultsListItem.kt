@@ -1,6 +1,5 @@
 package com.example.currencyconverterapp.ui.screens.converter.conversion_results
 
-import android.util.Log
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.combinedClickable

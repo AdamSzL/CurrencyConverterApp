@@ -1,19 +1,22 @@
-package com.example.currencyconverterapp.data
+package com.example.currencyconverterapp.di
 
 import com.example.currencyconverterapp.BuildConfig
 import com.example.currencyconverterapp.network.CurrencyConverterApiService
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
+import dagger.Module
+import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
 import kotlinx.serialization.json.Json
 import okhttp3.Interceptor
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
+import javax.inject.Singleton
 
-interface AppContainer {
-    val currencyConverterRepository: CurrencyConverterRepository
-}
-
-class DefaultAppContainer: AppContainer {
+@Module
+@InstallIn(SingletonComponent::class)
+object AppModule {
     private val baseUrl =
         "https://api.currencyapi.com/v3/"
 
@@ -31,17 +34,14 @@ class DefaultAppContainer: AppContainer {
         .addInterceptor(apiKeyInterceptor)
         .build()
 
-    private val retrofit = Retrofit.Builder()
-        .addConverterFactory(json.asConverterFactory("application/json".toMediaType()))
-        .baseUrl(baseUrl)
-        .client(okHttpClient)
-        .build()
-
-    private val retrofitService: CurrencyConverterApiService by lazy {
-        retrofit.create(CurrencyConverterApiService::class.java)
-    }
-
-    override val currencyConverterRepository: CurrencyConverterRepository by lazy {
-        NetworkCurrencyConverterRepository(retrofitService)
+    @Provides
+    @Singleton
+    fun provideCurrencyConverterApi(): CurrencyConverterApiService {
+        return Retrofit.Builder()
+            .addConverterFactory(json.asConverterFactory("application/json".toMediaType()))
+            .baseUrl(baseUrl)
+            .client(okHttpClient)
+            .build()
+            .create(CurrencyConverterApiService::class.java)
     }
 }
