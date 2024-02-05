@@ -90,43 +90,6 @@ class ConverterViewModel @Inject constructor(
         )
     }
 
-    fun toggleSelectionMode() {
-        _converterUiState.update {
-            val updatedIsSelectionModeEnabled = !it.isSelectionModeEnabled
-            val selectedItems = if (updatedIsSelectionModeEnabled) it.selectedConversionEntryCodes else emptyList()
-            it.copy(
-                isSelectionModeEnabled = updatedIsSelectionModeEnabled,
-                selectedConversionEntryCodes = selectedItems
-            )
-        }
-    }
-
-    fun toggleConversionEntrySelection(code: String, shouldAdd: Boolean) {
-        _converterUiState.update {
-            if (shouldAdd) {
-                it.copy(selectedConversionEntryCodes = it.selectedConversionEntryCodes + code)
-            } else {
-                it.copy(selectedConversionEntryCodes = it.selectedConversionEntryCodes
-                    .filter { targetCode ->
-                        targetCode != code
-                    }
-                )
-            }
-        }
-    }
-
-    fun removeSelectedConversionEntries() {
-        _converterUiState.update {
-            it.copy(
-                exchangeRates = it.exchangeRates
-                    .filter { exchangeRate ->
-                        exchangeRate.code !in it.selectedConversionEntryCodes
-                    },
-                selectedConversionEntryCodes = emptyList()
-            )
-        }
-    }
-
     fun deleteConversionEntry(code: String) {
         _converterUiState.update {
             it.copy(

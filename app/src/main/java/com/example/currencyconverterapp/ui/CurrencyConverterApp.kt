@@ -64,9 +64,6 @@ fun CurrencyConverterApp(
         topBar = {
             CurrencyConverterTopAppBar(
                 currentScreen = currentScreen,
-                isSelectionModeEnabled = converterUiState.isSelectionModeEnabled,
-                onSelectionModeToggle = converterViewModel::toggleSelectionMode,
-                onSelectedTargetCurrenciesDeletion = converterViewModel::removeSelectedConversionEntries,
             )
         },
         bottomBar = {
@@ -102,8 +99,6 @@ fun CurrencyConverterApp(
                             onBaseCurrencyValueChange = converterViewModel::setBaseCurrencyValue,
                             onTargetCurrencySelection = converterViewModel::selectTargetCurrency,
                             onTargetCurrencyAddition = converterViewModel::addTargetCurrency,
-                            onSelectionModeToggle = converterViewModel::toggleSelectionMode,
-                            onConversionEntryToggle = converterViewModel::toggleConversionEntrySelection,
                             onConversionEntryDeletion = converterViewModel::deleteConversionEntry,
                         )
                     }

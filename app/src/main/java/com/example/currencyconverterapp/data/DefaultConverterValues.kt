@@ -3,7 +3,6 @@ package com.example.currencyconverterapp.data
 import com.example.currencyconverterapp.model.Currency
 import com.example.currencyconverterapp.model.ExchangeRate
 import com.example.currencyconverterapp.ui.screens.converter.BaseCurrencyData
-import com.example.currencyconverterapp.ui.screens.converter.SelectionData
 
 val defaultBaseCurrency = Currency(
     symbol = "€",
@@ -72,10 +71,4 @@ val defaultBaseCurrencyData = BaseCurrencyData(
     currencies = defaultAvailableCurrencies,
     baseCurrency = defaultBaseCurrency,
     baseCurrencyValue = defaultBaseCurrencyValue
-)
-
-val defaultSelectionData = SelectionData(
-    isSelectionModeEnabled = false,
-    toggleSelectionMode = {},
-    toggleConversionEntry = { _, _ -> },
 )

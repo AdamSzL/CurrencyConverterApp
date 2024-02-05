@@ -25,8 +25,6 @@ fun ConverterScreen(
     onBaseCurrencyValueChange: (Double) -> Unit,
     onTargetCurrencySelection: (Currency) -> Unit,
     onTargetCurrencyAddition: (Currency, Currency) -> Unit,
-    onSelectionModeToggle: () -> Unit,
-    onConversionEntryToggle: (String, Boolean) -> Unit,
     onConversionEntryDeletion: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -79,12 +77,6 @@ fun ConverterScreen(
                     baseCurrencyValue = converterUiState.baseCurrencyValue
                 )
 
-                val selectionData = SelectionData(
-                    isSelectionModeEnabled = converterUiState.isSelectionModeEnabled,
-                    toggleSelectionMode = onSelectionModeToggle,
-                    toggleConversionEntry = onConversionEntryToggle,
-                )
-
                 BaseCurrencyController(
                     baseCurrencyData = baseCurrencyData,
                     onBaseCurrencyValueChange = onBaseCurrencyValueChange,
@@ -96,8 +88,6 @@ fun ConverterScreen(
                 ConversionResultsList(
                     baseCurrencyData = baseCurrencyData,
                     exchangeRates = converterUiState.exchangeRates,
-                    selectionData = selectionData,
-                    selectedConversionEntries = converterUiState.selectedConversionEntryCodes,
                     onConversionEntryDeletion = onConversionEntryDeletion,
                 )
             }
@@ -109,12 +99,6 @@ data class BaseCurrencyData(
     val currencies: List<Currency>,
     val baseCurrency: Currency,
     val baseCurrencyValue: Double
-)
-
-data class SelectionData(
-    val isSelectionModeEnabled: Boolean,
-    val toggleSelectionMode: () -> Unit,
-    val toggleConversionEntry: (String, Boolean) -> Unit,
 )
 
 @Composable

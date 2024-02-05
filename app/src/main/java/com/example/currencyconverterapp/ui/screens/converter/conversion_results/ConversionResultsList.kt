@@ -38,10 +38,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.example.currencyconverterapp.R
 import com.example.currencyconverterapp.data.defaultBaseCurrencyData
 import com.example.currencyconverterapp.data.defaultExchangeRates
-import com.example.currencyconverterapp.data.defaultSelectionData
 import com.example.currencyconverterapp.model.ExchangeRate
 import com.example.currencyconverterapp.ui.screens.converter.BaseCurrencyData
-import com.example.currencyconverterapp.ui.screens.converter.SelectionData
 import com.example.currencyconverterapp.ui.theme.CurrencyConverterAppTheme
 import kotlinx.coroutines.delay
 
@@ -49,8 +47,6 @@ import kotlinx.coroutines.delay
 fun ConversionResultsList(
     baseCurrencyData: BaseCurrencyData,
     exchangeRates: List<ExchangeRate>,
-    selectionData: SelectionData,
-    selectedConversionEntries: List<String>,
     onConversionEntryDeletion: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -74,8 +70,6 @@ fun ConversionResultsList(
                     baseCurrencyValue = baseCurrencyData.baseCurrencyValue,
                     targetCurrency = baseCurrencyData.currencies.find { it.code == exchangeRate.code }!!,
                     exchangeRate = exchangeRate,
-                    isSelected = exchangeRate.code in selectedConversionEntries,
-                    selectionData = selectionData,
                     modifier = Modifier
                         .fillMaxWidth()
                 )
@@ -165,8 +159,6 @@ fun ConversionResultsListPreview(
         ConversionResultsList(
             baseCurrencyData = defaultBaseCurrencyData,
             exchangeRates = defaultExchangeRates,
-            selectionData = defaultSelectionData.copy(isSelectionModeEnabled = isSelectionModeEnabled),
-            selectedConversionEntries = listOf(),
             onConversionEntryDeletion = { }
         )
     }

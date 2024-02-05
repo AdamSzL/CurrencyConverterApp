@@ -10,7 +10,5 @@ data class ConverterUiState(
     val baseCurrency: Currency = defaultBaseCurrency,
     val baseCurrencyValue: Double = defaultBaseCurrencyValue,
     val selectedTargetCurrency: Currency? = null,
-    val selectedConversionEntryCodes: List<String> = listOf(),
     val exchangeRates: List<ExchangeRate> = defaultExchangeRates,
-    val isSelectionModeEnabled: Boolean = false,
 )
