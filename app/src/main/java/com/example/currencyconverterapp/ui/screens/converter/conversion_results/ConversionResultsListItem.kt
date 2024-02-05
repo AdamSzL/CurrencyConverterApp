@@ -1,3 +1,5 @@
+@file:OptIn(ExperimentalMaterial3Api::class)
+
 package com.example.currencyconverterapp.ui.screens.converter.conversion_results
 
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -90,6 +92,7 @@ fun ConversionResultsListItem(
         }
     }
 }
+
 
 @Preview(showBackground = true)
 @Composable

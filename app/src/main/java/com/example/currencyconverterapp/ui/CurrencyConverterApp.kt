@@ -83,7 +83,6 @@ fun CurrencyConverterApp(
                 .fillMaxSize()
                 .padding(it)
         ) {
-
             NavHost(
                 navController = navController,
                 startDestination = "currency_converter",
@@ -105,6 +104,7 @@ fun CurrencyConverterApp(
                             onTargetCurrencyAddition = converterViewModel::addTargetCurrency,
                             onSelectionModeToggle = converterViewModel::toggleSelectionMode,
                             onConversionEntryToggle = converterViewModel::toggleConversionEntrySelection,
+                            onConversionEntryDeletion = converterViewModel::deleteConversionEntry,
                         )
                     }
 

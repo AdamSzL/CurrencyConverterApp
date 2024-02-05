@@ -11,12 +11,9 @@ import androidx.compose.material3.rememberStandardBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import com.example.currencyconverterapp.data.defaultAvailableCurrencies
 import com.example.currencyconverterapp.model.Currency
 import com.example.currencyconverterapp.ui.screens.converter.base_controller.BaseCurrencyController
 import com.example.currencyconverterapp.ui.screens.converter.conversion_results.ConversionResultsList
-import com.example.currencyconverterapp.ui.theme.CurrencyConverterAppTheme
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -30,6 +27,7 @@ fun ConverterScreen(
     onTargetCurrencyAddition: (Currency, Currency) -> Unit,
     onSelectionModeToggle: () -> Unit,
     onConversionEntryToggle: (String, Boolean) -> Unit,
+    onConversionEntryDeletion: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val bottomSheetScaffoldState = rememberBottomSheetScaffoldState(
@@ -100,6 +98,7 @@ fun ConverterScreen(
                     exchangeRates = converterUiState.exchangeRates,
                     selectionData = selectionData,
                     selectedConversionEntries = converterUiState.selectedConversionEntryCodes,
+                    onConversionEntryDeletion = onConversionEntryDeletion,
                 )
             }
         }

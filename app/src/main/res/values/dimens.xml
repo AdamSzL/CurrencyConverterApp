@@ -17,4 +17,5 @@
     <dimen name="top_bar_icon_size">32dp</dimen>
     <dimen name="dropdown_width">300dp</dimen>
     <dimen name="dropdown_height">300dp</dimen>
+    <dimen name="swipe_background_padding">16dp</dimen>
 </resources>

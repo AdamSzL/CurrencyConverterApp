@@ -127,4 +127,15 @@ class ConverterViewModel @Inject constructor(
         }
     }
 
+    fun deleteConversionEntry(code: String) {
+        _converterUiState.update {
+            it.copy(
+                exchangeRates = it.exchangeRates
+                    .filter { exchangeRate ->
+                        exchangeRate.code != code
+                    }
+            )
+        }
+    }
+
 }
