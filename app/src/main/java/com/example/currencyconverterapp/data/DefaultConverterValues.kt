@@ -1,6 +1,7 @@
 package com.example.currencyconverterapp.data
 
 import com.example.currencyconverterapp.model.Currency
+import com.example.currencyconverterapp.model.DateTimeExchangeRatesInfo
 import com.example.currencyconverterapp.model.ExchangeRate
 import com.example.currencyconverterapp.ui.screens.converter.BaseCurrencyData
 
@@ -71,4 +72,154 @@ val defaultBaseCurrencyData = BaseCurrencyData(
     currencies = defaultAvailableCurrencies,
     baseCurrency = defaultBaseCurrency,
     baseCurrencyValue = defaultBaseCurrencyValue
+)
+
+val defaultHistoricalExchangeRates = listOf(
+    DateTimeExchangeRatesInfo(
+        datetime = "2022-01-01T23:59:29Z",
+        exchangeRatesData = mapOf(
+            "EUR" to ExchangeRate("EUR", 1.05)
+        )
+    ),
+    DateTimeExchangeRatesInfo(
+        datetime = "2022-01-02T23:59:29Z",
+        exchangeRatesData = mapOf(
+            "EUR" to ExchangeRate("EUR", 1.10)
+        )
+    ),
+    DateTimeExchangeRatesInfo(
+        datetime = "2022-01-03T23:59:29Z",
+        exchangeRatesData = mapOf(
+            "EUR" to ExchangeRate("EUR", 1.07)
+        )
+    ),
+    DateTimeExchangeRatesInfo(
+        datetime = "2022-01-04T23:59:29Z",
+        exchangeRatesData = mapOf(
+            "EUR" to ExchangeRate("EUR", 1.03)
+        )
+    ),
+    DateTimeExchangeRatesInfo(
+        datetime = "2022-01-05T23:59:29Z",
+        exchangeRatesData = mapOf(
+            "EUR" to ExchangeRate("EUR", 1.00)
+        )
+    ),
+    DateTimeExchangeRatesInfo(
+        datetime = "2022-01-06T23:59:29Z",
+        exchangeRatesData = mapOf(
+            "EUR" to ExchangeRate("EUR", 0.96)
+        )
+    ),
+    DateTimeExchangeRatesInfo(
+        datetime = "2022-01-07T23:59:29Z",
+        exchangeRatesData = mapOf(
+            "EUR" to ExchangeRate("EUR", 0.87)
+        )
+    ),
+    DateTimeExchangeRatesInfo(
+        datetime = "2022-01-08T23:59:29Z",
+        exchangeRatesData = mapOf(
+            "EUR" to ExchangeRate("EUR", 1.05)
+        )
+    ),
+)
+
+val defaultHistoricalExchangeRatesNew = listOf(
+    DateTimeExchangeRatesInfo(
+        datetime = "2022-01-01T23:59:29Z",
+        exchangeRatesData = mapOf(
+            "EUR" to ExchangeRate("EUR", 0.90)
+        )
+    ),
+    DateTimeExchangeRatesInfo(
+        datetime = "2022-01-02T23:59:29Z",
+        exchangeRatesData = mapOf(
+            "EUR" to ExchangeRate("EUR", 0.85)
+        )
+    ),
+    DateTimeExchangeRatesInfo(
+        datetime = "2022-01-03T23:59:29Z",
+        exchangeRatesData = mapOf(
+            "EUR" to ExchangeRate("EUR", 0.80)
+        )
+    ),
+    DateTimeExchangeRatesInfo(
+        datetime = "2022-01-04T23:59:29Z",
+        exchangeRatesData = mapOf(
+            "EUR" to ExchangeRate("EUR", 1.03)
+        )
+    ),
+    DateTimeExchangeRatesInfo(
+        datetime = "2022-01-05T23:59:29Z",
+        exchangeRatesData = mapOf(
+            "EUR" to ExchangeRate("EUR", 1.00)
+        )
+    ),
+    DateTimeExchangeRatesInfo(
+        datetime = "2022-01-06T23:59:29Z",
+        exchangeRatesData = mapOf(
+            "EUR" to ExchangeRate("EUR", 0.96)
+        )
+    ),
+    DateTimeExchangeRatesInfo(
+        datetime = "2022-01-07T23:59:29Z",
+        exchangeRatesData = mapOf(
+            "EUR" to ExchangeRate("EUR", 0.87)
+        )
+    ),
+    DateTimeExchangeRatesInfo(
+        datetime = "2022-01-08T23:59:29Z",
+        exchangeRatesData = mapOf(
+            "EUR" to ExchangeRate("EUR", 1.05)
+        )
+    ),
+    DateTimeExchangeRatesInfo(
+        datetime = "2022-01-01T23:59:29Z",
+        exchangeRatesData = mapOf(
+            "EUR" to ExchangeRate("EUR", 0.90)
+        )
+    ),
+    DateTimeExchangeRatesInfo(
+        datetime = "2022-01-02T23:59:29Z",
+        exchangeRatesData = mapOf(
+            "EUR" to ExchangeRate("EUR", 0.85)
+        )
+    ),
+    DateTimeExchangeRatesInfo(
+        datetime = "2022-01-03T23:59:29Z",
+        exchangeRatesData = mapOf(
+            "EUR" to ExchangeRate("EUR", 0.80)
+        )
+    ),
+    DateTimeExchangeRatesInfo(
+        datetime = "2022-01-04T23:59:29Z",
+        exchangeRatesData = mapOf(
+            "EUR" to ExchangeRate("EUR", 1.03)
+        )
+    ),
+    DateTimeExchangeRatesInfo(
+        datetime = "2022-01-05T23:59:29Z",
+        exchangeRatesData = mapOf(
+            "EUR" to ExchangeRate("EUR", 1.00)
+        )
+    ),
+    DateTimeExchangeRatesInfo(
+        datetime = "2022-01-06T23:59:29Z",
+        exchangeRatesData = mapOf(
+            "EUR" to ExchangeRate("EUR", 0.96)
+        )
+    ),
+    DateTimeExchangeRatesInfo(
+        datetime = "2022-01-07T23:59:29Z",
+        exchangeRatesData = mapOf(
+            "EUR" to ExchangeRate("EUR", 0.87)
+        )
+    ),
+    DateTimeExchangeRatesInfo(
+        datetime = "2022-01-08T23:59:29Z",
+        exchangeRatesData = mapOf(
+            "EUR" to ExchangeRate("EUR", 1.05)
+        )
+    ),
 )

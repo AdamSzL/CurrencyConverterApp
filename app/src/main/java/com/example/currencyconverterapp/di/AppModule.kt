@@ -17,7 +17,7 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object AppModule {
-    private val baseUrl =
+    private const val baseUrl =
         "https://api.currencyapi.com/v3/"
 
     private val json = Json { ignoreUnknownKeys = true }

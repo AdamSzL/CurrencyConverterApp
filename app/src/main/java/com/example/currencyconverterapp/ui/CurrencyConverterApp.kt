@@ -108,9 +108,14 @@ fun CurrencyConverterApp(
                         val currencies by sharedViewModel.currencies.collectAsState()
                         ChartsScreen(
                             chartsUiState = chartsUiState,
+                            chartEntryModelProducer = chartsViewModel.chartEntryModelProducer,
+                            axisExtraKey = chartsViewModel.axisExtraKey,
                             currencies = currencies,
                             onBaseCurrencySelection = chartsViewModel::selectBaseCurrency,
-                            onTargetCurrencySelection = chartsViewModel::selectTargetCurrency
+                            onTargetCurrencySelection = chartsViewModel::selectTargetCurrency,
+                            onTimePeriodSelection = chartsViewModel::selectTimePeriod,
+                            onColumnChartToggle = chartsViewModel::toggleColumnChart,
+                            onChartUpdate = chartsViewModel::getHistoricalExchangeRates,
                         )
                     }
                 }
