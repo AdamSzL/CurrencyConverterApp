@@ -1,13 +1,13 @@
 package com.example.currencyconverterapp.ui.screens.charts
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.currencyconverterapp.data.CurrencyConverterRepository
 import com.example.currencyconverterapp.data.defaultHistoricalExchangeRates
-import com.example.currencyconverterapp.data.defaultHistoricalExchangeRatesNew
 import com.example.currencyconverterapp.model.Currency
 import com.example.currencyconverterapp.model.DateTimeExchangeRatesInfo
+import com.example.currencyconverterapp.ui.screens.charts.DateTimeHandler.getCurrentDate
+import com.example.currencyconverterapp.ui.screens.charts.DateTimeHandler.subtractTimePeriodFromDate
 import com.patrykandpatrick.vico.core.entry.ChartEntryModelProducer
 import com.patrykandpatrick.vico.core.entry.FloatEntry
 import com.patrykandpatrick.vico.core.entry.diff.ExtraStore
@@ -67,15 +67,23 @@ class ChartsViewModel @Inject constructor(
     }
 
     fun getHistoricalExchangeRates() {
-        // get exchange rates
-        val data = defaultHistoricalExchangeRatesNew
-        viewModelScope.launch {
-            chartEntryModelProducer.setEntriesSuspending(
-                convertToChartData(data),
-                updateExtras = { extraStore ->
-                    extraStore.set(axisExtraKey, getDatesFromData(data))
-                }
-            )
+        val currentDate = getCurrentDate()
+        with(chartsUiState.value) {
+            viewModelScope.launch {
+                val response = currencyConverterRepository.getHistoricalExchangeRates(
+                    dateTimeStart = subtractTimePeriodFromDate(currentDate, selectedTimePeriod),
+                    dateTimeEnd = currentDate,
+                    baseCurrency = selectedBaseCurrency.code,
+                    currencies = selectedTargetCurrency.code,
+                    accuracy = if (selectedTimePeriod == TimePeriod.TODAY) "hour" else "day"
+                )
+                chartEntryModelProducer.setEntriesSuspending(
+                    convertToChartData(response.data),
+                    updateExtras = { extraStore ->
+                        extraStore.set(axisExtraKey, getDatesFromData(response.data))
+                    }
+                )
+            }
         }
     }
 

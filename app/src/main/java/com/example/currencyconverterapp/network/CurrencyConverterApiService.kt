@@ -20,7 +20,8 @@ interface CurrencyConverterApiService {
     suspend fun getHistoricalExchangeRates(
         @Query("datetime_start") dateTimeStart: String = "",
         @Query("datetime_end") dateTimeEnd: String = "",
-        @Query("currency") currency: String = "",
-        @Query("currencies") currencies: String = ""
+        @Query("base_currency") baseCurrency: String = "",
+        @Query("currencies") currencies: String = "",
+        @Query("accuracy") accuracy: String = ""
     ): HistoricalExchangeRatesApiResponse
 }

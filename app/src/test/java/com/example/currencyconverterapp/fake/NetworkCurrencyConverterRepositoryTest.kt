@@ -22,4 +22,10 @@ class NetworkCurrencyConverterRepositoryTest {
         runTest {
             assertEquals(FakeDataSource.latestExchangeRatesApiResponse, repository.getLatestExchangeRates())
         }
+
+    @Test
+    fun networkCurrencyConverterRepository_getHistoricalExchangeRates_verifyApiResponse() =
+        runTest {
+            assertEquals(FakeDataSource.historicalExchangeRatesApiResponse, repository.getHistoricalExchangeRates())
+        }
 }

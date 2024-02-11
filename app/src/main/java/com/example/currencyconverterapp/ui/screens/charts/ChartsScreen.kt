@@ -8,28 +8,18 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.material3.DatePicker
-import androidx.compose.material3.DatePickerDialog
-import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.SelectableDates
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
-import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import com.example.currencyconverterapp.R
-import com.example.currencyconverterapp.data.defaultAvailableCurrencies
 import com.example.currencyconverterapp.model.Currency
 import com.example.currencyconverterapp.ui.screens.converter.currencies_dropdown.CurrenciesDropdownMenu
-import com.example.currencyconverterapp.ui.theme.CurrencyConverterAppTheme
 import com.patrykandpatrick.vico.core.entry.ChartEntryModelProducer
 import com.patrykandpatrick.vico.core.entry.diff.ExtraStore
-import java.time.LocalDate
 
 @Composable
 fun ChartsScreen(
@@ -55,7 +45,10 @@ fun ChartsScreen(
                 currencies = filterChartCurrencies(currencies, chartsUiState),
                 textLabel = R.string.base_currency,
                 selectedCurrency = chartsUiState.selectedBaseCurrency,
-                onCurrencySelection = onBaseCurrencySelection,
+                onCurrencySelection = {
+                    onBaseCurrencySelection(it)
+                    onChartUpdate()
+                },
                 modifier = Modifier.weight(1f)
             )
             Spacer(modifier = Modifier.width(dimensionResource(R.dimen.converter_input_gap)))
@@ -63,7 +56,10 @@ fun ChartsScreen(
                 currencies = filterChartCurrencies(currencies, chartsUiState),
                 textLabel = R.string.target_currency,
                 selectedCurrency = chartsUiState.selectedTargetCurrency,
-                onCurrencySelection = onTargetCurrencySelection,
+                onCurrencySelection = {
+                    onTargetCurrencySelection(it)
+                    onChartUpdate()
+                },
                 modifier = Modifier.weight(1f)
             )
         }
@@ -86,11 +82,13 @@ fun ChartsScreen(
         TimePeriodDropdownMenu(
             selectedTimePeriod = chartsUiState.selectedTimePeriod,
             onTimePeriodSelection = onTimePeriodSelection,
+            onChartUpdate = onChartUpdate,
         )
         Spacer(modifier = modifier.height(dimensionResource(R.dimen.chart_currency_gap)))
         HistoricalExchangeRatesChart(
             baseCurrency = chartsUiState.selectedBaseCurrency,
             targetCurrency = chartsUiState.selectedTargetCurrency,
+            selectedTimePeriod = chartsUiState.selectedTimePeriod,
             isColumnChartEnabled = chartsUiState.isColumnChartEnabled,
             chartEntryModelProducer = chartEntryModelProducer,
             axisExtraKey = axisExtraKey,
@@ -104,20 +102,3 @@ fun filterChartCurrencies(currencies: List<Currency>, chartsUiState: ChartsUiSta
         currency.code != chartsUiState.selectedTargetCurrency.code
     }
 }
-
-//@Preview(showBackground = true)
-//@Composable
-//fun ChartsScreenPreview() {
-//    CurrencyConverterAppTheme {
-//        ChartsScreen(
-//            chartsUiState = ChartsUiState(),
-//            currencies = defaultAvailableCurrencies,
-//            onBaseCurrencySelection = { },
-//            onTargetCurrencySelection = { },
-//            onChartUpdate = { },
-//            axisExtraKey = ExtraStore.Key(),
-//            chartEntryModelProducer = ChartEntryModelProducer(),
-//            onColumnChartToggle = { },
-//        )
-//    }
-//}

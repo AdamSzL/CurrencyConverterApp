@@ -7,12 +7,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -57,8 +57,8 @@ fun CurrencyConverterApp(
         backStackEntry?.destination?.route ?: CurrencyConverterScreen.Converter.name
     )
 
-    val converterUiState = converterViewModel.converterUiState.collectAsState().value
-    val chartsUiState = chartsViewModel.chartsUiState.collectAsState().value
+    val converterUiState = converterViewModel.converterUiState.collectAsStateWithLifecycle().value
+    val chartsUiState = chartsViewModel.chartsUiState.collectAsStateWithLifecycle().value
 
     Scaffold(
         topBar = {
@@ -91,7 +91,7 @@ fun CurrencyConverterApp(
                 ) {
                     composable(route = CurrencyConverterScreen.Converter.name) { entry ->
                         val sharedViewModel = entry.sharedViewModel<SharedViewModel>(navController,)
-                        val currencies by sharedViewModel.currencies.collectAsState()
+                        val currencies by sharedViewModel.currencies.collectAsStateWithLifecycle()
                         ConverterScreen(
                             converterUiState = converterUiState,
                             availableCurrencies = currencies,
@@ -105,7 +105,7 @@ fun CurrencyConverterApp(
 
                     composable(route = CurrencyConverterScreen.Charts.name) { entry ->
                         val sharedViewModel = entry.sharedViewModel<SharedViewModel>(navController,)
-                        val currencies by sharedViewModel.currencies.collectAsState()
+                        val currencies by sharedViewModel.currencies.collectAsStateWithLifecycle()
                         ChartsScreen(
                             chartsUiState = chartsUiState,
                             chartEntryModelProducer = chartsViewModel.chartEntryModelProducer,
