@@ -66,6 +66,15 @@ class ChartsViewModel @Inject constructor(
         }
     }
 
+    fun swapBaseAndTargetCurrencies() {
+        _chartsUiState.update {
+            it.copy(
+                selectedBaseCurrency = it.selectedTargetCurrency,
+                selectedTargetCurrency = it.selectedBaseCurrency
+            )
+        }
+    }
+
     fun getHistoricalExchangeRates() {
         val currentDate = getCurrentDate()
         with(chartsUiState.value) {

@@ -12,4 +12,5 @@
     <string name="delete">Delete</string>
     <string name="time_period">Time Period</string>
     <string name="column_chart">Column Charts</string>
+    <string name="swap_currencies">Swap Currencies</string>
 </resources>

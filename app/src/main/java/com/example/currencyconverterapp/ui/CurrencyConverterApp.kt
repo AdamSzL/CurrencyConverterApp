@@ -116,6 +116,7 @@ fun CurrencyConverterApp(
                             onTimePeriodSelection = chartsViewModel::selectTimePeriod,
                             onColumnChartToggle = chartsViewModel::toggleColumnChart,
                             onChartUpdate = chartsViewModel::getHistoricalExchangeRates,
+                            onBaseAndTargetCurrenciesSwap = chartsViewModel::swapBaseAndTargetCurrencies,
                         )
                     }
                 }

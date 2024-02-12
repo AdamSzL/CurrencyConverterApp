@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
@@ -17,7 +16,6 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import com.example.currencyconverterapp.R
 import com.example.currencyconverterapp.model.Currency
-import com.example.currencyconverterapp.ui.screens.converter.currencies_dropdown.CurrenciesDropdownMenu
 import com.patrykandpatrick.vico.core.entry.ChartEntryModelProducer
 import com.patrykandpatrick.vico.core.entry.diff.ExtraStore
 
@@ -32,37 +30,21 @@ fun ChartsScreen(
     onTimePeriodSelection: (TimePeriod) -> Unit,
     onColumnChartToggle: (Boolean) -> Unit,
     onChartUpdate: () -> Unit,
+    onBaseAndTargetCurrenciesSwap: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = modifier
     ) {
-        Row(
-            modifier = Modifier.padding(dimensionResource(R.dimen.converter_margin))
-        ) {
-            CurrenciesDropdownMenu(
-                currencies = filterChartCurrencies(currencies, chartsUiState),
-                textLabel = R.string.base_currency,
-                selectedCurrency = chartsUiState.selectedBaseCurrency,
-                onCurrencySelection = {
-                    onBaseCurrencySelection(it)
-                    onChartUpdate()
-                },
-                modifier = Modifier.weight(1f)
-            )
-            Spacer(modifier = Modifier.width(dimensionResource(R.dimen.converter_input_gap)))
-            CurrenciesDropdownMenu(
-                currencies = filterChartCurrencies(currencies, chartsUiState),
-                textLabel = R.string.target_currency,
-                selectedCurrency = chartsUiState.selectedTargetCurrency,
-                onCurrencySelection = {
-                    onTargetCurrencySelection(it)
-                    onChartUpdate()
-                },
-                modifier = Modifier.weight(1f)
-            )
-        }
+        BaseTargetCurrenciesController(
+            chartsUiState = chartsUiState,
+            currencies = currencies,
+            onBaseCurrencySelection = onBaseCurrencySelection,
+            onTargetCurrencySelection = onTargetCurrencySelection,
+            onChartUpdate = onChartUpdate,
+            onBaseAndTargetCurrenciesSwap = onBaseAndTargetCurrenciesSwap,
+        )
         Row(
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically,

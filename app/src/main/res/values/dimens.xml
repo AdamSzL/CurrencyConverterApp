@@ -22,4 +22,5 @@
     <dimen name="chart_padding">16dp</dimen>
     <dimen name="column_chart_width">8dp</dimen>
     <dimen name="column_chart_switch_text_gap">16dp</dimen>
+    <dimen name="swap_icon_margin">4dp</dimen>
 </resources>
