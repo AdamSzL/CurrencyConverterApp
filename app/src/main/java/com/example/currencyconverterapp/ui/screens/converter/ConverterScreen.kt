@@ -6,11 +6,18 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SheetValue
+import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.SnackbarResult
 import androidx.compose.material3.rememberBottomSheetScaffoldState
 import androidx.compose.material3.rememberStandardBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import com.example.currencyconverterapp.R
 import com.example.currencyconverterapp.model.Currency
 import com.example.currencyconverterapp.ui.screens.converter.base_controller.BaseCurrencyController
 import com.example.currencyconverterapp.ui.screens.converter.conversion_results.ConversionResultsList
@@ -26,6 +33,7 @@ fun ConverterScreen(
     onTargetCurrencySelection: (Currency) -> Unit,
     onTargetCurrencyAddition: (Currency, Currency) -> Unit,
     onConversionEntryDeletion: (String) -> Unit,
+    onConversionEntryDeletionUndo: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     val bottomSheetScaffoldState = rememberBottomSheetScaffoldState(
@@ -34,6 +42,9 @@ fun ConverterScreen(
             skipHiddenState = false,
         )
     )
+    val snackbarHostState = remember { SnackbarHostState() }
+    val snackbarMessage = stringResource(R.string.currency_deleted_message)
+    val snackbarActionMessage = stringResource(R.string.undo)
 
     val scope = rememberCoroutineScope()
 
@@ -59,17 +70,20 @@ fun ConverterScreen(
         modifier = modifier,
     ) {
         Scaffold(
+            snackbarHost = {
+                SnackbarHost(hostState = snackbarHostState)
+            },
             floatingActionButton = {
                 ConverterFloatingActionButton(
                     onClick = {
                         scope.launch { bottomSheetScaffoldState.bottomSheetState.expand() }
                     }
                 )
-            }
-        ) {
+            },
+        ) { paddingValues ->
             Column(
                 modifier = Modifier
-                    .padding(it)
+                    .padding(paddingValues)
             ) {
                 val baseCurrencyData = BaseCurrencyData(
                     currencies = availableCurrencies,
@@ -88,7 +102,20 @@ fun ConverterScreen(
                 ConversionResultsList(
                     baseCurrencyData = baseCurrencyData,
                     exchangeRates = converterUiState.exchangeRates,
-                    onConversionEntryDeletion = onConversionEntryDeletion,
+                    onConversionEntryDeletion = { conversionEntry ->
+                        onConversionEntryDeletion(conversionEntry)
+                        scope.launch{
+                            val result = snackbarHostState
+                                .showSnackbar(
+                                    message = snackbarMessage,
+                                    actionLabel = snackbarActionMessage,
+                                    duration = SnackbarDuration.Short,
+                                )
+                            if (result == SnackbarResult.ActionPerformed) {
+                                onConversionEntryDeletionUndo()
+                            }
+                        }
+                    }
                 )
             }
         }

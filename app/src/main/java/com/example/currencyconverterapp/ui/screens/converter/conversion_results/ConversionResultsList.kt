@@ -132,7 +132,6 @@ fun SwipeToDismissCurrencyContainer(
                         contentAlignment = Alignment.CenterEnd,
                         modifier = Modifier
                             .fillMaxWidth(if (dismissState.progress == 1.0f) 0.0f else dismissState.progress)
-                            .fillMaxWidth(dismissState.progress)
                             .fillMaxHeight()
                             .background(color)
                             .padding(dimensionResource(R.dimen.swipe_background_padding))

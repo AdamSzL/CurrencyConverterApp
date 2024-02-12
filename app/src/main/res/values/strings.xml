@@ -13,4 +13,6 @@
     <string name="time_period">Time Period</string>
     <string name="column_chart">Column Charts</string>
     <string name="swap_currencies">Swap Currencies</string>
+    <string name="currency_deleted_message">Currency Deleted</string>
+    <string name="undo">Undo</string>
 </resources>

@@ -100,6 +100,7 @@ fun CurrencyConverterApp(
                             onTargetCurrencySelection = converterViewModel::selectTargetCurrency,
                             onTargetCurrencyAddition = converterViewModel::addTargetCurrency,
                             onConversionEntryDeletion = converterViewModel::deleteConversionEntry,
+                            onConversionEntryDeletionUndo = converterViewModel::undoConversionEntryDeletion,
                         )
                     }
 

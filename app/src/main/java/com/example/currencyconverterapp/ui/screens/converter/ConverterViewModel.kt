@@ -1,5 +1,6 @@
 package com.example.currencyconverterapp.ui.screens.converter
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.currencyconverterapp.data.CurrencyConverterRepository
@@ -92,11 +93,31 @@ class ConverterViewModel @Inject constructor(
 
     fun deleteConversionEntry(code: String) {
         _converterUiState.update {
+            val deletedExchangeRate = it.exchangeRates.find { exchangeRate ->
+                exchangeRate.code == code
+            }
             it.copy(
                 exchangeRates = it.exchangeRates
                     .filter { exchangeRate ->
                         exchangeRate.code != code
-                    }
+                    },
+                deletedExchangeRate = deletedExchangeRate,
+            )
+        }
+    }
+
+    fun undoConversionEntryDeletion() {
+        _converterUiState.update {
+            it.copy(
+                exchangeRates = if (it.deletedExchangeRate != null) {
+                    (it.exchangeRates + ExchangeRate(code = it.deletedExchangeRate.code, value = it.deletedExchangeRate.value))
+                        .sortedBy { exchangeRate ->
+                            exchangeRate.code
+                        }
+                } else {
+                    it.exchangeRates
+                },
+                deletedExchangeRate = null,
             )
         }
     }
