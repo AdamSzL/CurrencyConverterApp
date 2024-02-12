@@ -84,7 +84,7 @@ class ChartsViewModel @Inject constructor(
                     dateTimeEnd = currentDate,
                     baseCurrency = selectedBaseCurrency.code,
                     currencies = selectedTargetCurrency.code,
-                    accuracy = if (selectedTimePeriod == TimePeriod.TODAY) "hour" else "day"
+                    accuracy = if (selectedTimePeriod == TimePeriod.ONE_DAY) "hour" else "day"
                 )
                 chartEntryModelProducer.setEntriesSuspending(
                     convertToChartData(response.data),

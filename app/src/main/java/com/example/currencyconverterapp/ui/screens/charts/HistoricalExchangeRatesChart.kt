@@ -52,6 +52,7 @@ fun HistoricalExchangeRatesChart(
         labelRotationDegrees = -90f,
     )
     val axisValuesOverrider = AxisValuesOverrider.adaptiveYValues(yFraction = 1f)
+    val marker = rememberMarker()
     Column(
         verticalArrangement = Arrangement.Center,
         modifier = Modifier.fillMaxHeight()
@@ -78,6 +79,7 @@ fun HistoricalExchangeRatesChart(
                 axisValuesOverrider = axisValuesOverrider,
             ),
             chartModelProducer = chartEntryModelProducer,
+            marker = marker,
             startAxis = startAxis,
             bottomAxis = bottomAxis,
             modifier = Modifier

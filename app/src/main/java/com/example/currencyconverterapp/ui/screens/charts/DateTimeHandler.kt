@@ -26,7 +26,7 @@ object DateTimeHandler {
         val days = when (timePeriod) {
             TimePeriod.TWO_WEEKS -> 14
             TimePeriod.ONE_WEEK -> 7
-            TimePeriod.TODAY -> 1
+            TimePeriod.ONE_DAY -> 1
             else -> 0
         }
         return TimePeriodUnits(years, months, days)
@@ -36,18 +36,12 @@ object DateTimeHandler {
         val instant = Instant.parse(date)
         val timeZone = TimeZone.currentSystemDefault()
         val (years, months, days) = getUnitsToSubtractFromTimePeriod(timePeriod)
-        val result = instant.minus(DateTimePeriod(years = years, months = months, days = days), timeZone).toString()
-        if (timePeriod == TimePeriod.TODAY) {
-            val localDateTime = LocalDateTime.parse(result.dropLast(1))
-            val newDate = LocalDateTime(localDateTime.year, localDateTime.monthNumber, localDateTime.dayOfMonth, hour = 23, minute = 59, second = 59)
-            return "${newDate}Z"
-        }
-        return result
+        return instant.minus(DateTimePeriod(years = years, months = months, days = days), timeZone).toString()
     }
 
     fun formatDateByTimePeriod(date: String, timePeriod: TimePeriod): String {
         val localDateTime = LocalDateTime.parse(date.dropLast(1))
-        return if (timePeriod == TimePeriod.TODAY) {
+        return if (timePeriod == TimePeriod.ONE_DAY) {
             "${formatDigit(localDateTime.hour)}:${formatDigit(localDateTime.minute)}:${formatDigit(localDateTime.second)}"
         } else {
             "${localDateTime.year}-${formatDigit(localDateTime.monthNumber)}-${formatDigit(localDateTime.dayOfMonth)}"
@@ -64,7 +58,7 @@ enum class TimePeriod(val label: String) {
     ONE_MONTH("1 Month"),
     TWO_WEEKS("2 Weeks"),
     ONE_WEEK("1 Week"),
-    TODAY("Today");
+    ONE_DAY("Last 24 Hours");
 
     companion object {
         fun getByLabel(label: String): TimePeriod {

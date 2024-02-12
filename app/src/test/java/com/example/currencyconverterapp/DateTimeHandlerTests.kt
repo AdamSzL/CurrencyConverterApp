@@ -32,7 +32,7 @@ class DateTimeHandlerTests {
 
     @Test
     fun getUnitsToSubtractFromTimePeriod_timePeriodToday_returnsCorrectUnits() {
-        val result = getUnitsToSubtractFromTimePeriod(TimePeriod.TODAY)
+        val result = getUnitsToSubtractFromTimePeriod(TimePeriod.ONE_DAY)
         assertEquals(TimePeriodUnits(0, 0, 1), result)
     }
 
@@ -95,12 +95,12 @@ class DateTimeHandlerTests {
 
     @Test
     fun subtractTimePeriodFromDate_timePeriodToday_returnCorrectDate() {
-        val result = subtractTimePeriodFromDate(date, TimePeriod.TODAY)
+        val result = subtractTimePeriodFromDate(date, TimePeriod.ONE_DAY)
         val dateTime = LocalDateTime.parse(result.dropLast(1))
         assertEquals(2022, dateTime.year)
         assertEquals(2, dateTime.monthNumber)
         assertEquals(9, dateTime.dayOfMonth)
-        assertEquals(23, dateTime.hour)
+        assertEquals(15, dateTime.hour)
         assertEquals(59, dateTime.minute)
         assertEquals(59, dateTime.second)
     }
@@ -117,11 +117,11 @@ class DateTimeHandlerTests {
 
     @Test
     fun formatDateByTimePeriod_periodToday_returnsTime() {
-        assertEquals("23:59:59", formatDateByTimePeriod("2022-01-04T23:59:59Z", TimePeriod.TODAY))
+        assertEquals("23:59:59", formatDateByTimePeriod("2022-01-04T23:59:59Z", TimePeriod.ONE_DAY))
     }
 
     @Test
     fun formatDateByTimePeriod_periodOneYear_returnsDate() {
-        assertEquals("04/01/2022", formatDateByTimePeriod("2022-01-04T23:59:59Z", TimePeriod.ONE_YEAR))
+        assertEquals("2022-01-04", formatDateByTimePeriod("2022-01-04T23:59:59Z", TimePeriod.ONE_YEAR))
     }
 }
