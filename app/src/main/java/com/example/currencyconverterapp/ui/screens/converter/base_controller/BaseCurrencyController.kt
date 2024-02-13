@@ -32,7 +32,6 @@ import com.example.currencyconverterapp.ui.screens.converter.BaseCurrencyData
 import com.example.currencyconverterapp.ui.screens.converter.base_controller.BaseControllerHelpers.determineColorFilter
 import com.example.currencyconverterapp.ui.screens.converter.base_controller.BaseControllerHelpers.getFlagResourceByCurrencyCode
 import com.example.currencyconverterapp.ui.screens.converter.currencies_dropdown.CurrenciesDropdownMenu
-import com.example.currencyconverterapp.ui.theme.CurrencyConverterAppTheme
 
 @Composable
 fun BaseCurrencyController(
@@ -52,14 +51,16 @@ fun BaseCurrencyController(
             textLabel = R.string.base_currency,
             selectedCurrency = baseCurrencyData.baseCurrency,
             onCurrencySelection = onBaseCurrencySelection,
-            modifier = Modifier.weight(3f),
+            modifier = Modifier
+                .weight(3f)
         )
         Spacer(modifier = Modifier.width(dimensionResource(R.dimen.converter_input_gap)))
         CurrencyValueTextField(
             currency = baseCurrencyData.baseCurrency,
             currencyValue = baseCurrencyData.baseCurrencyValue,
             onValueChange = onBaseCurrencyValueChange,
-            modifier = Modifier.weight(2f),
+            modifier = Modifier
+                .weight(2f)
         )
     }
 }
@@ -104,11 +105,9 @@ fun ExposedDropdownMenuBoxScope.BaseCurrencyTextField(
 @Preview(showBackground = true)
 @Composable
 fun BaseCurrencyControllerPreview() {
-    CurrencyConverterAppTheme {
-        BaseCurrencyController(
-            baseCurrencyData = defaultBaseCurrencyData,
-            onBaseCurrencySelection = { },
-            onBaseCurrencyValueChange = { },
-        )
-    }
+    BaseCurrencyController(
+        baseCurrencyData = defaultBaseCurrencyData,
+        onBaseCurrencySelection = { },
+        onBaseCurrencyValueChange = { },
+    )
 }

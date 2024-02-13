@@ -19,7 +19,7 @@ import com.example.currencyconverterapp.model.ExchangeRate
 import java.text.NumberFormat
 
 @Composable
-fun RowScope.ConversionMainContent(
+fun RowScope.ConversionItemMainContent(
     baseCurrency: Currency,
     baseCurrencyValue: Double,
     targetCurrency: Currency,

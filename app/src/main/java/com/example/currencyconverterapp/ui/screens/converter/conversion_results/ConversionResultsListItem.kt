@@ -46,7 +46,7 @@ fun ConversionResultsListItem(
             modifier = Modifier.size(dimensionResource(R.dimen.flag_size)),
         )
         Spacer(modifier = Modifier.width(dimensionResource(R.dimen.conversion_result_item_flag_gap)))
-        ConversionMainContent(
+        ConversionItemMainContent(
             baseCurrency = baseCurrency,
             baseCurrencyValue = baseCurrencyValue,
             targetCurrency = targetCurrency,

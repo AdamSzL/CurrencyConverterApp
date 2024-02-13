@@ -21,13 +21,16 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
 import com.example.currencyconverterapp.R
+import com.example.currencyconverterapp.ui.screens.DataStateHandler
 import com.example.currencyconverterapp.ui.screens.SharedViewModel
 import com.example.currencyconverterapp.ui.screens.charts.ChartsScreen
 import com.example.currencyconverterapp.ui.screens.charts.ChartsViewModel
 import com.example.currencyconverterapp.ui.screens.converter.ConverterScreen
 import com.example.currencyconverterapp.ui.screens.converter.ConverterViewModel
+import com.example.currencyconverterapp.ui.screens.converter.CurrenciesUiState
 import com.example.currencyconverterapp.ui.screens.converter.CurrencyConverterTopAppBar
 import com.example.currencyconverterapp.ui.screens.converter.navigation.BottomNavigationBar
+import com.example.currencyconverterapp.ui.screens.loading.LoadingScreenType
 
 enum class CurrencyConverterScreen(
     val route: String,
@@ -60,6 +63,15 @@ fun CurrencyConverterApp(
     val converterUiState = converterViewModel.converterUiState.collectAsStateWithLifecycle().value
     val chartsUiState = chartsViewModel.chartsUiState.collectAsStateWithLifecycle().value
 
+    val updateConverterAndChartsData = { sharedFunc: () -> Unit ->
+        sharedFunc()
+        converterViewModel.fetchExchangeRates(
+            baseCurrency = converterUiState.baseCurrency,
+            previousExchangeRates = converterUiState.exchangeRates,
+        )
+        chartsViewModel.getHistoricalExchangeRates()
+    }
+
     Scaffold(
         topBar = {
             CurrencyConverterTopAppBar(
@@ -91,34 +103,52 @@ fun CurrencyConverterApp(
                 ) {
                     composable(route = CurrencyConverterScreen.Converter.name) { entry ->
                         val sharedViewModel = entry.sharedViewModel<SharedViewModel>(navController,)
-                        val currencies by sharedViewModel.currencies.collectAsStateWithLifecycle()
-                        ConverterScreen(
-                            converterUiState = converterUiState,
-                            availableCurrencies = currencies,
-                            onBaseCurrencySelection = converterViewModel::selectBaseCurrency,
-                            onBaseCurrencyValueChange = converterViewModel::setBaseCurrencyValue,
-                            onTargetCurrencySelection = converterViewModel::selectTargetCurrency,
-                            onTargetCurrencyAddition = converterViewModel::addTargetCurrency,
-                            onConversionEntryDeletion = converterViewModel::deleteConversionEntry,
-                            onConversionEntryDeletionUndo = converterViewModel::undoConversionEntryDeletion,
-                        )
+                        val currenciesUiState by sharedViewModel.currenciesUiState.collectAsStateWithLifecycle()
+                        DataStateHandler(
+                            currenciesUiState = currenciesUiState,
+                            loadingScreenType = LoadingScreenType.FULL_CONVERTER,
+                            onErrorRetryAction = {
+                                sharedViewModel.restoreToLoadingState()
+                                updateConverterAndChartsData(sharedViewModel::fetchCurrencies)
+                            }
+                        ) {
+                            ConverterScreen(
+                                converterUiState = converterUiState,
+                                availableCurrencies = (currenciesUiState as CurrenciesUiState.Success).currencies,
+                                onBaseCurrencySelection = converterViewModel::selectBaseCurrency,
+                                onBaseCurrencyValueChange = converterViewModel::setBaseCurrencyValue,
+                                onTargetCurrencySelection = converterViewModel::selectTargetCurrency,
+                                onTargetCurrencyAddition = converterViewModel::addTargetCurrency,
+                                onConversionEntryDeletion = converterViewModel::deleteConversionEntry,
+                                onConversionEntryDeletionUndo = converterViewModel::undoConversionEntryDeletion,
+                            )
+                        }
                     }
 
                     composable(route = CurrencyConverterScreen.Charts.name) { entry ->
                         val sharedViewModel = entry.sharedViewModel<SharedViewModel>(navController,)
-                        val currencies by sharedViewModel.currencies.collectAsStateWithLifecycle()
-                        ChartsScreen(
-                            chartsUiState = chartsUiState,
-                            chartEntryModelProducer = chartsViewModel.chartEntryModelProducer,
-                            axisExtraKey = chartsViewModel.axisExtraKey,
-                            currencies = currencies,
-                            onBaseCurrencySelection = chartsViewModel::selectBaseCurrency,
-                            onTargetCurrencySelection = chartsViewModel::selectTargetCurrency,
-                            onTimePeriodSelection = chartsViewModel::selectTimePeriod,
-                            onColumnChartToggle = chartsViewModel::toggleColumnChart,
-                            onChartUpdate = chartsViewModel::getHistoricalExchangeRates,
-                            onBaseAndTargetCurrenciesSwap = chartsViewModel::swapBaseAndTargetCurrencies,
-                        )
+                        val currenciesUiState by sharedViewModel.currenciesUiState.collectAsStateWithLifecycle()
+                        DataStateHandler(
+                            currenciesUiState = currenciesUiState,
+                            loadingScreenType = LoadingScreenType.FULL_CHARTS,
+                            onErrorRetryAction = {
+                                sharedViewModel.restoreToLoadingState()
+                                updateConverterAndChartsData(sharedViewModel::fetchCurrencies)
+                            }
+                        ) {
+                            ChartsScreen(
+                                chartsUiState = chartsUiState,
+                                chartEntryModelProducer = chartsViewModel.chartEntryModelProducer,
+                                axisExtraKey = chartsViewModel.axisExtraKey,
+                                currencies = (currenciesUiState as CurrenciesUiState.Success).currencies,
+                                onBaseCurrencySelection = chartsViewModel::selectBaseCurrency,
+                                onTargetCurrencySelection = chartsViewModel::selectTargetCurrency,
+                                onTimePeriodSelection = chartsViewModel::selectTimePeriod,
+                                onColumnChartToggle = chartsViewModel::toggleColumnChart,
+                                onChartUpdate = chartsViewModel::getHistoricalExchangeRates,
+                                onBaseAndTargetCurrenciesSwap = chartsViewModel::swapBaseAndTargetCurrencies,
+                            )
+                        }
                     }
                 }
             }

@@ -40,7 +40,6 @@ import com.example.currencyconverterapp.data.defaultBaseCurrencyData
 import com.example.currencyconverterapp.data.defaultExchangeRates
 import com.example.currencyconverterapp.model.ExchangeRate
 import com.example.currencyconverterapp.ui.screens.converter.BaseCurrencyData
-import com.example.currencyconverterapp.ui.theme.CurrencyConverterAppTheme
 import kotlinx.coroutines.delay
 
 @Composable
@@ -154,13 +153,11 @@ fun SwipeToDismissCurrencyContainer(
 fun ConversionResultsListPreview(
     isSelectionModeEnabled: Boolean = false,
 ) {
-    CurrencyConverterAppTheme {
-        ConversionResultsList(
-            baseCurrencyData = defaultBaseCurrencyData,
-            exchangeRates = defaultExchangeRates,
-            onConversionEntryDeletion = { }
-        )
-    }
+    ConversionResultsList(
+        baseCurrencyData = defaultBaseCurrencyData,
+        exchangeRates = defaultExchangeRates,
+        onConversionEntryDeletion = { }
+    )
 }
 
 @Preview(showBackground = true)

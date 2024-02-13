@@ -23,4 +23,15 @@
     <dimen name="column_chart_width">8dp</dimen>
     <dimen name="column_chart_switch_text_gap">16dp</dimen>
     <dimen name="swap_icon_margin">4dp</dimen>
+    <dimen name="error_screen_column_gap">8dp</dimen>
+    <dimen name="conversion_result_loading_item_height">40dp</dimen>
+    <dimen name="base_currency_controller_loading_height">48dp</dimen>
+    <dimen name="swap_icon_size_loading">40dp</dimen>
+    <dimen name="loading_switch_height">32dp</dimen>
+    <dimen name="loading_time_period_dropdown_height">40dp</dimen>
+    <dimen name="loading_switch_width">50dp</dimen>
+    <dimen name="loading_switch_text_width">80dp</dimen>
+    <dimen name="chart_loading_base_target_controller_height">48dp</dimen>
+    <dimen name="loading_time_period_dropdown_margin">24dp</dimen>
+    <dimen name="loading_charts_item_gap">8dp</dimen>
 </resources>

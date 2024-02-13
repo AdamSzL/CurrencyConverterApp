@@ -45,7 +45,7 @@ val defaultAvailableCurrencies: List<Currency> = listOf(
     ),
 ) + defaultBaseCurrency
 
-val defaultBaseCurrencyValue = 1.23
+val defaultBaseCurrencyValue = 1.00
 
 val defaultExchangeRates: List<ExchangeRate> = listOf(
     ExchangeRate(

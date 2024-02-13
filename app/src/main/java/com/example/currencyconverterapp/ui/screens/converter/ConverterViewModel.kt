@@ -1,5 +1,6 @@
 package com.example.currencyconverterapp.ui.screens.converter
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.currencyconverterapp.data.CurrencyConverterRepository
@@ -12,6 +13,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import java.io.IOException
 import javax.inject.Inject
 
 @HiltViewModel
@@ -25,17 +27,22 @@ class ConverterViewModel @Inject constructor(
         fetchExchangeRates()
     }
 
-    private fun fetchExchangeRates(
+    fun fetchExchangeRates(
         baseCurrency: Currency = defaultBaseCurrency,
         previousExchangeRates: List<ExchangeRate> = defaultExchangeRates
     ) {
+        Log.d("XXX", "fetching exchange rates...")
         viewModelScope.launch {
-            val latestExchangeRates = currencyConverterRepository.getLatestExchangeRates(
-                baseCurrency = baseCurrency.code,
-                currencies = previousExchangeRates.joinToString(",") { it.code }
-            ).data.values.toList()
-            _converterUiState.update {
-                it.copy(exchangeRates = latestExchangeRates)
+            try {
+                val latestExchangeRates = currencyConverterRepository.getLatestExchangeRates(
+                    baseCurrency = baseCurrency.code,
+                    currencies = previousExchangeRates.joinToString(",") { it.code }
+                ).data.values.toList()
+                _converterUiState.update {
+                    it.copy(exchangeRates = latestExchangeRates)
+                }
+            } catch (e: IOException) {
+                Log.d("XXX", "Error in fetchExchangeRates")
             }
         }
     }

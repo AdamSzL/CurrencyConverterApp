@@ -1,5 +1,6 @@
 package com.example.currencyconverterapp.ui.screens.charts
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.currencyconverterapp.data.CurrencyConverterRepository
@@ -16,6 +17,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import java.io.IOException
 import javax.inject.Inject
 
 @HiltViewModel
@@ -76,22 +78,27 @@ class ChartsViewModel @Inject constructor(
     }
 
     fun getHistoricalExchangeRates() {
+        Log.d("XXX", "fetching historical exchange rates...")
         val currentDate = getCurrentDate()
         with(chartsUiState.value) {
             viewModelScope.launch {
-                val response = currencyConverterRepository.getHistoricalExchangeRates(
-                    dateTimeStart = subtractTimePeriodFromDate(currentDate, selectedTimePeriod),
-                    dateTimeEnd = currentDate,
-                    baseCurrency = selectedBaseCurrency.code,
-                    currencies = selectedTargetCurrency.code,
-                    accuracy = if (selectedTimePeriod == TimePeriod.ONE_DAY) "hour" else "day"
-                )
-                chartEntryModelProducer.setEntriesSuspending(
-                    convertToChartData(response.data),
-                    updateExtras = { extraStore ->
-                        extraStore.set(axisExtraKey, getDatesFromData(response.data))
-                    }
-                )
+                try {
+                    val response = currencyConverterRepository.getHistoricalExchangeRates(
+                        dateTimeStart = subtractTimePeriodFromDate(currentDate, selectedTimePeriod),
+                        dateTimeEnd = currentDate,
+                        baseCurrency = selectedBaseCurrency.code,
+                        currencies = selectedTargetCurrency.code,
+                        accuracy = if (selectedTimePeriod == TimePeriod.ONE_DAY) "hour" else "day"
+                    )
+                    chartEntryModelProducer.setEntriesSuspending(
+                        convertToChartData(response.data),
+                        updateExtras = { extraStore ->
+                            extraStore.set(axisExtraKey, getDatesFromData(response.data))
+                        }
+                    )
+                } catch (e: IOException) {
+                    Log.d("XXX", "Error in getHistoricalExchangeRates")
+                }
             }
         }
     }
