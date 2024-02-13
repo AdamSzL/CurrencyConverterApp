@@ -4,6 +4,6 @@ import com.example.currencyconverterapp.model.Currency
 
 sealed interface CurrenciesUiState {
     data class Success(val currencies: List<Currency>): CurrenciesUiState
-    object Error: CurrenciesUiState
-    object Loading: CurrenciesUiState
+    data object Error: CurrenciesUiState
+    data object Loading: CurrenciesUiState
 }

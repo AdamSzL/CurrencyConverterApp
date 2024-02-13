@@ -63,11 +63,10 @@ fun CurrencyConverterApp(
     val converterUiState = converterViewModel.converterUiState.collectAsStateWithLifecycle().value
     val chartsUiState = chartsViewModel.chartsUiState.collectAsStateWithLifecycle().value
 
-    val updateConverterAndChartsData = { sharedFunc: () -> Unit ->
-        sharedFunc()
+    val updateConverterAndChartsData = { sharedFetch: () -> Unit ->
+        sharedFetch()
         converterViewModel.fetchExchangeRates(
             baseCurrency = converterUiState.baseCurrency,
-            previousExchangeRates = converterUiState.exchangeRates,
         )
         chartsViewModel.getHistoricalExchangeRates()
     }
@@ -105,8 +104,9 @@ fun CurrencyConverterApp(
                         val sharedViewModel = entry.sharedViewModel<SharedViewModel>(navController,)
                         val currenciesUiState by sharedViewModel.currenciesUiState.collectAsStateWithLifecycle()
                         DataStateHandler(
-                            currenciesUiState = currenciesUiState,
+                            uiState = currenciesUiState.toString(),
                             loadingScreenType = LoadingScreenType.FULL_CONVERTER,
+                            errorMessage = R.string.error_loading_currency_data,
                             onErrorRetryAction = {
                                 sharedViewModel.restoreToLoadingState()
                                 updateConverterAndChartsData(sharedViewModel::fetchCurrencies)
@@ -115,6 +115,7 @@ fun CurrencyConverterApp(
                             ConverterScreen(
                                 converterUiState = converterUiState,
                                 availableCurrencies = (currenciesUiState as CurrenciesUiState.Success).currencies,
+                                onExchangeRatesUpdate = converterViewModel::fetchExchangeRates,
                                 onBaseCurrencySelection = converterViewModel::selectBaseCurrency,
                                 onBaseCurrencyValueChange = converterViewModel::setBaseCurrencyValue,
                                 onTargetCurrencySelection = converterViewModel::selectTargetCurrency,
@@ -129,8 +130,9 @@ fun CurrencyConverterApp(
                         val sharedViewModel = entry.sharedViewModel<SharedViewModel>(navController,)
                         val currenciesUiState by sharedViewModel.currenciesUiState.collectAsStateWithLifecycle()
                         DataStateHandler(
-                            currenciesUiState = currenciesUiState,
+                            uiState = currenciesUiState.toString(),
                             loadingScreenType = LoadingScreenType.FULL_CHARTS,
+                            errorMessage = R.string.error_loading_currency_data,
                             onErrorRetryAction = {
                                 sharedViewModel.restoreToLoadingState()
                                 updateConverterAndChartsData(sharedViewModel::fetchCurrencies)

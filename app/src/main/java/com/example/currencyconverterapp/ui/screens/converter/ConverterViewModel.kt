@@ -1,6 +1,5 @@
 package com.example.currencyconverterapp.ui.screens.converter
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.currencyconverterapp.data.CurrencyConverterRepository
@@ -31,32 +30,40 @@ class ConverterViewModel @Inject constructor(
         baseCurrency: Currency = defaultBaseCurrency,
         previousExchangeRates: List<ExchangeRate> = defaultExchangeRates
     ) {
-        Log.d("XXX", "fetching exchange rates...")
         viewModelScope.launch {
-            try {
+            val exchangeRatesUiState = try {
                 val latestExchangeRates = currencyConverterRepository.getLatestExchangeRates(
                     baseCurrency = baseCurrency.code,
                     currencies = previousExchangeRates.joinToString(",") { it.code }
                 ).data.values.toList()
-                _converterUiState.update {
-                    it.copy(exchangeRates = latestExchangeRates)
-                }
+                ExchangeRatesUiState.Success(latestExchangeRates)
             } catch (e: IOException) {
-                Log.d("XXX", "Error in fetchExchangeRates")
+                ExchangeRatesUiState.Error
+            }
+            _converterUiState.update {
+                it.copy(exchangeRatesUiState = exchangeRatesUiState)
             }
         }
     }
 
     fun selectBaseCurrency(currency: Currency) {
         var updatedExchangeRates: List<ExchangeRate> = listOf()
-        _converterUiState.update {
-            updatedExchangeRates = it.exchangeRates.filter { exchangeRate ->
-                exchangeRate.code != currency.code
+        if (converterUiState.value.exchangeRatesUiState is ExchangeRatesUiState.Success) {
+            _converterUiState.update {
+                updatedExchangeRates = (it.exchangeRatesUiState as ExchangeRatesUiState.Success).exchangeRates.filter { exchangeRate ->
+                    exchangeRate.code != currency.code
+                }
+                it.copy(
+                    baseCurrency = currency,
+                    exchangeRatesUiState = ExchangeRatesUiState.Success(updatedExchangeRates),
+                )
             }
-            it.copy(
-                baseCurrency = currency,
-                exchangeRates = updatedExchangeRates,
-            )
+        } else {
+            _converterUiState.update {
+                it.copy(
+                    baseCurrency = currency
+                )
+            }
         }
         fetchExchangeRates(
             baseCurrency = currency,
@@ -81,15 +88,17 @@ class ConverterViewModel @Inject constructor(
         currency: Currency
     ) {
         var updatedExchangeRates: List<ExchangeRate> = listOf()
-        _converterUiState.update {
-            updatedExchangeRates = it.exchangeRates + ExchangeRate(
-                currency.code,
-                null
-            )
-            it.copy(
-                exchangeRates = updatedExchangeRates,
-                selectedTargetCurrency = null,
-            )
+        if (converterUiState.value.exchangeRatesUiState is ExchangeRatesUiState.Success) {
+            _converterUiState.update {
+                updatedExchangeRates = (it.exchangeRatesUiState as ExchangeRatesUiState.Success).exchangeRates + ExchangeRate(
+                    currency.code,
+                    null
+                )
+                it.copy(
+                    exchangeRatesUiState = ExchangeRatesUiState.Success(updatedExchangeRates),
+                    selectedTargetCurrency = null,
+                )
+            }
         }
         fetchExchangeRates(
             baseCurrency = baseCurrency,
@@ -98,33 +107,37 @@ class ConverterViewModel @Inject constructor(
     }
 
     fun deleteConversionEntry(code: String) {
-        _converterUiState.update {
-            val deletedExchangeRate = it.exchangeRates.find { exchangeRate ->
-                exchangeRate.code == code
+        if (converterUiState.value.exchangeRatesUiState is ExchangeRatesUiState.Success) {
+            _converterUiState.update {
+                val deletedExchangeRate = (it.exchangeRatesUiState as ExchangeRatesUiState.Success).exchangeRates.find { exchangeRate ->
+                    exchangeRate.code == code
+                }
+                it.copy(
+                    exchangeRatesUiState = ExchangeRatesUiState.Success((it.exchangeRatesUiState as ExchangeRatesUiState.Success).exchangeRates
+                        .filter { exchangeRate ->
+                            exchangeRate.code != code
+                        }),
+                    deletedExchangeRate = deletedExchangeRate,
+                )
             }
-            it.copy(
-                exchangeRates = it.exchangeRates
-                    .filter { exchangeRate ->
-                        exchangeRate.code != code
-                    },
-                deletedExchangeRate = deletedExchangeRate,
-            )
         }
     }
 
     fun undoConversionEntryDeletion() {
-        _converterUiState.update {
-            it.copy(
-                exchangeRates = if (it.deletedExchangeRate != null) {
-                    (it.exchangeRates + ExchangeRate(code = it.deletedExchangeRate.code, value = it.deletedExchangeRate.value))
-                        .sortedBy { exchangeRate ->
-                            exchangeRate.code
-                        }
-                } else {
-                    it.exchangeRates
-                },
-                deletedExchangeRate = null,
-            )
+        if (converterUiState.value.exchangeRatesUiState is ExchangeRatesUiState.Success) {
+            _converterUiState.update {
+                it.copy(
+                    exchangeRatesUiState = ExchangeRatesUiState.Success(if (it.deletedExchangeRate != null) {
+                        ((it.exchangeRatesUiState as ExchangeRatesUiState.Success).exchangeRates + ExchangeRate(code = it.deletedExchangeRate.code, value = it.deletedExchangeRate.value))
+                            .sortedBy { exchangeRate ->
+                                exchangeRate.code
+                            }
+                    } else {
+                        (it.exchangeRatesUiState as ExchangeRatesUiState.Success).exchangeRates
+                    }),
+                    deletedExchangeRate = null,
+                )
+            }
         }
     }
 

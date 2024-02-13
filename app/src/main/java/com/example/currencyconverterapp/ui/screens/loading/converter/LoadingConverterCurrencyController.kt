@@ -1,4 +1,4 @@
-package com.example.currencyconverterapp.ui.screens.loading
+package com.example.currencyconverterapp.ui.screens.loading.converter
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
@@ -12,6 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.currencyconverterapp.R
+import com.example.currencyconverterapp.ui.screens.loading.ShimmerLoadingBox
 
 @Composable
 fun LoadingConverterCurrencyController(

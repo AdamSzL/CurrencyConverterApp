@@ -9,4 +9,5 @@ data class ChartsUiState(
     val selectedTargetCurrency: Currency = defaultTargetCurrency,
     val isColumnChartEnabled: Boolean = false,
     val selectedTimePeriod: TimePeriod = TimePeriod.ONE_MONTH,
+    val historicalExchangeRatesUiState: HistoricalExchangeRatesUiState = HistoricalExchangeRatesUiState.Loading
 )

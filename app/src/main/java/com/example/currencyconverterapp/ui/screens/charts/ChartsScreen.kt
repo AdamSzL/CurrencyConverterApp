@@ -16,6 +16,8 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import com.example.currencyconverterapp.R
 import com.example.currencyconverterapp.model.Currency
+import com.example.currencyconverterapp.ui.screens.DataStateHandler
+import com.example.currencyconverterapp.ui.screens.loading.LoadingScreenType
 import com.patrykandpatrick.vico.core.entry.ChartEntryModelProducer
 import com.patrykandpatrick.vico.core.entry.diff.ExtraStore
 
@@ -45,36 +47,43 @@ fun ChartsScreen(
             onChartUpdate = onChartUpdate,
             onBaseAndTargetCurrenciesSwap = onBaseAndTargetCurrenciesSwap,
         )
-        Row(
-            horizontalArrangement = Arrangement.Center,
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.fillMaxWidth(),
+        DataStateHandler(
+            uiState = chartsUiState.historicalExchangeRatesUiState.toString(),
+            loadingScreenType = LoadingScreenType.PART_CHARTS,
+            errorMessage = R.string.error_loading_chart_data,
+            onErrorRetryAction = onChartUpdate
         ) {
-            Switch(
-                checked = chartsUiState.isColumnChartEnabled,
-                onCheckedChange = {
-                    onColumnChartToggle(it)
-                },
+            Row(
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.fillMaxWidth(),
+            ) {
+                Switch(
+                    checked = chartsUiState.isColumnChartEnabled,
+                    onCheckedChange = {
+                        onColumnChartToggle(it)
+                    },
+                )
+                Spacer(modifier = Modifier.width(dimensionResource(R.dimen.column_chart_switch_text_gap)))
+                Text(
+                    text = stringResource(R.string.column_chart)
+                )
+            }
+            TimePeriodDropdownMenu(
+                selectedTimePeriod = chartsUiState.selectedTimePeriod,
+                onTimePeriodSelection = onTimePeriodSelection,
+                onChartUpdate = onChartUpdate,
             )
-            Spacer(modifier = Modifier.width(dimensionResource(R.dimen.column_chart_switch_text_gap)))
-            Text(
-                text = stringResource(R.string.column_chart)
+            Spacer(modifier = modifier.height(dimensionResource(R.dimen.chart_currency_gap)))
+            HistoricalExchangeRatesChart(
+                baseCurrency = chartsUiState.selectedBaseCurrency,
+                targetCurrency = chartsUiState.selectedTargetCurrency,
+                selectedTimePeriod = chartsUiState.selectedTimePeriod,
+                isColumnChartEnabled = chartsUiState.isColumnChartEnabled,
+                chartEntryModelProducer = chartEntryModelProducer,
+                axisExtraKey = axisExtraKey,
             )
         }
-        TimePeriodDropdownMenu(
-            selectedTimePeriod = chartsUiState.selectedTimePeriod,
-            onTimePeriodSelection = onTimePeriodSelection,
-            onChartUpdate = onChartUpdate,
-        )
-        Spacer(modifier = modifier.height(dimensionResource(R.dimen.chart_currency_gap)))
-        HistoricalExchangeRatesChart(
-            baseCurrency = chartsUiState.selectedBaseCurrency,
-            targetCurrency = chartsUiState.selectedTargetCurrency,
-            selectedTimePeriod = chartsUiState.selectedTimePeriod,
-            isColumnChartEnabled = chartsUiState.isColumnChartEnabled,
-            chartEntryModelProducer = chartEntryModelProducer,
-            axisExtraKey = axisExtraKey,
-        )
     }
 }
 

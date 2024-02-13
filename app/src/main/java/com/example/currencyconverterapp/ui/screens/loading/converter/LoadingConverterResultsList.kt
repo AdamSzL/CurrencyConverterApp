@@ -1,4 +1,4 @@
-package com.example.currencyconverterapp.ui.screens.loading
+package com.example.currencyconverterapp.ui.screens.loading.converter
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding

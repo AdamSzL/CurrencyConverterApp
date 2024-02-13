@@ -19,8 +19,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import com.example.currencyconverterapp.R
 import com.example.currencyconverterapp.model.Currency
+import com.example.currencyconverterapp.ui.screens.DataStateHandler
 import com.example.currencyconverterapp.ui.screens.converter.base_controller.BaseCurrencyController
 import com.example.currencyconverterapp.ui.screens.converter.conversion_results.ConversionResultsList
+import com.example.currencyconverterapp.ui.screens.loading.LoadingScreenType
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -28,6 +30,7 @@ import kotlinx.coroutines.launch
 fun ConverterScreen(
     converterUiState: ConverterUiState,
     availableCurrencies: List<Currency>,
+    onExchangeRatesUpdate: (Currency) -> Unit,
     onBaseCurrencySelection: (Currency) -> Unit,
     onBaseCurrencyValueChange: (Double) -> Unit,
     onTargetCurrencySelection: (Currency) -> Unit,
@@ -49,10 +52,15 @@ fun ConverterScreen(
     val scope = rememberCoroutineScope()
 
     AddCurrencyBottomSheet(
-        currencies = availableCurrencies.filter { currency ->
-            currency.code !in
-                    (converterUiState.exchangeRates.map { rate -> rate.code } + converterUiState.baseCurrency.code)
+        currencies = if (converterUiState.exchangeRatesUiState is ExchangeRatesUiState.Success) {
+            availableCurrencies.filter { currency ->
+                currency.code !in
+                        ((converterUiState.exchangeRatesUiState as ExchangeRatesUiState.Success).exchangeRates.map { rate -> rate.code } + converterUiState.baseCurrency.code)
+            }
+        } else {
+            availableCurrencies
         },
+        exchangeRatesUiState = converterUiState.exchangeRatesUiState,
         selectedTargetCurrency = converterUiState.selectedTargetCurrency,
         sheetScaffoldState = bottomSheetScaffoldState,
         onTargetCurrencySelection = onTargetCurrencySelection,
@@ -99,24 +107,33 @@ fun ConverterScreen(
                         .fillMaxWidth()
                 )
 
-                ConversionResultsList(
-                    baseCurrencyData = baseCurrencyData,
-                    exchangeRates = converterUiState.exchangeRates,
-                    onConversionEntryDeletion = { conversionEntry ->
-                        onConversionEntryDeletion(conversionEntry)
-                        scope.launch{
-                            val result = snackbarHostState
-                                .showSnackbar(
-                                    message = snackbarMessage,
-                                    actionLabel = snackbarActionMessage,
-                                    duration = SnackbarDuration.Short,
-                                )
-                            if (result == SnackbarResult.ActionPerformed) {
-                                onConversionEntryDeletionUndo()
+                DataStateHandler(
+                    uiState = converterUiState.exchangeRatesUiState.toString(),
+                    loadingScreenType = LoadingScreenType.PART_CONVERTER,
+                    errorMessage = R.string.error_loading_exchange_rates,
+                    onErrorRetryAction = {
+                        onExchangeRatesUpdate(converterUiState.baseCurrency)
+                    }
+                ) {
+                    ConversionResultsList(
+                        baseCurrencyData = baseCurrencyData,
+                        exchangeRates = (converterUiState.exchangeRatesUiState as ExchangeRatesUiState.Success).exchangeRates,
+                        onConversionEntryDeletion = { conversionEntry ->
+                            onConversionEntryDeletion(conversionEntry)
+                            scope.launch{
+                                val result = snackbarHostState
+                                    .showSnackbar(
+                                        message = snackbarMessage,
+                                        actionLabel = snackbarActionMessage,
+                                        duration = SnackbarDuration.Short,
+                                    )
+                                if (result == SnackbarResult.ActionPerformed) {
+                                    onConversionEntryDeletionUndo()
+                                }
                             }
                         }
-                    }
-                )
+                    )
+                }
             }
         }
     }
@@ -127,17 +144,3 @@ data class BaseCurrencyData(
     val baseCurrency: Currency,
     val baseCurrencyValue: Double
 )
-
-@Composable
-fun ExchangeRatesErrorScreen(
-    modifier: Modifier = Modifier
-) {
-
-}
-
-@Composable
-fun ExchangeRatesLoadingScreen(
-    modifier: Modifier = Modifier
-) {
-
-}

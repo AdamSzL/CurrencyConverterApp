@@ -5,6 +5,10 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import com.example.currencyconverterapp.ui.screens.loading.charts.LoadingChartBaseTargetController
+import com.example.currencyconverterapp.ui.screens.loading.charts.LoadingChartWithController
+import com.example.currencyconverterapp.ui.screens.loading.converter.LoadingConverterCurrencyController
+import com.example.currencyconverterapp.ui.screens.loading.converter.LoadingConverterResultsList
 
 @Composable
 fun LoadingScreen(

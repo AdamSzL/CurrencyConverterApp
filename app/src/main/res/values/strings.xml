@@ -19,5 +19,5 @@
     <string name="error_loading_currency_data">Error Loading Currency Data</string>
     <string name="try_again">Try Again</string>
     <string name="error_loading_exchange_rates">Error Loading Exchange Rates</string>
-    <string name="error_loading_historical_exchange_rates">Error Loading Historical Exchange Rates</string>
+    <string name="error_loading_chart_data">Error Loading Chart Data</string>
 </resources>

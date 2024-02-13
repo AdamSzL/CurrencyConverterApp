@@ -1,6 +1,5 @@
 package com.example.currencyconverterapp.ui.screens.charts
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.currencyconverterapp.data.CurrencyConverterRepository
@@ -78,11 +77,10 @@ class ChartsViewModel @Inject constructor(
     }
 
     fun getHistoricalExchangeRates() {
-        Log.d("XXX", "fetching historical exchange rates...")
         val currentDate = getCurrentDate()
         with(chartsUiState.value) {
             viewModelScope.launch {
-                try {
+                val historicalExchangeRatesUiState = try {
                     val response = currencyConverterRepository.getHistoricalExchangeRates(
                         dateTimeStart = subtractTimePeriodFromDate(currentDate, selectedTimePeriod),
                         dateTimeEnd = currentDate,
@@ -96,8 +94,14 @@ class ChartsViewModel @Inject constructor(
                             extraStore.set(axisExtraKey, getDatesFromData(response.data))
                         }
                     )
+                    HistoricalExchangeRatesUiState.Success
                 } catch (e: IOException) {
-                    Log.d("XXX", "Error in getHistoricalExchangeRates")
+                    HistoricalExchangeRatesUiState.Error
+                }
+                _chartsUiState.update {
+                    it.copy(
+                        historicalExchangeRatesUiState = historicalExchangeRatesUiState
+                    )
                 }
             }
         }
