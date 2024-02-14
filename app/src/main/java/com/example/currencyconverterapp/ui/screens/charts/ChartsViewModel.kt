@@ -1,5 +1,6 @@
 package com.example.currencyconverterapp.ui.screens.charts
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.currencyconverterapp.data.CurrencyConverterRepository
@@ -32,6 +33,7 @@ class ChartsViewModel @Inject constructor(
     )
 
     init {
+        Log.d("XXX", "ChartsViewModel init")
         getHistoricalExchangeRates()
     }
 

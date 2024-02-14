@@ -1,12 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
-    <style name="Theme.CurrencyConverterApp" parent="android:Theme.Material.Light.NoActionBar">
-        <item name="android:navigationBarColor">@color/navigation_bar_color</item>
-    </style>
-
     <style name="Theme.CurrencyConverterApp.Starting" parent="Theme.SplashScreen">
         <item name="windowSplashScreenBackground">@color/splash_bg</item>
         <item name="postSplashScreenTheme">@style/Theme.CurrencyConverterApp</item>
+        <item name="android:windowSplashScreenAnimatedIcon">@drawable/animated_logo</item>
     </style>
 </resources>

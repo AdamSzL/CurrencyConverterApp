@@ -8,21 +8,16 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation.NavBackStackEntry
-import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
-import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
 import com.example.currencyconverterapp.R
+import com.example.currencyconverterapp.ui.screens.CurrenciesViewModel
 import com.example.currencyconverterapp.ui.screens.DataStateHandler
-import com.example.currencyconverterapp.ui.screens.SharedViewModel
 import com.example.currencyconverterapp.ui.screens.charts.ChartsScreen
 import com.example.currencyconverterapp.ui.screens.charts.ChartsViewModel
 import com.example.currencyconverterapp.ui.screens.converter.ConverterScreen
@@ -51,6 +46,7 @@ enum class CurrencyConverterScreen(
 
 @Composable
 fun CurrencyConverterApp(
+    currenciesViewModel: CurrenciesViewModel = hiltViewModel(),
     converterViewModel: ConverterViewModel = hiltViewModel(),
     chartsViewModel: ChartsViewModel = hiltViewModel()
 ) {
@@ -60,6 +56,7 @@ fun CurrencyConverterApp(
         backStackEntry?.destination?.route ?: CurrencyConverterScreen.Converter.name
     )
 
+    val currenciesUiState = currenciesViewModel.currenciesUiState.collectAsStateWithLifecycle().value
     val converterUiState = converterViewModel.converterUiState.collectAsStateWithLifecycle().value
     val chartsUiState = chartsViewModel.chartsUiState.collectAsStateWithLifecycle().value
 
@@ -93,78 +90,57 @@ fun CurrencyConverterApp(
         ) {
             NavHost(
                 navController = navController,
-                startDestination = "currency_converter",
+                startDestination = CurrencyConverterScreen.Converter.name,
                 modifier = Modifier
             ) {
-                navigation(
-                    startDestination = CurrencyConverterScreen.Converter.name,
-                    route = "currency_converter"
-                ) {
-                    composable(route = CurrencyConverterScreen.Converter.name) { entry ->
-                        val sharedViewModel = entry.sharedViewModel<SharedViewModel>(navController,)
-                        val currenciesUiState by sharedViewModel.currenciesUiState.collectAsStateWithLifecycle()
-                        DataStateHandler(
-                            uiState = currenciesUiState.toString(),
-                            loadingScreenType = LoadingScreenType.FULL_CONVERTER,
-                            errorMessage = R.string.error_loading_currency_data,
-                            onErrorRetryAction = {
-                                sharedViewModel.restoreToLoadingState()
-                                updateConverterAndChartsData(sharedViewModel::fetchCurrencies)
-                            }
-                        ) {
-                            ConverterScreen(
-                                converterUiState = converterUiState,
-                                availableCurrencies = (currenciesUiState as CurrenciesUiState.Success).currencies,
-                                onExchangeRatesUpdate = converterViewModel::fetchExchangeRates,
-                                onBaseCurrencySelection = converterViewModel::selectBaseCurrency,
-                                onBaseCurrencyValueChange = converterViewModel::setBaseCurrencyValue,
-                                onTargetCurrencySelection = converterViewModel::selectTargetCurrency,
-                                onTargetCurrencyAddition = converterViewModel::addTargetCurrency,
-                                onConversionEntryDeletion = converterViewModel::deleteConversionEntry,
-                                onConversionEntryDeletionUndo = converterViewModel::undoConversionEntryDeletion,
-                            )
+                composable(route = CurrencyConverterScreen.Converter.name) {
+                    DataStateHandler(
+                        uiState = currenciesUiState.toString(),
+                        loadingScreenType = LoadingScreenType.FULL_CONVERTER,
+                        errorMessage = R.string.error_loading_currency_data,
+                        onErrorRetryAction = {
+                            currenciesViewModel.restoreToLoadingState()
+                            updateConverterAndChartsData(currenciesViewModel::fetchCurrencies)
                         }
+                    ) {
+                        ConverterScreen(
+                            converterUiState = converterUiState,
+                            availableCurrencies = (currenciesUiState as CurrenciesUiState.Success).currencies,
+                            onExchangeRatesUpdate = converterViewModel::fetchExchangeRates,
+                            onBaseCurrencySelection = converterViewModel::selectBaseCurrency,
+                            onBaseCurrencyValueChange = converterViewModel::setBaseCurrencyValue,
+                            onTargetCurrencySelection = converterViewModel::selectTargetCurrency,
+                            onTargetCurrencyAddition = converterViewModel::addTargetCurrency,
+                            onConversionEntryDeletion = converterViewModel::deleteConversionEntry,
+                            onConversionEntryDeletionUndo = converterViewModel::undoConversionEntryDeletion,
+                        )
                     }
-
-                    composable(route = CurrencyConverterScreen.Charts.name) { entry ->
-                        val sharedViewModel = entry.sharedViewModel<SharedViewModel>(navController,)
-                        val currenciesUiState by sharedViewModel.currenciesUiState.collectAsStateWithLifecycle()
-                        DataStateHandler(
-                            uiState = currenciesUiState.toString(),
-                            loadingScreenType = LoadingScreenType.FULL_CHARTS,
-                            errorMessage = R.string.error_loading_currency_data,
-                            onErrorRetryAction = {
-                                sharedViewModel.restoreToLoadingState()
-                                updateConverterAndChartsData(sharedViewModel::fetchCurrencies)
-                            }
-                        ) {
-                            ChartsScreen(
-                                chartsUiState = chartsUiState,
-                                chartEntryModelProducer = chartsViewModel.chartEntryModelProducer,
-                                axisExtraKey = chartsViewModel.axisExtraKey,
-                                currencies = (currenciesUiState as CurrenciesUiState.Success).currencies,
-                                onBaseCurrencySelection = chartsViewModel::selectBaseCurrency,
-                                onTargetCurrencySelection = chartsViewModel::selectTargetCurrency,
-                                onTimePeriodSelection = chartsViewModel::selectTimePeriod,
-                                onColumnChartToggle = chartsViewModel::toggleColumnChart,
-                                onChartUpdate = chartsViewModel::getHistoricalExchangeRates,
-                                onBaseAndTargetCurrenciesSwap = chartsViewModel::swapBaseAndTargetCurrencies,
-                            )
+                }
+                composable(route = CurrencyConverterScreen.Charts.name) {
+                    DataStateHandler(
+                        uiState = currenciesUiState.toString(),
+                        loadingScreenType = LoadingScreenType.FULL_CHARTS,
+                        errorMessage = R.string.error_loading_currency_data,
+                        onErrorRetryAction = {
+                            currenciesViewModel.restoreToLoadingState()
+                            updateConverterAndChartsData(currenciesViewModel::fetchCurrencies)
                         }
+                    ) {
+                        ChartsScreen(
+                            chartsUiState = chartsUiState,
+                            chartEntryModelProducer = chartsViewModel.chartEntryModelProducer,
+                            axisExtraKey = chartsViewModel.axisExtraKey,
+                            currencies = (currenciesUiState as CurrenciesUiState.Success).currencies,
+                            onBaseCurrencySelection = chartsViewModel::selectBaseCurrency,
+                            onTargetCurrencySelection = chartsViewModel::selectTargetCurrency,
+                            onTimePeriodSelection = chartsViewModel::selectTimePeriod,
+                            onColumnChartToggle = chartsViewModel::toggleColumnChart,
+                            onChartUpdate = chartsViewModel::getHistoricalExchangeRates,
+                            onBaseAndTargetCurrenciesSwap = chartsViewModel::swapBaseAndTargetCurrencies,
+                        )
                     }
                 }
             }
         }
     }
-}
-
-@Composable
-inline fun <reified T : ViewModel> NavBackStackEntry.sharedViewModel(
-    navController: NavHostController,
-): T {
-    val navGraphRoute = destination.parent?.route ?: return hiltViewModel()
-    val parentEntry = remember(this) {
-        navController.getBackStackEntry(navGraphRoute)
-    }
-    return hiltViewModel(parentEntry)
 }

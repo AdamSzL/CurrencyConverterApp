@@ -1,5 +1,6 @@
 package com.example.currencyconverterapp.ui.screens
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.currencyconverterapp.data.CurrencyConverterRepository
@@ -12,13 +13,14 @@ import java.io.IOException
 import javax.inject.Inject
 
 @HiltViewModel
-class SharedViewModel @Inject constructor(
+class CurrenciesViewModel @Inject constructor(
     private val currencyConverterRepository: CurrencyConverterRepository
 ): ViewModel() {
     private val _currenciesUiState = MutableStateFlow<CurrenciesUiState>(CurrenciesUiState.Loading)
     val currenciesUiState: StateFlow<CurrenciesUiState> = _currenciesUiState
 
     init {
+        Log.d("XXX", "CurrenciesViewModel init")
         fetchCurrencies()
     }
 
