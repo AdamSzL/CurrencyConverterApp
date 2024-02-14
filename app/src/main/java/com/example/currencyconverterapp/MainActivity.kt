@@ -33,7 +33,7 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         installSplashScreen().apply {
-            setKeepOnScreenCondition {
+            setKeepVisibleCondition {
                 currenciesViewModel.currenciesUiState.value == CurrenciesUiState.Loading
                         || converterViewModel.converterUiState.value.exchangeRatesUiState == ExchangeRatesUiState.Loading
                         || chartsViewModel.chartsUiState.value.historicalExchangeRatesUiState == HistoricalExchangeRatesUiState.Loading
