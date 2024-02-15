@@ -1,6 +1,5 @@
 package com.example.currencyconverterapp.ui.screens.converter
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.currencyconverterapp.data.CurrencyConverterRepository
@@ -25,7 +24,6 @@ class ConverterViewModel @Inject constructor(
 
     init {
         fetchExchangeRates()
-        Log.d("XXX", "Fetching exchange rates")
     }
 
     fun fetchExchangeRates(

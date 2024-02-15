@@ -20,4 +20,5 @@
     <string name="try_again">Try Again</string>
     <string name="error_loading_exchange_rates">Error Loading Exchange Rates</string>
     <string name="error_loading_chart_data">Error Loading Chart Data</string>
+    <string name="loading_data">Loading Data</string>
 </resources>

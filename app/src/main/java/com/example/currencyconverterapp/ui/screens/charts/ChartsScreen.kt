@@ -17,7 +17,6 @@ import androidx.compose.ui.res.stringResource
 import com.example.currencyconverterapp.R
 import com.example.currencyconverterapp.model.Currency
 import com.example.currencyconverterapp.ui.screens.DataStateHandler
-import com.example.currencyconverterapp.ui.screens.loading.LoadingScreenType
 import com.patrykandpatrick.vico.core.entry.ChartEntryModelProducer
 import com.patrykandpatrick.vico.core.entry.diff.ExtraStore
 
@@ -49,7 +48,6 @@ fun ChartsScreen(
         )
         DataStateHandler(
             uiState = chartsUiState.historicalExchangeRatesUiState.toString(),
-            loadingScreenType = LoadingScreenType.PART_CHARTS,
             errorMessage = R.string.error_loading_chart_data,
             onErrorRetryAction = onChartUpdate
         ) {

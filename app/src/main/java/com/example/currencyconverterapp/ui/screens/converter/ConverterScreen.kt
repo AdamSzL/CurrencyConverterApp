@@ -22,7 +22,6 @@ import com.example.currencyconverterapp.model.Currency
 import com.example.currencyconverterapp.ui.screens.DataStateHandler
 import com.example.currencyconverterapp.ui.screens.converter.base_controller.BaseCurrencyController
 import com.example.currencyconverterapp.ui.screens.converter.conversion_results.ConversionResultsList
-import com.example.currencyconverterapp.ui.screens.loading.LoadingScreenType
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -109,7 +108,6 @@ fun ConverterScreen(
 
                 DataStateHandler(
                     uiState = converterUiState.exchangeRatesUiState.toString(),
-                    loadingScreenType = LoadingScreenType.PART_CONVERTER,
                     errorMessage = R.string.error_loading_exchange_rates,
                     onErrorRetryAction = {
                         onExchangeRatesUpdate(converterUiState.baseCurrency)

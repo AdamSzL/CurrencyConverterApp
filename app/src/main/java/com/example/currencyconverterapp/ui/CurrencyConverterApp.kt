@@ -25,7 +25,6 @@ import com.example.currencyconverterapp.ui.screens.converter.ConverterViewModel
 import com.example.currencyconverterapp.ui.screens.converter.CurrenciesUiState
 import com.example.currencyconverterapp.ui.screens.converter.CurrencyConverterTopAppBar
 import com.example.currencyconverterapp.ui.screens.converter.navigation.BottomNavigationBar
-import com.example.currencyconverterapp.ui.screens.loading.LoadingScreenType
 
 enum class CurrencyConverterScreen(
     val route: String,
@@ -96,7 +95,6 @@ fun CurrencyConverterApp(
                 composable(route = CurrencyConverterScreen.Converter.name) {
                     DataStateHandler(
                         uiState = currenciesUiState.toString(),
-                        loadingScreenType = LoadingScreenType.FULL_CONVERTER,
                         errorMessage = R.string.error_loading_currency_data,
                         onErrorRetryAction = {
                             currenciesViewModel.restoreToLoadingState()
@@ -119,7 +117,6 @@ fun CurrencyConverterApp(
                 composable(route = CurrencyConverterScreen.Charts.name) {
                     DataStateHandler(
                         uiState = currenciesUiState.toString(),
-                        loadingScreenType = LoadingScreenType.FULL_CHARTS,
                         errorMessage = R.string.error_loading_currency_data,
                         onErrorRetryAction = {
                             currenciesViewModel.restoreToLoadingState()
