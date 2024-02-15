@@ -29,7 +29,7 @@ import kotlinx.coroutines.launch
 fun ConverterScreen(
     converterUiState: ConverterUiState,
     availableCurrencies: List<Currency>,
-    onExchangeRatesUpdate: (Currency) -> Unit,
+    onExchangeRatesUpdate: (Currency?) -> Unit,
     onBaseCurrencySelection: (Currency) -> Unit,
     onBaseCurrencyValueChange: (Double) -> Unit,
     onTargetCurrencySelection: (Currency) -> Unit,
@@ -110,7 +110,9 @@ fun ConverterScreen(
                     uiState = converterUiState.exchangeRatesUiState.toString(),
                     errorMessage = R.string.error_loading_exchange_rates,
                     onErrorRetryAction = {
-                        onExchangeRatesUpdate(converterUiState.baseCurrency)
+                        onExchangeRatesUpdate(
+                            converterUiState.baseCurrency
+                        )
                     }
                 ) {
                     ConversionResultsList(

@@ -12,18 +12,21 @@ interface CurrencyConverterRepository {
     suspend fun getLatestExchangeRates(baseCurrency: String = "", currencies: String = ""): LatestExchangeRatesApiResponse
 
     suspend fun getHistoricalExchangeRates(dateTimeStart: String = "", dateTimeEnd: String = "", baseCurrency: String = "", currencies: String = "", accuracy: String = ""): HistoricalExchangeRatesApiResponse
+
 }
 
 class NetworkCurrencyConverterRepository @Inject constructor(
-    private val currencyConverterApiService: CurrencyConverterApiService
+    private val currencyConverterApiService: CurrencyConverterApiService,
 ): CurrencyConverterRepository {
-    override suspend fun getCurrencies(): CurrenciesApiResponse = currencyConverterApiService.getCurrencies()
+
+    override suspend fun getCurrencies(): CurrenciesApiResponse =
+        currencyConverterApiService.getCurrencies()
 
     override suspend fun getLatestExchangeRates(
         baseCurrency: String,
         currencies: String
-    ): LatestExchangeRatesApiResponse
-        = currencyConverterApiService.getLatestExchangeRates(baseCurrency, currencies)
+    ): LatestExchangeRatesApiResponse =
+        currencyConverterApiService.getLatestExchangeRates(baseCurrency, currencies)
 
     override suspend fun getHistoricalExchangeRates(
         dateTimeStart: String,
@@ -31,6 +34,6 @@ class NetworkCurrencyConverterRepository @Inject constructor(
         baseCurrency: String,
         currencies: String,
         accuracy: String,
-    ): HistoricalExchangeRatesApiResponse
-        = currencyConverterApiService.getHistoricalExchangeRates(dateTimeStart, dateTimeEnd, baseCurrency, currencies, accuracy)
+    ): HistoricalExchangeRatesApiResponse =
+        currencyConverterApiService.getHistoricalExchangeRates(dateTimeStart, dateTimeEnd, baseCurrency, currencies, accuracy)
 }

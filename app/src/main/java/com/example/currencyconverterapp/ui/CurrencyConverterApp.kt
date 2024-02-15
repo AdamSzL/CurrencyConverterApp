@@ -61,9 +61,7 @@ fun CurrencyConverterApp(
 
     val updateConverterAndChartsData = { sharedFetch: () -> Unit ->
         sharedFetch()
-        converterViewModel.fetchExchangeRates(
-            baseCurrency = converterUiState.baseCurrency,
-        )
+        converterViewModel.fetchExchangeRatesBySavedData()
         chartsViewModel.getHistoricalExchangeRates()
     }
 
@@ -104,7 +102,7 @@ fun CurrencyConverterApp(
                         ConverterScreen(
                             converterUiState = converterUiState,
                             availableCurrencies = (currenciesUiState as CurrenciesUiState.Success).currencies,
-                            onExchangeRatesUpdate = converterViewModel::fetchExchangeRates,
+                            onExchangeRatesUpdate = converterViewModel::fetchExchangeRatesBySavedData,
                             onBaseCurrencySelection = converterViewModel::selectBaseCurrency,
                             onBaseCurrencyValueChange = converterViewModel::setBaseCurrencyValue,
                             onTargetCurrencySelection = converterViewModel::selectTargetCurrency,
