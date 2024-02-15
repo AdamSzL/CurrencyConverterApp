@@ -52,7 +52,7 @@ fun ConversionResultsList(
     LazyColumn(
         modifier = modifier
             .fillMaxSize()
-            .padding(dimensionResource(R.dimen.converter_margin))
+            .padding(dimensionResource(R.dimen.converter_horizontal_margin))
     ) {
         itemsIndexed(
             exchangeRates,

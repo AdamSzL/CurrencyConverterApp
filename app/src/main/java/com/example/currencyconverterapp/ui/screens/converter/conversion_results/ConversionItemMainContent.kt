@@ -75,7 +75,7 @@ fun RowScope.ConversionItemMainContent(
 
 fun getCurrencyFormat(currency: Currency): NumberFormat {
     val currencyFormat = NumberFormat.getCurrencyInstance()
-    currencyFormat.maximumFractionDigits = 2
+    currencyFormat.maximumFractionDigits = 4
     val targetCurrencyInstance = java.util.Currency.getInstance(currency.code)
     currencyFormat.currency = targetCurrencyInstance
     return currencyFormat

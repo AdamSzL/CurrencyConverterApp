@@ -41,10 +41,13 @@ fun BaseCurrencyController(
     modifier: Modifier = Modifier
 ) {
     Row(
-        verticalAlignment = Alignment.CenterVertically,
+        verticalAlignment = Alignment.Top,
         horizontalArrangement = Arrangement.Center,
         modifier = modifier
-            .padding(dimensionResource(R.dimen.converter_margin))
+            .padding(
+                horizontal = dimensionResource(R.dimen.converter_horizontal_margin),
+                vertical = dimensionResource(R.dimen.converter_vertical_margin)
+            )
     ) {
         CurrenciesDropdownMenu(
             currencies = baseCurrencyData.currencies,
@@ -52,15 +55,14 @@ fun BaseCurrencyController(
             selectedCurrency = baseCurrencyData.baseCurrency,
             onCurrencySelection = onBaseCurrencySelection,
             modifier = Modifier
-                .weight(3f)
+                .weight(1f)
         )
         Spacer(modifier = Modifier.width(dimensionResource(R.dimen.converter_input_gap)))
         CurrencyValueTextField(
-            currency = baseCurrencyData.baseCurrency,
             currencyValue = baseCurrencyData.baseCurrencyValue,
             onValueChange = onBaseCurrencyValueChange,
             modifier = Modifier
-                .weight(2f)
+                .weight(1f)
         )
     }
 }

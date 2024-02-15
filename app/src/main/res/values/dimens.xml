@@ -2,7 +2,8 @@
 <resources>
     <dimen name="dropdown_menu_item_flag_code_gap">8dp</dimen>
     <dimen name="dropdown_menu_item_code_name_gap">8dp</dimen>
-    <dimen name="converter_margin">16dp</dimen>
+    <dimen name="converter_horizontal_margin">16dp</dimen>
+    <dimen name="converter_vertical_margin">8dp</dimen>
     <dimen name="converter_input_gap">8dp</dimen>
     <dimen name="conversion_result_item_margin">16dp</dimen>
     <dimen name="conversion_result_list_gap">16dp</dimen>

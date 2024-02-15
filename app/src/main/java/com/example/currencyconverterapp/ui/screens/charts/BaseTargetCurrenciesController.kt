@@ -28,7 +28,11 @@ fun BaseTargetCurrenciesController(
 ) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
-        modifier = modifier.padding(dimensionResource(R.dimen.converter_margin))
+        modifier = modifier
+            .padding(
+                horizontal = dimensionResource(R.dimen.converter_horizontal_margin),
+                vertical = dimensionResource(R.dimen.converter_vertical_margin)
+            )
     ) {
         CurrenciesDropdownMenu(
             currencies = filterChartCurrencies(currencies, chartsUiState),
