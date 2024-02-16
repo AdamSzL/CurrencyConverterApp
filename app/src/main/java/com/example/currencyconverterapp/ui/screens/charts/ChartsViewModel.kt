@@ -2,6 +2,7 @@ package com.example.currencyconverterapp.ui.screens.charts
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.currencyconverterapp.data.ChartsUserPreferencesRepository
 import com.example.currencyconverterapp.data.CurrencyConverterRepository
 import com.example.currencyconverterapp.data.defaultHistoricalExchangeRates
 import com.example.currencyconverterapp.model.Currency
@@ -14,14 +15,33 @@ import com.patrykandpatrick.vico.core.entry.diff.ExtraStore
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.flow.zip
 import kotlinx.coroutines.launch
+import kotlinx.serialization.json.Json
 import java.io.IOException
 import javax.inject.Inject
 
+data class CombinedBaseTargetCurrencyData(
+    val savedBaseCurrency: Currency,
+    val savedTargetCurrency: Currency
+)
+
+data class CombinedBaseTargetCurrencyColumnChartsEnabledData(
+    val combinedBaseTargetCurrencyData: CombinedBaseTargetCurrencyData,
+    val savedColumnChartsEnabled: Boolean,
+)
+
+data class CombinedChartsData(
+    val combinedBaseTargetCurrencyColumnChartsEnabledData: CombinedBaseTargetCurrencyColumnChartsEnabledData,
+    val savedSelectedTimePeriod: TimePeriod,
+)
+
 @HiltViewModel
 class ChartsViewModel @Inject constructor(
-    private val currencyConverterRepository: CurrencyConverterRepository
+    private val currencyConverterRepository: CurrencyConverterRepository,
+    private val chartsUserPreferencesRepository: ChartsUserPreferencesRepository,
 ): ViewModel() {
     private val _chartsUiState = MutableStateFlow(ChartsUiState())
     val chartsUiState: StateFlow<ChartsUiState> = _chartsUiState
@@ -32,7 +52,78 @@ class ChartsViewModel @Inject constructor(
     )
 
     init {
-        getHistoricalExchangeRates()
+        getHistoricalExchangeRatesWithSavedData()
+    }
+
+    private fun getHistoricalExchangeRatesWithSavedData() {
+        viewModelScope.launch {
+            chartsUserPreferencesRepository.savedBaseCurrency.zip(
+                chartsUserPreferencesRepository.savedTargetCurrency
+            ) { savedBaseCurrency, savedTargetCurrency ->
+                CombinedBaseTargetCurrencyData(
+                    Json.decodeFromString(savedBaseCurrency),
+                    Json.decodeFromString(savedTargetCurrency)
+                )
+            }.zip(
+                chartsUserPreferencesRepository.savedColumnChartsEnabled
+            ) { combinedBaseTargetCurrencyData, savedColumnChartsEnabled ->
+                CombinedBaseTargetCurrencyColumnChartsEnabledData(
+                    combinedBaseTargetCurrencyData,
+                    savedColumnChartsEnabled
+                )
+            }.zip(
+                chartsUserPreferencesRepository.savedSelectedTimePeriod
+            ) { combinedBaseTargetCurrencyColumnChartsEnabledData, savedSelectedTimePeriod ->
+                CombinedChartsData(
+                    combinedBaseTargetCurrencyColumnChartsEnabledData,
+                    TimePeriod.getByLabel(savedSelectedTimePeriod)
+                )
+            }.first { chartsData ->
+                _chartsUiState.update {
+                    it.copy(
+                        selectedBaseCurrency = chartsData
+                            .combinedBaseTargetCurrencyColumnChartsEnabledData
+                            .combinedBaseTargetCurrencyData
+                            .savedBaseCurrency,
+                        selectedTargetCurrency = chartsData
+                            .combinedBaseTargetCurrencyColumnChartsEnabledData
+                            .combinedBaseTargetCurrencyData
+                            .savedTargetCurrency,
+                        isColumnChartEnabled = chartsData
+                            .combinedBaseTargetCurrencyColumnChartsEnabledData
+                            .savedColumnChartsEnabled,
+                        selectedTimePeriod = chartsData
+                            .savedSelectedTimePeriod
+                    )
+                }
+                getHistoricalExchangeRates()
+                true
+            }
+        }
+    }
+
+    private fun updateSavedBaseCurrency(baseCurrency: Currency) {
+        viewModelScope.launch {
+            chartsUserPreferencesRepository.updateSavedBaseCurrency(baseCurrency)
+        }
+    }
+
+    private fun updateSavedTargetCurrency(targetCurrency: Currency) {
+        viewModelScope.launch {
+            chartsUserPreferencesRepository.updateSavedTargetCurrency(targetCurrency)
+        }
+    }
+
+    private fun updateSavedColumnChartsEnabled(columnChartsEnabled: Boolean) {
+        viewModelScope.launch {
+            chartsUserPreferencesRepository.updateSavedColumnChartsEnabled(columnChartsEnabled)
+        }
+    }
+
+    private fun updateSavedSelectedTimePeriod(selectedTimePeriod: TimePeriod) {
+        viewModelScope.launch {
+            chartsUserPreferencesRepository.updateSavedSelectedTimePeriod(selectedTimePeriod)
+        }
     }
 
     fun selectBaseCurrency(currency: Currency) {
@@ -41,6 +132,7 @@ class ChartsViewModel @Inject constructor(
                 selectedBaseCurrency = currency
             )
         }
+        updateSavedBaseCurrency(currency)
     }
 
     fun selectTargetCurrency(currency: Currency) {
@@ -49,6 +141,7 @@ class ChartsViewModel @Inject constructor(
                 selectedTargetCurrency = currency
             )
         }
+        updateSavedTargetCurrency(currency)
     }
 
     fun toggleColumnChart(isColumn: Boolean) {
@@ -57,6 +150,7 @@ class ChartsViewModel @Inject constructor(
                 isColumnChartEnabled = isColumn
             )
         }
+        updateSavedColumnChartsEnabled(isColumn)
     }
 
     fun selectTimePeriod(timePeriod: TimePeriod) {
@@ -65,10 +159,13 @@ class ChartsViewModel @Inject constructor(
                 selectedTimePeriod = timePeriod
             )
         }
+        updateSavedSelectedTimePeriod(timePeriod)
     }
 
     fun swapBaseAndTargetCurrencies() {
         _chartsUiState.update {
+            updateSavedBaseCurrency(it.selectedTargetCurrency)
+            updateSavedTargetCurrency(it.selectedBaseCurrency)
             it.copy(
                 selectedBaseCurrency = it.selectedTargetCurrency,
                 selectedTargetCurrency = it.selectedBaseCurrency

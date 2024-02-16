@@ -2,7 +2,7 @@ package com.example.currencyconverterapp.ui.screens.converter
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.currencyconverterapp.data.CurrenciesUserPreferencesRepository
+import com.example.currencyconverterapp.data.ConverterUserPreferencesRepository
 import com.example.currencyconverterapp.data.CurrencyConverterRepository
 import com.example.currencyconverterapp.model.Currency
 import com.example.currencyconverterapp.model.ExchangeRate
@@ -20,7 +20,7 @@ import javax.inject.Inject
 @HiltViewModel
 class ConverterViewModel @Inject constructor(
     private val currencyConverterRepository: CurrencyConverterRepository,
-    private val currenciesUserPreferencesRepository: CurrenciesUserPreferencesRepository
+    private val converterUserPreferencesRepository: ConverterUserPreferencesRepository
 ): ViewModel() {
     private val _converterUiState = MutableStateFlow(ConverterUiState())
     val converterUiState: StateFlow<ConverterUiState> = _converterUiState
@@ -33,14 +33,14 @@ class ConverterViewModel @Inject constructor(
         baseCurrency: Currency? = null,
     ) {
         viewModelScope.launch {
-            currenciesUserPreferencesRepository.savedBaseCurrency.zip(
-                currenciesUserPreferencesRepository.savedCurrencyValue
+            converterUserPreferencesRepository.savedBaseCurrency.zip(
+                converterUserPreferencesRepository.savedCurrencyValue
             ) { savedBaseCurrency, savedCurrencyValue ->
                 CombinedBaseCurrencyData(
                     Json.decodeFromString(savedBaseCurrency),
                     savedCurrencyValue
                 )
-            }.zip(currenciesUserPreferencesRepository.savedCurrencies) { combinedBaseCurrencyData, savedCurrencies ->
+            }.zip(converterUserPreferencesRepository.savedCurrencies) { combinedBaseCurrencyData, savedCurrencies ->
                 CombinedPrefsData(combinedBaseCurrencyData, savedCurrencies)
             }.first { savedData ->
                 _converterUiState.update {
@@ -80,19 +80,19 @@ class ConverterViewModel @Inject constructor(
 
     private fun updateSavedCurrencies(currencies: String) {
         viewModelScope.launch {
-            currenciesUserPreferencesRepository.updateSavedCurrencies(currencies)
+            converterUserPreferencesRepository.updateSavedCurrencies(currencies)
         }
     }
 
     private fun updateSavedBaseCurrency(currency: Currency) {
         viewModelScope.launch {
-            currenciesUserPreferencesRepository.updateSavedBaseCurrency(currency)
+            converterUserPreferencesRepository.updateSavedBaseCurrency(currency)
         }
     }
 
     private fun updateSavedCurrencyValue(value: Double) {
         viewModelScope.launch {
-            currenciesUserPreferencesRepository.updateSavedCurrencyValue(value)
+            converterUserPreferencesRepository.updateSavedCurrencyValue(value)
         }
     }
 

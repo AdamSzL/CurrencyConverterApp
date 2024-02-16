@@ -2,7 +2,6 @@ package com.example.currencyconverterapp.ui.screens
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.currencyconverterapp.data.CurrenciesUserPreferencesRepository
 import com.example.currencyconverterapp.data.CurrencyConverterRepository
 import com.example.currencyconverterapp.ui.screens.converter.CurrenciesUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -15,7 +14,6 @@ import javax.inject.Inject
 @HiltViewModel
 class CurrenciesViewModel @Inject constructor(
     private val currencyConverterRepository: CurrencyConverterRepository,
-    private val currenciesUserPreferencesRepository: CurrenciesUserPreferencesRepository,
 ): ViewModel() {
     private val _currenciesUiState = MutableStateFlow<CurrenciesUiState>(CurrenciesUiState.Loading)
     val currenciesUiState: StateFlow<CurrenciesUiState> = _currenciesUiState
