@@ -1,8 +1,9 @@
 package com.example.currencyconverterapp.ui.screens.converter
 
+//import com.example.currencyconverterapp.data.ConverterCachedDataRepository
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.currencyconverterapp.data.ConverterUserPreferencesRepository
+import com.example.currencyconverterapp.data.ConverterCachedDataRepository
 import com.example.currencyconverterapp.data.CurrencyConverterRepository
 import com.example.currencyconverterapp.model.Currency
 import com.example.currencyconverterapp.model.ExchangeRate
@@ -11,47 +12,31 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.flow.zip
 import kotlinx.coroutines.launch
-import kotlinx.serialization.json.Json
 import java.io.IOException
 import javax.inject.Inject
 
 @HiltViewModel
 class ConverterViewModel @Inject constructor(
     private val currencyConverterRepository: CurrencyConverterRepository,
-    private val converterUserPreferencesRepository: ConverterUserPreferencesRepository
+    private val converterCachedDataRepository: ConverterCachedDataRepository,
 ): ViewModel() {
     private val _converterUiState = MutableStateFlow(ConverterUiState())
     val converterUiState: StateFlow<ConverterUiState> = _converterUiState
 
     init {
-        fetchExchangeRatesBySavedData()
-    }
-
-    fun fetchExchangeRatesBySavedData(
-        baseCurrency: Currency? = null,
-    ) {
         viewModelScope.launch {
-            converterUserPreferencesRepository.savedBaseCurrency.zip(
-                converterUserPreferencesRepository.savedCurrencyValue
-            ) { savedBaseCurrency, savedCurrencyValue ->
-                CombinedBaseCurrencyData(
-                    Json.decodeFromString(savedBaseCurrency),
-                    savedCurrencyValue
-                )
-            }.zip(converterUserPreferencesRepository.savedCurrencies) { combinedBaseCurrencyData, savedCurrencies ->
-                CombinedPrefsData(combinedBaseCurrencyData, savedCurrencies)
-            }.first { savedData ->
+            converterCachedDataRepository.savedConverterData.first { converterCachedData ->
                 _converterUiState.update {
                     it.copy(
-                        baseCurrency = savedData.combinedBaseCurrencyData.currency,
-                        baseCurrencyValue = savedData.combinedBaseCurrencyData.currencyValue
+                        baseCurrency = converterCachedData.baseCurrency,
+                        baseCurrencyValue = converterCachedData.baseCurrencyValue,
+                        exchangeRatesUiState = ExchangeRatesUiState.Success(converterCachedData.exchangeRates)
                     )
                 }
                 fetchExchangeRates(
-                    baseCurrency ?: savedData.combinedBaseCurrencyData.currency,
-                    savedData.savedCurrencies
+                    converterCachedData.baseCurrency,
+                    converterCachedData.exchangeRates
                 )
                 true
             }
@@ -60,13 +45,13 @@ class ConverterViewModel @Inject constructor(
 
     private fun fetchExchangeRates(
         baseCurrency: Currency,
-        currencyCodes: String,
+        exchangeRates: List<ExchangeRate>
     ) {
         viewModelScope.launch {
             val exchangeRatesUiState = try {
                 val latestExchangeRates = currencyConverterRepository.getLatestExchangeRates(
                     baseCurrency = baseCurrency.code,
-                    currencies = currencyCodes,
+                    currencies = exchangeRates.joinToString(",") { it.code },
                 ).data.values.toList()
                 ExchangeRatesUiState.Success(latestExchangeRates)
             } catch (e: IOException) {
@@ -78,23 +63,6 @@ class ConverterViewModel @Inject constructor(
         }
     }
 
-    private fun updateSavedCurrencies(currencies: String) {
-        viewModelScope.launch {
-            converterUserPreferencesRepository.updateSavedCurrencies(currencies)
-        }
-    }
-
-    private fun updateSavedBaseCurrency(currency: Currency) {
-        viewModelScope.launch {
-            converterUserPreferencesRepository.updateSavedBaseCurrency(currency)
-        }
-    }
-
-    private fun updateSavedCurrencyValue(value: Double) {
-        viewModelScope.launch {
-            converterUserPreferencesRepository.updateSavedCurrencyValue(value)
-        }
-    }
 
     fun selectBaseCurrency(currency: Currency) {
         var updatedExchangeRates: List<ExchangeRate> = listOf()
@@ -117,7 +85,7 @@ class ConverterViewModel @Inject constructor(
         }
         fetchExchangeRates(
             baseCurrency = currency,
-            currencyCodes = updatedExchangeRates.joinToString(",") { it.code }
+            exchangeRates = updatedExchangeRates,
         )
         updateSavedBaseCurrency(currency)
     }
@@ -152,12 +120,11 @@ class ConverterViewModel @Inject constructor(
                 )
             }
         }
-        val newCurrencyCodes = updatedExchangeRates.joinToString(",") { it.code }
         fetchExchangeRates(
             baseCurrency = baseCurrency,
-            currencyCodes = newCurrencyCodes,
+            exchangeRates = updatedExchangeRates
         )
-        updateSavedCurrencies(newCurrencyCodes)
+        updateSavedExchangeRates(updatedExchangeRates)
         updateSavedBaseCurrency(baseCurrency)
     }
 
@@ -178,7 +145,7 @@ class ConverterViewModel @Inject constructor(
                 )
             }
         }
-        updateSavedCurrencies(updatedExchangeRates.joinToString(",") { it.code })
+        updateSavedExchangeRates(updatedExchangeRates)
     }
 
     fun undoConversionEntryDeletion() {
@@ -199,17 +166,24 @@ class ConverterViewModel @Inject constructor(
                 )
             }
         }
-        updateSavedCurrencies(updatedExchangeRates.joinToString(",") { it.code })
+        updateSavedExchangeRates(updatedExchangeRates)
     }
 
+    private fun updateSavedBaseCurrency(currency: Currency) {
+        viewModelScope.launch {
+            converterCachedDataRepository.updateSavedBaseCurrency(currency)
+        }
+    }
+
+    private fun updateSavedCurrencyValue(value: Double) {
+        viewModelScope.launch {
+            converterCachedDataRepository.updateSavedCurrencyValue(value)
+        }
+    }
+
+    private fun updateSavedExchangeRates(exchangeRates: List<ExchangeRate>) {
+        viewModelScope.launch {
+            converterCachedDataRepository.updateSavedExchangeRates(exchangeRates)
+        }
+    }
 }
-
-data class CombinedPrefsData(
-    val combinedBaseCurrencyData: CombinedBaseCurrencyData,
-    val savedCurrencies: String,
-)
-
-data class CombinedBaseCurrencyData(
-    val currency: Currency,
-    val currencyValue: Double,
-)

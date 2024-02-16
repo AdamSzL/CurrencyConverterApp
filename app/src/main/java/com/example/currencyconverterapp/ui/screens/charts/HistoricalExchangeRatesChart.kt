@@ -11,9 +11,9 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import com.example.currencyconverterapp.R
 import com.example.currencyconverterapp.model.Currency
+import com.example.currencyconverterapp.model.TimePeriod
 import com.example.currencyconverterapp.ui.screens.charts.DateTimeHandler.formatDateByTimePeriod
 import com.example.currencyconverterapp.ui.screens.charts.NumberUtilities.getRoundingByDifference
 import com.patrykandpatrick.vico.compose.axis.horizontal.rememberBottomAxis
@@ -27,7 +27,6 @@ import com.patrykandpatrick.vico.core.chart.line.LineChart
 import com.patrykandpatrick.vico.core.chart.values.AxisValuesOverrider
 import com.patrykandpatrick.vico.core.component.shape.LineComponent
 import com.patrykandpatrick.vico.core.component.shape.shader.DynamicShaders
-import com.patrykandpatrick.vico.core.component.text.TextComponent
 import com.patrykandpatrick.vico.core.component.text.textComponent
 import com.patrykandpatrick.vico.core.dimensions.MutableDimensions
 import com.patrykandpatrick.vico.core.entry.ChartEntryModelProducer

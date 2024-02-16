@@ -67,11 +67,12 @@ dependencies {
     implementation("androidx.compose.ui:ui-tooling-preview")
     implementation("androidx.compose.material3:material3-android:1.2.0-rc01")
     implementation("androidx.core:core-splashscreen:1.0.0-alpha02")
-    implementation("androidx.datastore:datastore-preferences:1.0.0")
+    implementation("androidx.datastore:datastore:1.0.0")
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
     implementation("com.jakewharton.retrofit:retrofit2-kotlinx-serialization-converter:1.0.0")
     implementation("com.squareup.okhttp3:okhttp:4.11.0")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.1")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-protobuf:1.6.3")
     implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.5.0")
     implementation("com.google.dagger:hilt-android:2.50")
     implementation("androidx.hilt:hilt-navigation-compose:1.1.0")
@@ -89,6 +90,7 @@ dependencies {
     kaptAndroidTest("com.google.dagger:hilt-compiler:2.50")
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
+    implementation(kotlin("reflect"))
 }
 
 kapt {

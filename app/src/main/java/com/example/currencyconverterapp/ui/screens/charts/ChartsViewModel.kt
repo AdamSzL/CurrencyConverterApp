@@ -1,12 +1,14 @@
 package com.example.currencyconverterapp.ui.screens.charts
 
+//import com.example.currencyconverterapp.data.ChartsCachedDataRepository
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.currencyconverterapp.data.ChartsUserPreferencesRepository
+import com.example.currencyconverterapp.data.ChartsCachedDataRepository
 import com.example.currencyconverterapp.data.CurrencyConverterRepository
 import com.example.currencyconverterapp.data.defaultHistoricalExchangeRates
 import com.example.currencyconverterapp.model.Currency
 import com.example.currencyconverterapp.model.DateTimeExchangeRatesInfo
+import com.example.currencyconverterapp.model.TimePeriod
 import com.example.currencyconverterapp.ui.screens.charts.DateTimeHandler.getCurrentDate
 import com.example.currencyconverterapp.ui.screens.charts.DateTimeHandler.subtractTimePeriodFromDate
 import com.patrykandpatrick.vico.core.entry.ChartEntryModelProducer
@@ -17,31 +19,14 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.flow.zip
 import kotlinx.coroutines.launch
-import kotlinx.serialization.json.Json
 import java.io.IOException
 import javax.inject.Inject
-
-data class CombinedBaseTargetCurrencyData(
-    val savedBaseCurrency: Currency,
-    val savedTargetCurrency: Currency
-)
-
-data class CombinedBaseTargetCurrencyColumnChartsEnabledData(
-    val combinedBaseTargetCurrencyData: CombinedBaseTargetCurrencyData,
-    val savedColumnChartsEnabled: Boolean,
-)
-
-data class CombinedChartsData(
-    val combinedBaseTargetCurrencyColumnChartsEnabledData: CombinedBaseTargetCurrencyColumnChartsEnabledData,
-    val savedSelectedTimePeriod: TimePeriod,
-)
 
 @HiltViewModel
 class ChartsViewModel @Inject constructor(
     private val currencyConverterRepository: CurrencyConverterRepository,
-    private val chartsUserPreferencesRepository: ChartsUserPreferencesRepository,
+    private val chartsCachedDataRepository: ChartsCachedDataRepository,
 ): ViewModel() {
     private val _chartsUiState = MutableStateFlow(ChartsUiState())
     val chartsUiState: StateFlow<ChartsUiState> = _chartsUiState
@@ -52,77 +37,83 @@ class ChartsViewModel @Inject constructor(
     )
 
     init {
-        getHistoricalExchangeRatesWithSavedData()
-    }
-
-    private fun getHistoricalExchangeRatesWithSavedData() {
         viewModelScope.launch {
-            chartsUserPreferencesRepository.savedBaseCurrency.zip(
-                chartsUserPreferencesRepository.savedTargetCurrency
-            ) { savedBaseCurrency, savedTargetCurrency ->
-                CombinedBaseTargetCurrencyData(
-                    Json.decodeFromString(savedBaseCurrency),
-                    Json.decodeFromString(savedTargetCurrency)
-                )
-            }.zip(
-                chartsUserPreferencesRepository.savedColumnChartsEnabled
-            ) { combinedBaseTargetCurrencyData, savedColumnChartsEnabled ->
-                CombinedBaseTargetCurrencyColumnChartsEnabledData(
-                    combinedBaseTargetCurrencyData,
-                    savedColumnChartsEnabled
-                )
-            }.zip(
-                chartsUserPreferencesRepository.savedSelectedTimePeriod
-            ) { combinedBaseTargetCurrencyColumnChartsEnabledData, savedSelectedTimePeriod ->
-                CombinedChartsData(
-                    combinedBaseTargetCurrencyColumnChartsEnabledData,
-                    TimePeriod.getByLabel(savedSelectedTimePeriod)
-                )
-            }.first { chartsData ->
+            chartsCachedDataRepository.savedChartsData.first { savedChartsData ->
                 _chartsUiState.update {
                     it.copy(
-                        selectedBaseCurrency = chartsData
-                            .combinedBaseTargetCurrencyColumnChartsEnabledData
-                            .combinedBaseTargetCurrencyData
-                            .savedBaseCurrency,
-                        selectedTargetCurrency = chartsData
-                            .combinedBaseTargetCurrencyColumnChartsEnabledData
-                            .combinedBaseTargetCurrencyData
-                            .savedTargetCurrency,
-                        isColumnChartEnabled = chartsData
-                            .combinedBaseTargetCurrencyColumnChartsEnabledData
-                            .savedColumnChartsEnabled,
-                        selectedTimePeriod = chartsData
-                            .savedSelectedTimePeriod
+                        selectedBaseCurrency = savedChartsData.baseCurrency,
+                        selectedTargetCurrency = savedChartsData.targetCurrency,
+                        isColumnChartEnabled = savedChartsData.isColumnChartEnabled,
+                        selectedTimePeriod = savedChartsData.selectedTimePeriod,
+                        historicalExchangeRatesUiState = HistoricalExchangeRatesUiState.Success,
                     )
                 }
-                getHistoricalExchangeRates()
+                updateChartEntries(savedChartsData.historicalExchangeRates)
+//                getHistoricalExchangeRates()
                 true
+            }
+        }
+    }
+
+    fun updateChartEntries(entries: List<DateTimeExchangeRatesInfo>) {
+        viewModelScope.launch {
+            chartEntryModelProducer.setEntriesSuspending(
+                convertToChartData(entries),
+                updateExtras = { extraStore ->
+                    extraStore.set(axisExtraKey, getDatesFromData(entries))
+                }
+            )
+        }
+    }
+
+    fun getHistoricalExchangeRates() {
+        val currentDate = getCurrentDate()
+        with(chartsUiState.value) {
+            viewModelScope.launch {
+                val historicalExchangeRatesUiState = try {
+                    val response = currencyConverterRepository.getHistoricalExchangeRates(
+                        dateTimeStart = subtractTimePeriodFromDate(currentDate, selectedTimePeriod),
+                        dateTimeEnd = currentDate,
+                        baseCurrency = selectedBaseCurrency.code,
+                        currencies = selectedTargetCurrency.code,
+                        accuracy = if (selectedTimePeriod == TimePeriod.ONE_DAY) "hour" else "day"
+                    )
+                    updateChartEntries(response.data)
+                    chartsCachedDataRepository.updateSavedHistoricalExchangeRates(response.data)
+                    HistoricalExchangeRatesUiState.Success
+                } catch (e: IOException) {
+                    HistoricalExchangeRatesUiState.Error
+                }
+                _chartsUiState.update {
+                    it.copy(
+                        historicalExchangeRatesUiState = historicalExchangeRatesUiState
+                    )
+                }
             }
         }
     }
 
     private fun updateSavedBaseCurrency(baseCurrency: Currency) {
         viewModelScope.launch {
-            chartsUserPreferencesRepository.updateSavedBaseCurrency(baseCurrency)
+            chartsCachedDataRepository.updateSavedBaseCurrency(baseCurrency)
         }
     }
 
     private fun updateSavedTargetCurrency(targetCurrency: Currency) {
         viewModelScope.launch {
-            chartsUserPreferencesRepository.updateSavedTargetCurrency(targetCurrency)
+            chartsCachedDataRepository.updateSavedTargetCurrency(targetCurrency)
         }
     }
 
     private fun updateSavedColumnChartsEnabled(columnChartsEnabled: Boolean) {
         viewModelScope.launch {
-            chartsUserPreferencesRepository.updateSavedColumnChartsEnabled(columnChartsEnabled)
+            chartsCachedDataRepository.updateSavedIsColumnChartEnabled(columnChartsEnabled)
         }
     }
 
     private fun updateSavedSelectedTimePeriod(selectedTimePeriod: TimePeriod) {
         viewModelScope.launch {
-            chartsUserPreferencesRepository.updateSavedSelectedTimePeriod(selectedTimePeriod)
+            chartsCachedDataRepository.updateSavedSelectedTimePeriod(selectedTimePeriod)
         }
     }
 
@@ -173,36 +164,6 @@ class ChartsViewModel @Inject constructor(
         }
     }
 
-    fun getHistoricalExchangeRates() {
-        val currentDate = getCurrentDate()
-        with(chartsUiState.value) {
-            viewModelScope.launch {
-                val historicalExchangeRatesUiState = try {
-                    val response = currencyConverterRepository.getHistoricalExchangeRates(
-                        dateTimeStart = subtractTimePeriodFromDate(currentDate, selectedTimePeriod),
-                        dateTimeEnd = currentDate,
-                        baseCurrency = selectedBaseCurrency.code,
-                        currencies = selectedTargetCurrency.code,
-                        accuracy = if (selectedTimePeriod == TimePeriod.ONE_DAY) "hour" else "day"
-                    )
-                    chartEntryModelProducer.setEntriesSuspending(
-                        convertToChartData(response.data),
-                        updateExtras = { extraStore ->
-                            extraStore.set(axisExtraKey, getDatesFromData(response.data))
-                        }
-                    )
-                    HistoricalExchangeRatesUiState.Success
-                } catch (e: IOException) {
-                    HistoricalExchangeRatesUiState.Error
-                }
-                _chartsUiState.update {
-                    it.copy(
-                        historicalExchangeRatesUiState = historicalExchangeRatesUiState
-                    )
-                }
-            }
-        }
-    }
 
     private fun convertToChartData(data: List<DateTimeExchangeRatesInfo>): List<FloatEntry> {
         val entries = arrayListOf<FloatEntry>()

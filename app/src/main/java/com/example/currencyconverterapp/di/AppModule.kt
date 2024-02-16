@@ -2,10 +2,15 @@ package com.example.currencyconverterapp.di
 
 import android.content.Context
 import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.core.PreferenceDataStoreFactory
-import androidx.datastore.preferences.core.Preferences
-import androidx.datastore.preferences.preferencesDataStoreFile
+import androidx.datastore.core.DataStoreFactory
+import androidx.datastore.dataStoreFile
 import com.example.currencyconverterapp.BuildConfig
+import com.example.currencyconverterapp.data.ChartsCachedDataSerializer
+import com.example.currencyconverterapp.data.ConverterCachedDataSerializer
+import com.example.currencyconverterapp.data.CurrenciesCachedDataSerializer
+import com.example.currencyconverterapp.model.ChartsCachedData
+import com.example.currencyconverterapp.model.ConverterCachedData
+import com.example.currencyconverterapp.model.CurrenciesCachedData
 import com.example.currencyconverterapp.network.CurrencyConverterApiService
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import dagger.Module
@@ -26,7 +31,11 @@ object AppModule {
     private const val BASE_URL =
         "https://api.currencyapi.com/v3/"
 
-    private const val CURRENCIES_PREFERENCES = "currencies_preferences"
+    private const val CONVERTER_DATA_STORE = "converter_data_store"
+
+    private const val CHARTS_DATA_STORE = "charts_data_store"
+
+    private const val CURRENCIES_DATA_STORE = "currencies_data_store"
 
     private val json = Json { ignoreUnknownKeys = true }
 
@@ -55,10 +64,31 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun providePreferencesDataStore(@ApplicationContext appContext: Context): DataStore<Preferences> =
-        PreferenceDataStoreFactory.create(
-            produceFile = {
-                appContext.preferencesDataStoreFile(CURRENCIES_PREFERENCES)
-            }
-        )
+    fun provideConverterCachedDataStore(@ApplicationContext appContext: Context): DataStore<ConverterCachedData> {
+        return DataStoreFactory.create(
+            serializer = ConverterCachedDataSerializer,
+        ) {
+            appContext.dataStoreFile(CONVERTER_DATA_STORE)
+        }
+    }
+
+    @Provides
+    @Singleton
+    fun provideChartsCachedDataStore(@ApplicationContext appContext: Context): DataStore<ChartsCachedData> {
+        return DataStoreFactory.create(
+            serializer = ChartsCachedDataSerializer,
+        ) {
+            appContext.dataStoreFile(CHARTS_DATA_STORE)
+        }
+    }
+
+    @Provides
+    @Singleton
+    fun provideCurrenciesCachedDataStore(@ApplicationContext appContext: Context): DataStore<CurrenciesCachedData> {
+        return DataStoreFactory.create(
+            serializer = CurrenciesCachedDataSerializer,
+        ) {
+            appContext.dataStoreFile(CURRENCIES_DATA_STORE)
+        }
+    }
 }

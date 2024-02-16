@@ -59,9 +59,8 @@ fun CurrencyConverterApp(
     val converterUiState = converterViewModel.converterUiState.collectAsStateWithLifecycle().value
     val chartsUiState = chartsViewModel.chartsUiState.collectAsStateWithLifecycle().value
 
-    val updateConverterAndChartsData = { sharedFetch: () -> Unit ->
-        sharedFetch()
-        converterViewModel.fetchExchangeRatesBySavedData()
+    val updateConverterAndChartsData = {
+//        converterViewModel.fetchExchangeRatesBySavedData()
         chartsViewModel.getHistoricalExchangeRates()
     }
 
@@ -95,14 +94,13 @@ fun CurrencyConverterApp(
                         uiState = currenciesUiState.toString(),
                         errorMessage = R.string.error_loading_currency_data,
                         onErrorRetryAction = {
-                            currenciesViewModel.restoreToLoadingState()
-                            updateConverterAndChartsData(currenciesViewModel::fetchCurrencies)
+                            currenciesViewModel.restoreToLoadingStateAndFetchCurrencies()
+                            updateConverterAndChartsData()
                         }
                     ) {
                         ConverterScreen(
                             converterUiState = converterUiState,
                             availableCurrencies = (currenciesUiState as CurrenciesUiState.Success).currencies,
-                            onExchangeRatesUpdate = converterViewModel::fetchExchangeRatesBySavedData,
                             onBaseCurrencySelection = converterViewModel::selectBaseCurrency,
                             onBaseCurrencyValueChange = converterViewModel::setBaseCurrencyValue,
                             onTargetCurrencySelection = converterViewModel::selectTargetCurrency,
@@ -117,8 +115,8 @@ fun CurrencyConverterApp(
                         uiState = currenciesUiState.toString(),
                         errorMessage = R.string.error_loading_currency_data,
                         onErrorRetryAction = {
-                            currenciesViewModel.restoreToLoadingState()
-                            updateConverterAndChartsData(currenciesViewModel::fetchCurrencies)
+                            currenciesViewModel.restoreToLoadingStateAndFetchCurrencies()
+                            updateConverterAndChartsData()
                         }
                     ) {
                         ChartsScreen(

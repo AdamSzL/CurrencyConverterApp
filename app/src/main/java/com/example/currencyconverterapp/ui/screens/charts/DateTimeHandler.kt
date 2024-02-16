@@ -1,5 +1,6 @@
 package com.example.currencyconverterapp.ui.screens.charts
 
+import com.example.currencyconverterapp.model.TimePeriod
 import kotlinx.datetime.Clock
 import kotlinx.datetime.DateTimePeriod
 import kotlinx.datetime.Instant
@@ -49,20 +50,4 @@ object DateTimeHandler {
     }
 
     fun formatDigit(digit: Int): String = if (digit < 10) "0${digit}" else digit.toString()
-}
-
-enum class TimePeriod(val label: String) {
-    ONE_YEAR("1 Year"),
-    SIX_MONTHS("6 Months"),
-    THREE_MONTHS("3 Months"),
-    ONE_MONTH("1 Month"),
-    TWO_WEEKS("2 Weeks"),
-    ONE_WEEK("1 Week"),
-    ONE_DAY("Last 24 Hours");
-
-    companion object {
-        fun getByLabel(label: String): TimePeriod {
-            return entries.find { it.label == label } ?: ONE_YEAR
-        }
-    }
 }

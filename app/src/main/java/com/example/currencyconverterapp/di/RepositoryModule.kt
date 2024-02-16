@@ -1,9 +1,11 @@
 package com.example.currencyconverterapp.di
 
-import com.example.currencyconverterapp.data.ChartsUserPreferencesRepository
-import com.example.currencyconverterapp.data.ChartsUserPreferencesRepositoryImpl
-import com.example.currencyconverterapp.data.ConverterUserPreferencesRepository
-import com.example.currencyconverterapp.data.ConverterUserPreferencesRepositoryImpl
+import com.example.currencyconverterapp.data.ChartsCachedDataRepository
+import com.example.currencyconverterapp.data.ChartsCachedDataRepositoryImpl
+import com.example.currencyconverterapp.data.ConverterCachedDataRepository
+import com.example.currencyconverterapp.data.ConverterCachedDataRepositoryImpl
+import com.example.currencyconverterapp.data.CurrenciesCachedDataRepository
+import com.example.currencyconverterapp.data.CurrenciesCachedDataRepositoryImpl
 import com.example.currencyconverterapp.data.CurrencyConverterRepository
 import com.example.currencyconverterapp.data.NetworkCurrencyConverterRepository
 import dagger.Binds
@@ -24,13 +26,19 @@ abstract class RepositoryModule {
 
     @Binds
     @Singleton
-    abstract fun bindConverterUserPreferencesRepository(
-        converterUserPreferencesRepositoryImpl: ConverterUserPreferencesRepositoryImpl
-    ): ConverterUserPreferencesRepository
+    abstract fun bindConverterCachedDataRepository(
+        converterCachedDataRepositoryImpl: ConverterCachedDataRepositoryImpl
+    ): ConverterCachedDataRepository
 
     @Binds
     @Singleton
-    abstract fun bindChartsUserPreferencesRepository(
-        chartsUserPreferencesRepositoryImpl: ChartsUserPreferencesRepositoryImpl
-    ): ChartsUserPreferencesRepository
+    abstract fun bindChartsCachedDataRepository(
+        chartsCachedDataRepositoryImpl: ChartsCachedDataRepositoryImpl
+    ): ChartsCachedDataRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindCurrenciesCachedDataRepository(
+        currenciesCachedDataRepositoryImpl: CurrenciesCachedDataRepositoryImpl
+    ): CurrenciesCachedDataRepository
 }

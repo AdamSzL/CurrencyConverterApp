@@ -14,7 +14,6 @@ import androidx.compose.material3.SnackbarResult
 import androidx.compose.material3.rememberBottomSheetScaffoldState
 import androidx.compose.material3.rememberStandardBottomSheetState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
@@ -31,7 +30,6 @@ import kotlinx.coroutines.launch
 fun ConverterScreen(
     converterUiState: ConverterUiState,
     availableCurrencies: List<Currency>,
-    onExchangeRatesUpdate: (Currency?) -> Unit,
     onBaseCurrencySelection: (Currency) -> Unit,
     onBaseCurrencyValueChange: (Double) -> Unit,
     onTargetCurrencySelection: (Currency) -> Unit,
@@ -113,9 +111,10 @@ fun ConverterScreen(
                     uiState = converterUiState.exchangeRatesUiState.toString(),
                     errorMessage = R.string.error_loading_exchange_rates,
                     onErrorRetryAction = {
-                        onExchangeRatesUpdate(
-                            converterUiState.baseCurrency
-                        )
+//                        onExchangeRatesUpdate(
+//                            converterUiState.baseCurrency
+//                        )
+                        Log.d("XXX", "RETRY")
                     }
                 ) {
                     ConversionResultsList(
@@ -123,7 +122,7 @@ fun ConverterScreen(
                         exchangeRates = (converterUiState.exchangeRatesUiState as ExchangeRatesUiState.Success).exchangeRates,
                         onConversionEntryDeletion = { conversionEntry ->
                             onConversionEntryDeletion(conversionEntry)
-                            scope.launch{
+                            scope.launch {
                                 snackbarHostState.currentSnackbarData?.dismiss()
                                 val result = snackbarHostState
                                     .showSnackbar(

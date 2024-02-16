@@ -1,11 +1,11 @@
 package com.example.currencyconverterapp
 
+import com.example.currencyconverterapp.model.TimePeriod
 import com.example.currencyconverterapp.ui.screens.charts.DateTimeHandler.formatDateByTimePeriod
 import com.example.currencyconverterapp.ui.screens.charts.DateTimeHandler.formatDigit
 import com.example.currencyconverterapp.ui.screens.charts.DateTimeHandler.getCurrentDate
 import com.example.currencyconverterapp.ui.screens.charts.DateTimeHandler.getUnitsToSubtractFromTimePeriod
 import com.example.currencyconverterapp.ui.screens.charts.DateTimeHandler.subtractTimePeriodFromDate
-import com.example.currencyconverterapp.ui.screens.charts.TimePeriod
 import com.example.currencyconverterapp.ui.screens.charts.TimePeriodUnits
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime

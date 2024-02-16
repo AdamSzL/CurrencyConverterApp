@@ -14,6 +14,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import com.example.currencyconverterapp.R
+import com.example.currencyconverterapp.model.TimePeriod
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
