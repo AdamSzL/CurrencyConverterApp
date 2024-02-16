@@ -1,5 +1,6 @@
 package com.example.currencyconverterapp.ui.screens.converter
 
+import android.util.Log
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -13,6 +14,7 @@ import androidx.compose.material3.SnackbarResult
 import androidx.compose.material3.rememberBottomSheetScaffoldState
 import androidx.compose.material3.rememberStandardBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
@@ -44,6 +46,7 @@ fun ConverterScreen(
             skipHiddenState = false,
         )
     )
+
     val snackbarHostState = remember { SnackbarHostState() }
     val snackbarMessage = stringResource(R.string.currency_deleted_message)
     val snackbarActionMessage = stringResource(R.string.undo)
@@ -121,6 +124,7 @@ fun ConverterScreen(
                         onConversionEntryDeletion = { conversionEntry ->
                             onConversionEntryDeletion(conversionEntry)
                             scope.launch{
+                                snackbarHostState.currentSnackbarData?.dismiss()
                                 val result = snackbarHostState
                                     .showSnackbar(
                                         message = snackbarMessage,
