@@ -23,4 +23,6 @@
     <string name="loading_data">Loading Data</string>
     <string name="error">Error</string>
     <string name="enter_decimal_number">Enter a decimal number</string>
+    <string name="hour">HOUR</string>
+    <string name="day">DAY</string>
 </resources>

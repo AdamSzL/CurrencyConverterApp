@@ -6,7 +6,7 @@ object NumberUtilities {
             2
         } else {
             val decimalString = difference.toBigDecimal().toPlainString().substringAfter('.', "0")
-            decimalString.indexOfFirst { it != '0' } + 3
+            decimalString.indexOfFirst { it != '0' } + 2
         }
     }
 }
