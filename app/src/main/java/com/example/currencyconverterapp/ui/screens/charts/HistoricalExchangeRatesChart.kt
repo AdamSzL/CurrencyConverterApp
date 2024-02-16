@@ -63,7 +63,7 @@ fun HistoricalExchangeRatesChart(
         title = if (selectedTimePeriod == TimePeriod.ONE_DAY) stringResource(R.string.hour) else stringResource(R.string.day),
         titleComponent = textComponent {
             color = MaterialTheme.colorScheme.primary.toArgb()
-            padding = MutableDimensions(0f, 5f)
+            margins = MutableDimensions(0f, 5f)
         }
     )
     val axisValuesOverrider = AxisValuesOverrider.adaptiveYValues(yFraction = 1f)
