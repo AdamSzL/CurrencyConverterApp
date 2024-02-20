@@ -1,6 +1,5 @@
 package com.example.currencyconverterapp.ui.screens.converter
 
-import android.util.Log
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -14,13 +13,13 @@ import androidx.compose.material3.SnackbarResult
 import androidx.compose.material3.rememberBottomSheetScaffoldState
 import androidx.compose.material3.rememberStandardBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import com.example.currencyconverterapp.R
 import com.example.currencyconverterapp.model.Currency
-import com.example.currencyconverterapp.ui.screens.DataStateHandler
 import com.example.currencyconverterapp.ui.screens.converter.base_controller.BaseCurrencyController
 import com.example.currencyconverterapp.ui.screens.converter.conversion_results.ConversionResultsList
 import kotlinx.coroutines.launch
@@ -30,6 +29,7 @@ import kotlinx.coroutines.launch
 fun ConverterScreen(
     converterUiState: ConverterUiState,
     availableCurrencies: List<Currency>,
+    onExchangeRatesRefresh: () -> Unit,
     onBaseCurrencySelection: (Currency) -> Unit,
     onBaseCurrencyValueChange: (Double) -> Unit,
     onTargetCurrencySelection: (Currency) -> Unit,
@@ -48,19 +48,24 @@ fun ConverterScreen(
     val snackbarHostState = remember { SnackbarHostState() }
     val snackbarMessage = stringResource(R.string.currency_deleted_message)
     val snackbarActionMessage = stringResource(R.string.undo)
+    val snackbarErrorMessage = stringResource(R.string.error_loading_exchange_rates)
 
     val scope = rememberCoroutineScope()
 
-    AddCurrencyBottomSheet(
-        currencies = if (converterUiState.exchangeRatesUiState is ExchangeRatesUiState.Success) {
-            availableCurrencies.filter { currency ->
-                currency.code !in
-                        ((converterUiState.exchangeRatesUiState as ExchangeRatesUiState.Success).exchangeRates.map { rate -> rate.code } + converterUiState.baseCurrency.code)
+    if (converterUiState.exchangeRatesUiState == ExchangeRatesUiState.Error) {
+        LaunchedEffect(Unit) {
+            scope.launch {
+                snackbarHostState.currentSnackbarData?.dismiss()
+                snackbarHostState.showSnackbar(snackbarErrorMessage)
             }
-        } else {
-            availableCurrencies
+        }
+    }
+
+    AddCurrencyBottomSheet(
+        currencies = availableCurrencies.filter { currency ->
+            currency.code !in
+                    (converterUiState.exchangeRates.map { rate -> rate.code } + converterUiState.baseCurrency.code)
         },
-        exchangeRatesUiState = converterUiState.exchangeRatesUiState,
         selectedTargetCurrency = converterUiState.selectedTargetCurrency,
         sheetScaffoldState = bottomSheetScaffoldState,
         onTargetCurrencySelection = onTargetCurrencySelection,
@@ -107,19 +112,14 @@ fun ConverterScreen(
                         .fillMaxWidth()
                 )
 
-                DataStateHandler(
-                    uiState = converterUiState.exchangeRatesUiState.toString(),
-                    errorMessage = R.string.error_loading_exchange_rates,
-                    onErrorRetryAction = {
-//                        onExchangeRatesUpdate(
-//                            converterUiState.baseCurrency
-//                        )
-                        Log.d("XXX", "RETRY")
-                    }
-                ) {
+                if (converterUiState.exchangeRatesUiState == ExchangeRatesUiState.Loading) {
+                    LoadingScreen()
+                } else {
                     ConversionResultsList(
                         baseCurrencyData = baseCurrencyData,
-                        exchangeRates = (converterUiState.exchangeRatesUiState as ExchangeRatesUiState.Success).exchangeRates,
+                        exchangeRatesUiState = converterUiState.exchangeRatesUiState,
+                        exchangeRates = converterUiState.exchangeRates,
+                        onExchangeRatesRefresh = onExchangeRatesRefresh,
                         onConversionEntryDeletion = { conversionEntry ->
                             onConversionEntryDeletion(conversionEntry)
                             scope.launch {

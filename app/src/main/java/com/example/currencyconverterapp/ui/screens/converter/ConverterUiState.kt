@@ -10,5 +10,6 @@ data class ConverterUiState(
     val baseCurrencyValue: Double = defaultBaseCurrencyValue,
     val selectedTargetCurrency: Currency? = null,
     val deletedExchangeRate: ExchangeRate? = null,
+    val exchangeRates: List<ExchangeRate> = emptyList(),
     val exchangeRatesUiState: ExchangeRatesUiState = ExchangeRatesUiState.Loading
 )

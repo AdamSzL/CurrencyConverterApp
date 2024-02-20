@@ -59,9 +59,13 @@ fun CurrencyConverterApp(
     val converterUiState = converterViewModel.converterUiState.collectAsStateWithLifecycle().value
     val chartsUiState = chartsViewModel.chartsUiState.collectAsStateWithLifecycle().value
 
-    val updateConverterAndChartsData = {
-//        converterViewModel.fetchExchangeRatesBySavedData()
-        chartsViewModel.getHistoricalExchangeRates()
+    val fetchDataAgain = {
+        currenciesViewModel.restoreToLoadingStateAndFetchCurrencies()
+        converterViewModel.fetchExchangeRates(
+            converterUiState.baseCurrency,
+            converterUiState.exchangeRates
+        )
+//        chartsViewModel.getHistoricalExchangeRates()
     }
 
     Scaffold(
@@ -93,14 +97,18 @@ fun CurrencyConverterApp(
                     DataStateHandler(
                         uiState = currenciesUiState.toString(),
                         errorMessage = R.string.error_loading_currency_data,
-                        onErrorRetryAction = {
-                            currenciesViewModel.restoreToLoadingStateAndFetchCurrencies()
-                            updateConverterAndChartsData()
-                        }
+                        onErrorRetryAction = fetchDataAgain,
                     ) {
                         ConverterScreen(
                             converterUiState = converterUiState,
                             availableCurrencies = (currenciesUiState as CurrenciesUiState.Success).currencies,
+                            onExchangeRatesRefresh = {
+                                converterViewModel.restoreToSuccessState()
+                                converterViewModel.fetchExchangeRates(
+                                    converterUiState.baseCurrency,
+                                    converterUiState.exchangeRates
+                                )
+                            },
                             onBaseCurrencySelection = converterViewModel::selectBaseCurrency,
                             onBaseCurrencyValueChange = converterViewModel::setBaseCurrencyValue,
                             onTargetCurrencySelection = converterViewModel::selectTargetCurrency,
@@ -114,10 +122,7 @@ fun CurrencyConverterApp(
                     DataStateHandler(
                         uiState = currenciesUiState.toString(),
                         errorMessage = R.string.error_loading_currency_data,
-                        onErrorRetryAction = {
-                            currenciesViewModel.restoreToLoadingStateAndFetchCurrencies()
-                            updateConverterAndChartsData()
-                        }
+                        onErrorRetryAction = fetchDataAgain,
                     ) {
                         ChartsScreen(
                             chartsUiState = chartsUiState,

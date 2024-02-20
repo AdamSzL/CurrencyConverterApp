@@ -18,11 +18,12 @@
     <string name="network_off">Network Off</string>
     <string name="error_loading_currency_data">Error Loading Currency Data</string>
     <string name="try_again">Try Again</string>
-    <string name="error_loading_exchange_rates">Error Loading Exchange Rates</string>
+    <string name="error_loading_exchange_rates">Error Fetching Latest Exchange Rates</string>
     <string name="error_loading_chart_data">Error Loading Chart Data</string>
     <string name="loading_data">Loading Data</string>
     <string name="error">Error</string>
     <string name="enter_decimal_number">Enter a decimal number</string>
     <string name="hour">HOUR</string>
     <string name="day">DAY</string>
+    <string name="refresh">Refresh</string>
 </resources>

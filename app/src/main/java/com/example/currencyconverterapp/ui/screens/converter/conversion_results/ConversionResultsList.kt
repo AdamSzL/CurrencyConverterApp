@@ -40,12 +40,15 @@ import com.example.currencyconverterapp.data.defaultBaseCurrencyData
 import com.example.currencyconverterapp.data.defaultExchangeRates
 import com.example.currencyconverterapp.model.ExchangeRate
 import com.example.currencyconverterapp.ui.screens.converter.BaseCurrencyData
+import com.example.currencyconverterapp.ui.screens.converter.ExchangeRatesUiState
 import kotlinx.coroutines.delay
 
 @Composable
 fun ConversionResultsList(
     baseCurrencyData: BaseCurrencyData,
+    exchangeRatesUiState: ExchangeRatesUiState,
     exchangeRates: List<ExchangeRate>,
+    onExchangeRatesRefresh: () -> Unit,
     onConversionEntryDeletion: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -65,10 +68,12 @@ fun ConversionResultsList(
                 modifier = Modifier.fillMaxWidth()
             ) {
                 ConversionResultsListItem(
+                    exchangeRatesUiState = exchangeRatesUiState,
                     baseCurrency = baseCurrencyData.baseCurrency,
                     baseCurrencyValue = baseCurrencyData.baseCurrencyValue,
                     targetCurrency = baseCurrencyData.currencies.find { it.code == exchangeRate.code }!!,
                     exchangeRate = exchangeRate,
+                    onExchangeRatesRefresh = onExchangeRatesRefresh,
                     modifier = Modifier
                         .fillMaxWidth()
                 )
@@ -156,7 +161,9 @@ fun ConversionResultsListPreview(
     ConversionResultsList(
         baseCurrencyData = defaultBaseCurrencyData,
         exchangeRates = defaultExchangeRates,
-        onConversionEntryDeletion = { }
+        onConversionEntryDeletion = { },
+        exchangeRatesUiState = ExchangeRatesUiState.Success,
+        onExchangeRatesRefresh = { }
     )
 }
 

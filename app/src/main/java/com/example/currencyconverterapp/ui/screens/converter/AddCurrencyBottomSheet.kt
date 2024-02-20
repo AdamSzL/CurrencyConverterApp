@@ -26,7 +26,6 @@ import com.example.currencyconverterapp.ui.screens.converter.currencies_dropdown
 @Composable
 fun AddCurrencyBottomSheet(
     currencies: List<Currency>,
-    exchangeRatesUiState: ExchangeRatesUiState,
     selectedTargetCurrency: Currency?,
     sheetScaffoldState: BottomSheetScaffoldState,
     onTargetCurrencySelection: (Currency) -> Unit,
@@ -44,7 +43,6 @@ fun AddCurrencyBottomSheet(
                 SheetHeader()
                 SheetForm(
                     currencies = currencies,
-                    exchangeRatesUiState = exchangeRatesUiState,
                     selectedTargetCurrency = selectedTargetCurrency,
                     onTargetCurrencySelection = onTargetCurrencySelection,
                     onCancel = onCancel,
@@ -81,7 +79,6 @@ fun SheetHeader(
 @Composable
 fun SheetForm(
     currencies: List<Currency>,
-    exchangeRatesUiState: ExchangeRatesUiState,
     selectedTargetCurrency: Currency?,
     onTargetCurrencySelection: (Currency) -> Unit,
     onCancel: () -> Unit,
@@ -101,7 +98,6 @@ fun SheetForm(
         )
         SheetActionButtons(
             selectedTargetCurrency = selectedTargetCurrency,
-            exchangeRatesUiState = exchangeRatesUiState,
             onCancel = onCancel,
             onSubmit = onSubmit
         )
@@ -111,7 +107,6 @@ fun SheetForm(
 @Composable
 fun SheetActionButtons(
     selectedTargetCurrency: Currency?,
-    exchangeRatesUiState: ExchangeRatesUiState,
     onCancel: () -> Unit,
     onSubmit: () -> Unit,
     modifier: Modifier = Modifier,
@@ -130,7 +125,7 @@ fun SheetActionButtons(
         }
         Button(
             onClick = onSubmit,
-            enabled = selectedTargetCurrency != null && exchangeRatesUiState is ExchangeRatesUiState.Success,
+            enabled = selectedTargetCurrency != null
         ) {
             Text(
                 text = stringResource(R.string.add)

@@ -23,15 +23,18 @@ import com.example.currencyconverterapp.data.defaultBaseCurrencyValue
 import com.example.currencyconverterapp.data.defaultExchangeRates
 import com.example.currencyconverterapp.model.Currency
 import com.example.currencyconverterapp.model.ExchangeRate
+import com.example.currencyconverterapp.ui.screens.converter.ExchangeRatesUiState
 import com.example.currencyconverterapp.ui.screens.converter.base_controller.BaseControllerHelpers.getFlagResourceByCurrencyCode
 import com.example.currencyconverterapp.ui.theme.CurrencyConverterAppTheme
 
 @Composable
 fun ConversionResultsListItem(
+    exchangeRatesUiState: ExchangeRatesUiState,
     baseCurrency: Currency,
     baseCurrencyValue: Double,
     targetCurrency: Currency,
     exchangeRate: ExchangeRate,
+    onExchangeRatesRefresh: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Row(
@@ -47,10 +50,12 @@ fun ConversionResultsListItem(
         )
         Spacer(modifier = Modifier.width(dimensionResource(R.dimen.conversion_result_item_flag_gap)))
         ConversionItemMainContent(
+            exchangeRatesUiState = exchangeRatesUiState,
             baseCurrency = baseCurrency,
             baseCurrencyValue = baseCurrencyValue,
             targetCurrency = targetCurrency,
-            exchangeRate = exchangeRate
+            exchangeRate = exchangeRate,
+            onExchangeRatesRefresh = onExchangeRatesRefresh,
         )
     }
 }
@@ -59,12 +64,12 @@ fun ConversionResultsListItem(
 @Preview(showBackground = true)
 @Composable
 fun ConversionResultsListItemPreview(
+    exchangeRatesUiState: ExchangeRatesUiState = ExchangeRatesUiState.Success,
     isLoading: Boolean = false,
-    isSelectionModeEnabled: Boolean = false,
-    isSelected: Boolean = false,
 ) {
     CurrencyConverterAppTheme {
         ConversionResultsListItem(
+            exchangeRatesUiState = exchangeRatesUiState,
             baseCurrency = defaultBaseCurrency,
             targetCurrency = defaultAvailableCurrencies.find { it.code == "GBP" }!!,
             baseCurrencyValue = defaultBaseCurrencyValue,
@@ -73,24 +78,25 @@ fun ConversionResultsListItemPreview(
             } else {
                 defaultExchangeRates.first()
             },
+            onExchangeRatesRefresh = { }
         )
     }
 }
 
 @Preview(showBackground = true)
 @Composable
-fun ConversionResultsListItemSelectionModePreview() {
+fun ConversionResultsListItemPreviewUiStateError() {
     ConversionResultsListItemPreview(
-        isSelectionModeEnabled = true
+        exchangeRatesUiState = ExchangeRatesUiState.Error
     )
 }
 
 @Preview(showBackground = true)
 @Composable
-fun ConversionResultsListItemSelectionModeSelectedPreview() {
+fun ConversionResultsListItemPreviewUiStateErrorValueNull() {
     ConversionResultsListItemPreview(
-        isSelectionModeEnabled = true,
-        isSelected = true,
+        exchangeRatesUiState = ExchangeRatesUiState.Error,
+        isLoading = true,
     )
 }
 
