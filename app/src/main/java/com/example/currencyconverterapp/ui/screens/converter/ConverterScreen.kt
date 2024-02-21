@@ -36,6 +36,7 @@ fun ConverterScreen(
     onTargetCurrencyAddition: (Currency, Currency) -> Unit,
     onConversionEntryDeletion: (String) -> Unit,
     onConversionEntryDeletionUndo: () -> Unit,
+    onErrorMessageDisplayed: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     val bottomSheetScaffoldState = rememberBottomSheetScaffoldState(
@@ -52,11 +53,12 @@ fun ConverterScreen(
 
     val scope = rememberCoroutineScope()
 
-    if (converterUiState.exchangeRatesUiState == ExchangeRatesUiState.Error) {
+    if (converterUiState.exchangeRatesUiState == ExchangeRatesUiState.Error && converterUiState.shouldShowErrorMessage) {
         LaunchedEffect(Unit) {
             scope.launch {
                 snackbarHostState.currentSnackbarData?.dismiss()
                 snackbarHostState.showSnackbar(snackbarErrorMessage)
+                onErrorMessageDisplayed()
             }
         }
     }

@@ -21,7 +21,6 @@ import com.example.currencyconverterapp.model.TimePeriod
 fun TimePeriodDropdownMenu(
     selectedTimePeriod: TimePeriod,
     onTimePeriodSelection: (TimePeriod) -> Unit,
-    onChartUpdate: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     var expanded by remember {
@@ -56,7 +55,6 @@ fun TimePeriodDropdownMenu(
                 DropdownMenuItem(
                     onClick = {
                         onTimePeriodSelection(TimePeriod.getByLabel(option))
-                        onChartUpdate()
                         expanded = false
                     },
                     text = {

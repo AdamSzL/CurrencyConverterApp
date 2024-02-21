@@ -65,7 +65,7 @@ fun CurrencyConverterApp(
             converterUiState.baseCurrency,
             converterUiState.exchangeRates
         )
-//        chartsViewModel.getHistoricalExchangeRates()
+        chartsViewModel.getHistoricalExchangeRates()
     }
 
     Scaffold(
@@ -115,6 +115,7 @@ fun CurrencyConverterApp(
                             onTargetCurrencyAddition = converterViewModel::addTargetCurrency,
                             onConversionEntryDeletion = converterViewModel::deleteConversionEntry,
                             onConversionEntryDeletionUndo = converterViewModel::undoConversionEntryDeletion,
+                            onErrorMessageDisplayed = converterViewModel::errorMessageDisplayed,
                         )
                     }
                 }
@@ -134,7 +135,9 @@ fun CurrencyConverterApp(
                             onTimePeriodSelection = chartsViewModel::selectTimePeriod,
                             onColumnChartToggle = chartsViewModel::toggleColumnChart,
                             onChartUpdate = chartsViewModel::getHistoricalExchangeRates,
+                            onLoadingStateRestore = chartsViewModel::restoreToLoadingState,
                             onBaseAndTargetCurrenciesSwap = chartsViewModel::swapBaseAndTargetCurrencies,
+                            onErrorMessageDisplayed = chartsViewModel::errorMessageDisplayed,
                         )
                     }
                 }

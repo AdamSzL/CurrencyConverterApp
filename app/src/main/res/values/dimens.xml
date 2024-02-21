@@ -36,4 +36,5 @@
     <dimen name="loading_time_period_dropdown_margin">24dp</dimen>
     <dimen name="loading_charts_item_gap">8dp</dimen>
     <dimen name="coin_image_size">100dp</dimen>
+    <dimen name="currency_code_value_gap">16dp</dimen>
 </resources>

@@ -5,7 +5,9 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.CircularProgressIndicator
@@ -18,6 +20,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextOverflow
 import com.example.currencyconverterapp.R
 import com.example.currencyconverterapp.model.Currency
 import com.example.currencyconverterapp.model.ExchangeRate
@@ -42,16 +45,22 @@ fun RowScope.ConversionItemMainContent(
         verticalAlignment = Alignment.CenterVertically,
         modifier = modifier.weight(1f)
     ) {
-        Column {
+        Column(
+            modifier = Modifier.weight(1f)
+        ) {
             Text(
                 text = targetCurrency.code,
                 style = MaterialTheme.typography.displaySmall,
+                maxLines = 1,
             )
             Text(
                 text = targetCurrency.name,
                 style = MaterialTheme.typography.bodyLarge,
+                overflow = TextOverflow.Ellipsis,
+                maxLines = 1,
             )
         }
+        Spacer(modifier = Modifier.width(dimensionResource(R.dimen.currency_code_value_gap)))
         Column(
             horizontalAlignment = Alignment.End,
             verticalArrangement = Arrangement.Center,

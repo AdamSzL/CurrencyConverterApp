@@ -52,6 +52,14 @@ class ConverterViewModel @Inject constructor(
         }
     }
 
+    fun errorMessageDisplayed() {
+        _converterUiState.update {
+            it.copy(
+                shouldShowErrorMessage = false
+            )
+        }
+    }
+
     fun fetchExchangeRates(
         baseCurrency: Currency,
         exchangeRates: List<ExchangeRate>
@@ -66,13 +74,14 @@ class ConverterViewModel @Inject constructor(
                 updateSavedExchangeRates(newExchangeRates)
                 ExchangeRatesUiState.Success
             } catch (e: IOException) {
-                delay(500)
+                delay(200)
                 ExchangeRatesUiState.Error
             }
             _converterUiState.update {
                 it.copy(
                     exchangeRates = newExchangeRates,
-                    exchangeRatesUiState = exchangeRatesUiState
+                    exchangeRatesUiState = exchangeRatesUiState,
+                    shouldShowErrorMessage = true,
                 )
             }
         }

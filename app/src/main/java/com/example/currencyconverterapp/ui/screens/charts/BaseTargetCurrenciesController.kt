@@ -22,7 +22,6 @@ fun BaseTargetCurrenciesController(
     currencies: List<Currency>,
     onBaseCurrencySelection: (Currency) -> Unit,
     onTargetCurrencySelection: (Currency) -> Unit,
-    onChartUpdate: () -> Unit,
     onBaseAndTargetCurrenciesSwap: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -40,7 +39,6 @@ fun BaseTargetCurrenciesController(
             selectedCurrency = chartsUiState.selectedBaseCurrency,
             onCurrencySelection = {
                 onBaseCurrencySelection(it)
-                onChartUpdate()
             },
             modifier = Modifier.weight(1f)
         )
@@ -52,7 +50,6 @@ fun BaseTargetCurrenciesController(
                 .padding(dimensionResource(R.dimen.swap_icon_margin))
                 .clickable {
                     onBaseAndTargetCurrenciesSwap()
-                    onChartUpdate()
                 }
         )
         CurrenciesDropdownMenu(
@@ -61,7 +58,6 @@ fun BaseTargetCurrenciesController(
             selectedCurrency = chartsUiState.selectedTargetCurrency,
             onCurrencySelection = {
                 onTargetCurrencySelection(it)
-                onChartUpdate()
             },
             modifier = Modifier.weight(1f)
         )

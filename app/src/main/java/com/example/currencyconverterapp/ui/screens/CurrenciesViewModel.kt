@@ -6,6 +6,7 @@ import com.example.currencyconverterapp.data.CurrenciesCachedDataRepository
 import com.example.currencyconverterapp.data.CurrencyConverterRepository
 import com.example.currencyconverterapp.ui.screens.converter.CurrenciesUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.first
@@ -51,6 +52,7 @@ class CurrenciesViewModel @Inject constructor(
                 currenciesCachedDataRepository.updateSavedCurrencies(newCurrencies)
                 CurrenciesUiState.Success(newCurrencies)
             } catch (e: IOException) {
+                delay(200)
                 CurrenciesUiState.Error
             }
             _currenciesUiState.update {

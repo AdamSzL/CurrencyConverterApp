@@ -11,5 +11,6 @@ data class ConverterUiState(
     val selectedTargetCurrency: Currency? = null,
     val deletedExchangeRate: ExchangeRate? = null,
     val exchangeRates: List<ExchangeRate> = emptyList(),
-    val exchangeRatesUiState: ExchangeRatesUiState = ExchangeRatesUiState.Loading
+    val exchangeRatesUiState: ExchangeRatesUiState = ExchangeRatesUiState.Loading,
+    val shouldShowErrorMessage: Boolean = true,
 )

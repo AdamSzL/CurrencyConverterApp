@@ -12,15 +12,14 @@ interface ChartsCachedDataRepository {
 
     val savedChartsData: Flow<ChartsCachedData>
 
-    suspend fun updateSavedBaseCurrency(currency: Currency)
-
-    suspend fun updateSavedTargetCurrency(currency: Currency)
-
     suspend fun updateSavedIsColumnChartEnabled(isColumnChartEnabled: Boolean)
 
-    suspend fun updateSavedSelectedTimePeriod(timePeriod: TimePeriod)
-
-    suspend fun updateSavedHistoricalExchangeRates(newHistoricalExchangeRates: List<DateTimeExchangeRatesInfo>)
+    suspend fun updateSavedChartData(
+        historicalExchangeRates: List<DateTimeExchangeRatesInfo>,
+        baseCurrency: Currency,
+        targetCurrency: Currency,
+        selectedTimePeriod: TimePeriod,
+    )
 }
 
 class ChartsCachedDataRepositoryImpl @Inject constructor(
@@ -30,45 +29,25 @@ class ChartsCachedDataRepositoryImpl @Inject constructor(
     override val savedChartsData: Flow<ChartsCachedData>
         get() = chartsCachedDataStore.data
 
-    override suspend fun updateSavedBaseCurrency(currency: Currency) {
-        chartsCachedDataStore.updateData {
-            it.copy(
-                baseCurrency = currency
-            )
-        }
-    }
-
-    override suspend fun updateSavedTargetCurrency(currency: Currency) {
-        chartsCachedDataStore.updateData {
-            it.copy(
-                targetCurrency = currency
-            )
-        }
-    }
-
     override suspend fun updateSavedIsColumnChartEnabled(isColumnChartEnabled: Boolean) {
         chartsCachedDataStore.updateData {
-            it.copy(
-                isColumnChartEnabled = isColumnChartEnabled
-            )
+            it.copy(isColumnChartEnabled = isColumnChartEnabled)
         }
     }
 
-    override suspend fun updateSavedSelectedTimePeriod(timePeriod: TimePeriod) {
+    override suspend fun updateSavedChartData(
+        historicalExchangeRates: List<DateTimeExchangeRatesInfo>,
+        baseCurrency: Currency,
+        targetCurrency: Currency,
+        selectedTimePeriod: TimePeriod
+    ) {
         chartsCachedDataStore.updateData {
             it.copy(
-                selectedTimePeriod = timePeriod
+                historicalExchangeRates = historicalExchangeRates,
+                baseCurrency = baseCurrency,
+                targetCurrency = targetCurrency,
+                selectedTimePeriod = selectedTimePeriod
             )
         }
     }
-
-    override suspend fun updateSavedHistoricalExchangeRates(newHistoricalExchangeRates: List<DateTimeExchangeRatesInfo>) {
-        chartsCachedDataStore.updateData {
-            it.copy(
-                historicalExchangeRates = newHistoricalExchangeRates
-            )
-        }
-    }
-
-
 }
