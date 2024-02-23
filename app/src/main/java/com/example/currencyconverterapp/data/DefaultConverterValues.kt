@@ -3,6 +3,7 @@ package com.example.currencyconverterapp.data
 import com.example.currencyconverterapp.model.Currency
 import com.example.currencyconverterapp.model.DateTimeExchangeRatesInfo
 import com.example.currencyconverterapp.model.ExchangeRate
+import com.example.currencyconverterapp.model.ExchangeRateRelation
 import com.example.currencyconverterapp.model.WatchlistItem
 import com.example.currencyconverterapp.ui.screens.converter.BaseCurrencyData
 
@@ -63,11 +64,13 @@ val defaultWatchlistItems = listOf(
         baseCurrency = defaultBaseCurrency,
         targetCurrency = defaultTargetCurrency,
         targetValue = 1.22,
+        exchangeRateRelation = ExchangeRateRelation.LESS_THAN,
     ),
     WatchlistItem(
         baseCurrency = defaultTargetCurrency,
         targetCurrency = defaultBaseCurrency,
         targetValue = 0.85,
+        exchangeRateRelation = ExchangeRateRelation.GREATER_THAN_OR_EQUAL,
     )
 )
 

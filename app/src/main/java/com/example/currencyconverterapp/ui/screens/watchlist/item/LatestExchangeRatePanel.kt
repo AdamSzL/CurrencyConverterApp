@@ -1,4 +1,4 @@
-package com.example.currencyconverterapp.ui.screens.watchlist.add
+package com.example.currencyconverterapp.ui.screens.watchlist.item
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
@@ -30,6 +30,7 @@ import com.example.currencyconverterapp.model.Currency
 import com.example.currencyconverterapp.ui.screens.charts.DateTimeHandler.getAndFormatTimeDifference
 import com.example.currencyconverterapp.ui.screens.charts.NumberUtilities.printDecimalWithoutScientificNotation
 import com.example.currencyconverterapp.ui.screens.converter.base_controller.BaseControllerHelpers.getFlagResourceByCurrencyCode
+import com.example.currencyconverterapp.ui.screens.watchlist.WatchlistItemCurrencyFlags
 import com.example.currencyconverterapp.ui.theme.Montserrat
 import kotlinx.coroutines.delay
 
@@ -56,28 +57,11 @@ fun BoxScope.LatestExchangeRatePanel(
             .align(Alignment.BottomEnd)
     ) {
         val context = LocalContext.current
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            Image(
-                painter = painterResource(getFlagResourceByCurrencyCode(context, baseCurrency.code.lowercase())),
-                contentDescription = stringResource(R.string.base_currency),
-                modifier = Modifier
-                    .size(dimensionResource(R.dimen.flag_size))
-            )
-            Spacer(modifier = Modifier.width(dimensionResource(R.dimen.exchange_rate_panel_small_gap)))
-            Icon(
-                imageVector = Icons.AutoMirrored.Filled.ArrowForward,
-                contentDescription = null
-            )
-            Spacer(modifier = Modifier.width(dimensionResource(R.dimen.exchange_rate_panel_small_gap)))
-            Image(
-                painter = painterResource(getFlagResourceByCurrencyCode(context, targetCurrency.code.lowercase())),
-                contentDescription = stringResource(R.string.target_currency),
-                modifier = Modifier
-                    .size(dimensionResource(R.dimen.flag_size))
-            )
-        }
+        WatchlistItemCurrencyFlags(
+            context = context,
+            baseCurrency = baseCurrency,
+            targetCurrency = targetCurrency,
+        )
 
         Text(
             text = "1 ${baseCurrency.code} = ${printDecimalWithoutScientificNotation(latestExchangeRate)} ${targetCurrency.code}",

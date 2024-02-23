@@ -1,4 +1,4 @@
-package com.example.currencyconverterapp.ui.screens.watchlist
+package com.example.currencyconverterapp.ui.screens.watchlist.list
 
 import com.example.currencyconverterapp.model.WatchlistItem
 

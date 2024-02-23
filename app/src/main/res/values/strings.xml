@@ -34,4 +34,6 @@
     <string name="notify_me">Notify me when the value of 1 %s is</string>
     <string name="failed_to_load_latest_exchange_rate">Failed to load latest exchange rate</string>
     <string name="retry">Retry</string>
+    <string name="notification_when">%s is %s %s</string>
+    <string name="update">Update</string>
 </resources>

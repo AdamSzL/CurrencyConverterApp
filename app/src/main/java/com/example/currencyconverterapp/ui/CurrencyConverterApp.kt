@@ -11,11 +11,13 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.example.currencyconverterapp.R
 import com.example.currencyconverterapp.ui.screens.CurrenciesViewModel
 import com.example.currencyconverterapp.ui.screens.DataStateHandler
@@ -26,11 +28,10 @@ import com.example.currencyconverterapp.ui.screens.converter.ConverterViewModel
 import com.example.currencyconverterapp.ui.screens.converter.CurrenciesUiState
 import com.example.currencyconverterapp.ui.screens.converter.CurrencyConverterTopAppBar
 import com.example.currencyconverterapp.ui.screens.converter.navigation.BottomNavigationBar
-import com.example.currencyconverterapp.ui.screens.watchlist.WatchlistScreen
-import com.example.currencyconverterapp.ui.screens.watchlist.WatchlistViewModel
-import com.example.currencyconverterapp.ui.screens.watchlist.add.WatchlistAddItemScreen
-import com.example.currencyconverterapp.ui.screens.watchlist.add.WatchlistAddItemViewModel
-import com.example.currencyconverterapp.ui.screens.watchlist.edit.WatchlistEditItemScreen
+import com.example.currencyconverterapp.ui.screens.watchlist.item.WatchlistItemScreen
+import com.example.currencyconverterapp.ui.screens.watchlist.list.WatchlistViewModel
+import com.example.currencyconverterapp.ui.screens.watchlist.item.WatchlistItemViewModel
+import com.example.currencyconverterapp.ui.screens.watchlist.list.WatchlistScreen
 
 enum class CurrencyConverterScreen(
     val route: String,
@@ -82,7 +83,7 @@ fun CurrencyConverterApp(
     val backStackEntry by navController.currentBackStackEntryAsState()
     val route = backStackEntry?.destination?.route
     val (currentCurrencyConverterScreen, currentWatchlistScreen) = if (route != null && route.contains("Watchlist")) {
-        Pair(CurrencyConverterScreen.Watchlist, WatchlistScreen.valueOf(route))
+        Pair(CurrencyConverterScreen.Watchlist, if (route == "WatchlistEditItem/{watchlist_item_id}") WatchlistScreen.WatchlistEditItem else WatchlistScreen.valueOf(route))
     } else {
         Pair(CurrencyConverterScreen.valueOf(route ?: CurrencyConverterScreen.Converter.name), null)
     }
@@ -190,7 +191,9 @@ fun CurrencyConverterApp(
                         ) {
                             WatchlistScreen(
                                 watchlistItems = watchlistItems,
-                                onWatchlistItemEdition = watchlistViewModel::updateWatchlistItem,
+                                onWatchlistItemClicked = { watchlistItemId ->
+                                    navController.navigate("${WatchlistScreen.WatchlistEditItem.name}/${watchlistItemId}")
+                                },
                                 onWatchlistItemDeletion = watchlistViewModel::removeWatchlistItem,
                                 onAddButtonClicked = {
                                     navController.navigate(WatchlistScreen.WatchlistAddItem.name)
@@ -199,38 +202,61 @@ fun CurrencyConverterApp(
                         }
                     }
                     composable(route = WatchlistScreen.WatchlistAddItem.name) {
-                        val watchlistAddItemViewModel: WatchlistAddItemViewModel = hiltViewModel()
+                        val watchlistItemViewModel: WatchlistItemViewModel = hiltViewModel()
                         val watchlistAddItemUiState
-                            = watchlistAddItemViewModel.watchlistAddItemUiState.collectAsStateWithLifecycle().value
+                            = watchlistItemViewModel.watchlistItemUiState.collectAsStateWithLifecycle().value
                         DataStateHandler(
                             uiState = currenciesUiState.toString(),
                             errorMessage = R.string.error_loading_currency_data,
                             onErrorRetryAction = fetchDataAgain
                         ) {
-                            WatchlistAddItemScreen(
+                            WatchlistItemScreen(
                                 currencies = (currenciesUiState as CurrenciesUiState.Success).currencies,
-                                watchlistAddItemUiState = watchlistAddItemUiState,
-                                onBaseCurrencySelection = watchlistAddItemViewModel::selectBaseCurrency,
-                                onTargetCurrencySelection = watchlistAddItemViewModel::selectTargetCurrency,
-                                onBaseAndTargetCurrenciesSwap = watchlistAddItemViewModel::swapBaseAndTargetCurrencies,
-                                onExchangeRateRelationSelection = watchlistAddItemViewModel::selectExchangeRateRelation,
-                                onTargetValueChange = watchlistAddItemViewModel::changeTargetValue,
-                                onWatchlistItemAddition = watchlistAddItemViewModel::addWatchlistItem,
-                                onLatestExchangeRateUpdate = watchlistAddItemViewModel::restoreToLoadingStateAndFetchExchangeRate,
-                                navigateUp = {
+                                watchlistItemUiState = watchlistAddItemUiState,
+                                confirmButtonText = R.string.add,
+                                onBaseCurrencySelection = watchlistItemViewModel::selectBaseCurrency,
+                                onTargetCurrencySelection = watchlistItemViewModel::selectTargetCurrency,
+                                onBaseAndTargetCurrenciesSwap = watchlistItemViewModel::swapBaseAndTargetCurrencies,
+                                onExchangeRateRelationSelection = watchlistItemViewModel::selectExchangeRateRelation,
+                                onTargetValueChange = watchlistItemViewModel::changeTargetValue,
+                                onConfirmButtonClicked = watchlistItemViewModel::addWatchlistItem,
+                                onCancelButtonClicked = {
                                     navController.navigateUp()
-                                }
+                                },
+                                onLatestExchangeRateUpdate = watchlistItemViewModel::restoreToLoadingStateAndFetchExchangeRate,
                             )
                         }
                     }
-                    composable(route = WatchlistScreen.WatchlistEditItem.name) {
+                    composable(
+                        route = "${WatchlistScreen.WatchlistEditItem.name}/{watchlist_item_id}",
+                        arguments = listOf(
+                            navArgument("watchlist_item_id") {
+                                type = NavType.StringType
+                            }
+                        )
+                    ) {
+                        val watchlistItemViewModel: WatchlistItemViewModel = hiltViewModel()
+                        val watchlistItemUiState
+                                = watchlistItemViewModel.watchlistItemUiState.collectAsStateWithLifecycle().value
                         DataStateHandler(
                             uiState = currenciesUiState.toString(),
                             errorMessage = R.string.error_loading_currency_data,
                             onErrorRetryAction = fetchDataAgain
                         ) {
-                            WatchlistEditItemScreen(
+                            WatchlistItemScreen(
                                 currencies = (currenciesUiState as CurrenciesUiState.Success).currencies,
+                                watchlistItemUiState = watchlistItemUiState,
+                                confirmButtonText = R.string.update,
+                                onBaseCurrencySelection = watchlistItemViewModel::selectBaseCurrency,
+                                onTargetCurrencySelection = watchlistItemViewModel::selectTargetCurrency,
+                                onBaseAndTargetCurrenciesSwap = watchlistItemViewModel::swapBaseAndTargetCurrencies,
+                                onExchangeRateRelationSelection = watchlistItemViewModel::selectExchangeRateRelation,
+                                onTargetValueChange = watchlistItemViewModel::changeTargetValue,
+                                onConfirmButtonClicked = watchlistItemViewModel::editWatchlistItem,
+                                onCancelButtonClicked = {
+                                    navController.navigateUp()
+                                },
+                                onLatestExchangeRateUpdate = watchlistItemViewModel::restoreToLoadingStateAndFetchExchangeRate,
                             )
                         }
                     }

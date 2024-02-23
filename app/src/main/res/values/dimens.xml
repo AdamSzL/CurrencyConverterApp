@@ -42,4 +42,9 @@
     <dimen name="currency_value_text_field_symbol_margin">8dp</dimen>
     <dimen name="watchlist_add_item_big_gap">32dp</dimen>
     <dimen name="exchange_rate_panel_small_gap">4dp</dimen>
+    <dimen name="watchlist_item_small_gap">4dp</dimen>
+    <dimen name="watchlist_item_margin">16dp</dimen>
+    <dimen name="watchlist_remove_icon_margin">8dp</dimen>
+    <dimen name="watchlist_entry_list_item_gap">16dp</dimen>
+    <dimen name="watchlist_entry_list_margin">16dp</dimen>
 </resources>

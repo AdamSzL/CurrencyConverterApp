@@ -1,5 +1,6 @@
-package com.example.currencyconverterapp.ui.screens.watchlist
+package com.example.currencyconverterapp.ui.screens.watchlist.list
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
@@ -20,7 +21,7 @@ import com.example.currencyconverterapp.model.WatchlistItem
 @Composable
 fun WatchlistScreen(
     watchlistItems: List<WatchlistItem>,
-    onWatchlistItemEdition: (WatchlistItem) -> Unit,
+    onWatchlistItemClicked: (String) -> Unit,
     onWatchlistItemDeletion: (String) -> Unit,
     onAddButtonClicked: () -> Unit,
     modifier: Modifier = Modifier
@@ -39,7 +40,10 @@ fun WatchlistScreen(
         },
         modifier = modifier
     ) { paddingValues ->
-        Box(
+        WatchlistEntryList(
+            watchlistItems = watchlistItems,
+            onWatchlistItemClicked = onWatchlistItemClicked,
+            onWatchlistItemDeletion = onWatchlistItemDeletion,
             modifier = Modifier.padding(paddingValues)
         )
     }
@@ -51,7 +55,7 @@ fun WatchlistScreen(
 fun WatchlistScreenPreview() {
     WatchlistScreen(
         watchlistItems = defaultWatchlistItems,
-        onWatchlistItemEdition = { },
+        onWatchlistItemClicked = { },
         onWatchlistItemDeletion = { },
         onAddButtonClicked = { },
     )

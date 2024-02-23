@@ -1,4 +1,4 @@
-package com.example.currencyconverterapp.ui.screens.watchlist
+package com.example.currencyconverterapp.ui.screens.watchlist.list
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -28,12 +28,6 @@ class WatchlistViewModel @Inject constructor(
     fun removeWatchlistItem(itemId: String) {
         viewModelScope.launch {
             watchlistDataRepository.removeWatchlistItem(itemId)
-        }
-    }
-
-    fun updateWatchlistItem(watchlistItem: WatchlistItem) {
-        viewModelScope.launch {
-            watchlistDataRepository.updateWatchlistItem(watchlistItem)
         }
     }
 }

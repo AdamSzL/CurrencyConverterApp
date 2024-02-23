@@ -1,4 +1,4 @@
-package com.example.currencyconverterapp.ui.screens.watchlist.add
+package com.example.currencyconverterapp.ui.screens.watchlist.item
 
 import androidx.annotation.StringRes
 import androidx.compose.foundation.Image
@@ -31,27 +31,30 @@ import com.example.currencyconverterapp.model.ExchangeRateRelation
 import com.example.currencyconverterapp.model.WatchlistItem
 import com.example.currencyconverterapp.ui.screens.converter.base_controller.CurrencyValueTextField
 import com.example.currencyconverterapp.ui.screens.converter.currencies_dropdown.CurrenciesDropdownMenu
-import com.example.currencyconverterapp.ui.screens.watchlist.ExchangeRateRelationDropdownMenu
+import com.example.currencyconverterapp.ui.screens.watchlist.item.ExchangeRateRelationDropdownMenu
+import com.example.currencyconverterapp.ui.screens.watchlist.item.LatestExchangeRatePanelStateHandler
+import com.example.currencyconverterapp.ui.screens.watchlist.item.WatchlistItemUiState
 import com.example.currencyconverterapp.ui.theme.CurrencyConverterAppTheme
 
 @Composable
-fun WatchlistAddItemScreen(
+fun WatchlistItemScreen(
     currencies: List<Currency>,
-    watchlistAddItemUiState: WatchlistAddItemUiState,
+    watchlistItemUiState: WatchlistItemUiState,
+    @StringRes confirmButtonText: Int,
     onBaseCurrencySelection: (Currency) -> Unit,
     onTargetCurrencySelection: (Currency) -> Unit,
     onBaseAndTargetCurrenciesSwap: () -> Unit,
     onExchangeRateRelationSelection: (ExchangeRateRelation) -> Unit,
     onTargetValueChange: (Double) -> Unit,
-    onWatchlistItemAddition: (WatchlistItem) -> Unit,
+    onConfirmButtonClicked: (WatchlistItem) -> Unit,
+    onCancelButtonClicked: () -> Unit,
     onLatestExchangeRateUpdate: () -> Unit,
-    navigateUp: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
         modifier = modifier.fillMaxSize()
     ) {
-        with(watchlistAddItemUiState) {
+        with(watchlistItemUiState) {
             Column(
                 modifier = modifier
                     .weight(1f)
@@ -108,7 +111,7 @@ fun WatchlistAddItemScreen(
 
                 Row {
                     ExchangeRateRelationDropdownMenu(
-                        watchlistAddItemUiState = watchlistAddItemUiState,
+                        watchlistAddItemUiState = watchlistItemUiState,
                         onExchangeRateRelationSelection = onExchangeRateRelationSelection,
                         modifier = Modifier.weight(1f)
                     )
@@ -132,10 +135,11 @@ fun WatchlistAddItemScreen(
                 )
             }
 
-            WatchlistAddItemScreenControls(
-                watchlistAddItemUiState = watchlistAddItemUiState,
-                onWatchlistItemAddition = onWatchlistItemAddition,
-                navigateUp = navigateUp
+            WatchlistItemScreenControls(
+                watchlistItemUiState = watchlistItemUiState,
+                confirmButtonText = confirmButtonText,
+                onCancelButtonClicked = onCancelButtonClicked,
+                onConfirmButtonClicked = onConfirmButtonClicked,
             )
         }
     }
@@ -166,17 +170,23 @@ fun EntryItemRow(
 @Composable
 fun WatchlistAddItemScreenPreview() {
     CurrencyConverterAppTheme {
-        WatchlistAddItemScreen(
+        WatchlistItemScreen(
             currencies = defaultAvailableCurrencies,
-            watchlistAddItemUiState = WatchlistAddItemUiState(),
+            watchlistItemUiState = WatchlistItemUiState(
+                latestExchangeRateUiState = LatestExchangeRateUiState.Success(
+                    1.23,
+                    "2024-02-22T16:51:52Z"
+                )
+            ),
+            confirmButtonText = R.string.add,
             onBaseCurrencySelection = { },
             onTargetCurrencySelection = { },
             onBaseAndTargetCurrenciesSwap = { },
             onExchangeRateRelationSelection = { },
             onTargetValueChange = { },
-            onWatchlistItemAddition = { },
+            onConfirmButtonClicked = { },
+            onCancelButtonClicked = { },
             onLatestExchangeRateUpdate = { },
-            navigateUp = {}
         )
     }
 }

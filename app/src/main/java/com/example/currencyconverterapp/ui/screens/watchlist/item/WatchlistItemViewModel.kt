@@ -1,5 +1,6 @@
-package com.example.currencyconverterapp.ui.screens.watchlist.add
+package com.example.currencyconverterapp.ui.screens.watchlist.item
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.currencyconverterapp.data.CurrencyConverterRepository
@@ -10,6 +11,7 @@ import com.example.currencyconverterapp.model.WatchlistItem
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
@@ -17,20 +19,42 @@ import java.io.IOException
 import javax.inject.Inject
 
 @HiltViewModel
-class WatchlistAddItemViewModel @Inject constructor(
+class WatchlistItemViewModel @Inject constructor(
     private val watchlistDataRepository: WatchlistDataRepository,
     private val currencyConverterRepository: CurrencyConverterRepository,
+    private val state: SavedStateHandle
 ): ViewModel() {
 
-    private val _watchlistAddItemUiState = MutableStateFlow(WatchlistAddItemUiState())
-    val watchlistAddItemUiState: StateFlow<WatchlistAddItemUiState> = _watchlistAddItemUiState
+    private val _watchlistItemUiState = MutableStateFlow(WatchlistItemUiState())
+    val watchlistItemUiState: StateFlow<WatchlistItemUiState> = _watchlistItemUiState
 
     init {
-        fetchLatestExchangeRate()
+        val watchlistItemId = state.get<String>("watchlist_item_id")
+        if (watchlistItemId != null) {
+            viewModelScope.launch {
+                watchlistDataRepository.watchlistData.first { watchlistData ->
+                    val watchlistItem = watchlistData.watchlistItems.first { it.id == watchlistItemId }
+                    _watchlistItemUiState.update {
+                        it.copy(
+                            itemId = watchlistItemId,
+                            baseCurrency = watchlistItem.baseCurrency,
+                            targetCurrency = watchlistItem.targetCurrency,
+                            exchangeRateRelation = watchlistItem.exchangeRateRelation,
+                            targetValue = watchlistItem.targetValue,
+                            latestExchangeRateUiState = LatestExchangeRateUiState.Loading
+                        )
+                    }
+                    fetchLatestExchangeRate()
+                    true
+                }
+            }
+        } else {
+            fetchLatestExchangeRate()
+        }
     }
 
     fun selectBaseCurrency(baseCurrency: Currency) {
-        _watchlistAddItemUiState.update {
+        _watchlistItemUiState.update {
             it.copy(
                 baseCurrency = baseCurrency,
             )
@@ -39,7 +63,7 @@ class WatchlistAddItemViewModel @Inject constructor(
     }
 
     fun selectTargetCurrency(targetCurrency: Currency) {
-        _watchlistAddItemUiState.update {
+        _watchlistItemUiState.update {
             it.copy(
                 targetCurrency = targetCurrency,
             )
@@ -48,7 +72,7 @@ class WatchlistAddItemViewModel @Inject constructor(
     }
 
     fun selectExchangeRateRelation(exchangeRateRelation: ExchangeRateRelation) {
-        _watchlistAddItemUiState.update {
+        _watchlistItemUiState.update {
             it.copy(
                 exchangeRateRelation = exchangeRateRelation
             )
@@ -56,7 +80,7 @@ class WatchlistAddItemViewModel @Inject constructor(
     }
 
     fun changeTargetValue(targetValue: Double) {
-        _watchlistAddItemUiState.update {
+        _watchlistItemUiState.update {
             it.copy(
                 targetValue = targetValue,
             )
@@ -64,7 +88,7 @@ class WatchlistAddItemViewModel @Inject constructor(
     }
 
     fun swapBaseAndTargetCurrencies() {
-        _watchlistAddItemUiState.update {
+        _watchlistItemUiState.update {
             it.copy(
                 baseCurrency = it.targetCurrency,
                 targetCurrency = it.baseCurrency,
@@ -74,7 +98,7 @@ class WatchlistAddItemViewModel @Inject constructor(
     }
 
     fun restoreToLoadingStateAndFetchExchangeRate() {
-        _watchlistAddItemUiState.update {
+        _watchlistItemUiState.update {
             it.copy(
                 latestExchangeRateUiState = LatestExchangeRateUiState.Loading
             )
@@ -86,8 +110,8 @@ class WatchlistAddItemViewModel @Inject constructor(
         viewModelScope.launch {
             val latestExchangeRateUiState = try {
                 val exchangeRate = currencyConverterRepository.getLatestExchangeRates(
-                    baseCurrency = watchlistAddItemUiState.value.baseCurrency.code,
-                    currencies = watchlistAddItemUiState.value.targetCurrency.code,
+                    baseCurrency = watchlistItemUiState.value.baseCurrency.code,
+                    currencies = watchlistItemUiState.value.targetCurrency.code,
                 ).data.values.toList().first().value
                 val lastUpdatedAt = Clock.System.now().toString()
                 LatestExchangeRateUiState.Success(
@@ -97,7 +121,7 @@ class WatchlistAddItemViewModel @Inject constructor(
             } catch (e: IOException) {
                 LatestExchangeRateUiState.Error
             }
-            _watchlistAddItemUiState.update {
+            _watchlistItemUiState.update {
                 it.copy(
                     latestExchangeRateUiState = latestExchangeRateUiState
                 )
@@ -108,6 +132,12 @@ class WatchlistAddItemViewModel @Inject constructor(
     fun addWatchlistItem(watchlistItem: WatchlistItem) {
         viewModelScope.launch {
             watchlistDataRepository.addWatchlistItem(watchlistItem)
+        }
+    }
+
+    fun editWatchlistItem(watchlistItem: WatchlistItem) {
+        viewModelScope.launch {
+            watchlistDataRepository.updateWatchlistItem(watchlistItem)
         }
     }
 }

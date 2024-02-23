@@ -9,4 +9,5 @@ data class WatchlistItem(
     val baseCurrency: Currency,
     val targetCurrency: Currency,
     val targetValue: Double,
+    val exchangeRateRelation: ExchangeRateRelation,
 )

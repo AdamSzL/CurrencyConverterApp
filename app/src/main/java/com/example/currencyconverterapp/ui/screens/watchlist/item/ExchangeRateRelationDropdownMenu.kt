@@ -1,14 +1,13 @@
-package com.example.currencyconverterapp.ui.screens.watchlist
+package com.example.currencyconverterapp.ui.screens.watchlist.item
 
 import CustomDropdownMenu
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.example.currencyconverterapp.model.ExchangeRateRelation
-import com.example.currencyconverterapp.ui.screens.watchlist.add.WatchlistAddItemUiState
 
 @Composable
 fun ExchangeRateRelationDropdownMenu(
-    watchlistAddItemUiState: WatchlistAddItemUiState,
+    watchlistAddItemUiState: WatchlistItemUiState,
     onExchangeRateRelationSelection: (ExchangeRateRelation) -> Unit,
     modifier: Modifier = Modifier
 ) {
