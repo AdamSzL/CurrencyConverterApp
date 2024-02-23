@@ -1,7 +1,10 @@
 <resources>
     <string name="app_name">CurrencyConverterApp</string>
-    <string name="currency_converter">Converter</string>
-    <string name="currency_charts">Charts</string>
+    <string name="converter">Converter</string>
+    <string name="charts">Charts</string>
+    <string name="watchlist">Watchlist</string>
+    <string name="watchlist_add">Add Item To Watchlist</string>
+    <string name="watchlist_edit">Edit Watchlist Entry</string>
     <string name="base_currency">Base Currency</string>
     <string name="value">Value</string>
     <string name="add_target_currency">Add Target Currency</string>
@@ -26,4 +29,9 @@
     <string name="hour">HOUR</string>
     <string name="day">DAY</string>
     <string name="refresh">Refresh</string>
+    <string name="back_button">Back</string>
+    <string name="target_value">Target Value</string>
+    <string name="notify_me">Notify me when the value of 1 %s is</string>
+    <string name="failed_to_load_latest_exchange_rate">Failed to load latest exchange rate</string>
+    <string name="retry">Retry</string>
 </resources>

@@ -8,6 +8,8 @@ import com.example.currencyconverterapp.data.CurrenciesCachedDataRepository
 import com.example.currencyconverterapp.data.CurrenciesCachedDataRepositoryImpl
 import com.example.currencyconverterapp.data.CurrencyConverterRepository
 import com.example.currencyconverterapp.data.NetworkCurrencyConverterRepository
+import com.example.currencyconverterapp.data.WatchlistDataRepository
+import com.example.currencyconverterapp.data.WatchlistDataRepositoryImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -41,4 +43,10 @@ abstract class RepositoryModule {
     abstract fun bindCurrenciesCachedDataRepository(
         currenciesCachedDataRepositoryImpl: CurrenciesCachedDataRepositoryImpl
     ): CurrenciesCachedDataRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindWatchlistDataRepository(
+        watchlistDataRepositoryImpl: WatchlistDataRepositoryImpl
+    ): WatchlistDataRepository
 }

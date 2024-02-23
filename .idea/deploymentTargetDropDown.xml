@@ -2,7 +2,7 @@
 <project version="4">
   <component name="deploymentTargetDropDown">
     <value>
-      <entry key="BaseCurrencyControllerPreview">
+      <entry key="WatchlistAddItemScreenPreview - Desktop">
         <State />
       </entry>
       <entry key="app">
@@ -18,7 +18,7 @@
               </deviceKey>
             </Target>
           </targetSelectedWithDropDown>
-          <timeTargetWasSelectedWithDropDown value="2024-02-20T02:27:20.267459700Z" />
+          <timeTargetWasSelectedWithDropDown value="2024-02-23T00:33:48.917739900Z" />
         </State>
       </entry>
     </value>

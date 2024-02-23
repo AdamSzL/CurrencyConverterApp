@@ -98,7 +98,7 @@ fun ChartsScreen(
                 )
             }
             TimePeriodDropdownMenu(
-                selectedTimePeriod = chartsUiState.selectedTimePeriod,
+                chartsUiState = chartsUiState,
                 onTimePeriodSelection = onTimePeriodSelection,
             )
             Spacer(modifier = modifier.height(dimensionResource(R.dimen.chart_currency_gap)))

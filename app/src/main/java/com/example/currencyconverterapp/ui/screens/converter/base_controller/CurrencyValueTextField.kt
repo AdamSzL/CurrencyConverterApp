@@ -4,6 +4,7 @@ import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Warning
@@ -18,17 +19,22 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.currencyconverterapp.R
+import com.example.currencyconverterapp.data.defaultBaseCurrency
+import com.example.currencyconverterapp.model.Currency
 
 @Composable
 fun CurrencyValueTextField(
+    currency: Currency,
     currencyValue: Double,
     onValueChange: (Double) -> Unit,
     modifier: Modifier = Modifier,
+    shouldShowLabel: Boolean = true,
 ) {
     var text by remember { mutableStateOf(currencyValue.toString()) }
     var isError by remember { mutableStateOf(false) }
@@ -58,7 +64,18 @@ fun CurrencyValueTextField(
             }
         },
         isError = isError,
-        label = { Text(stringResource(R.string.value)) },
+        label = {
+            if (shouldShowLabel) {
+                Text(stringResource(R.string.value))
+            }
+        },
+        leadingIcon = {
+            Text(
+                text = currency.symbolNative,
+                style = MaterialTheme.typography.displaySmall,
+                modifier = Modifier.padding(horizontal = dimensionResource(R.dimen.currency_value_text_field_symbol_margin))
+            )
+        },
         textStyle = MaterialTheme.typography.displaySmall.copy(fontWeight = FontWeight.Normal),
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
         supportingText = {
@@ -86,6 +103,7 @@ fun CurrencyValueTextField(
 @Composable
 fun CurrencyValueTextFieldPreview() {
     CurrencyValueTextField(
+        currency = defaultBaseCurrency.copy(symbolNative = "AMM"),
         currencyValue = 0.2,
         onValueChange = { },
     )

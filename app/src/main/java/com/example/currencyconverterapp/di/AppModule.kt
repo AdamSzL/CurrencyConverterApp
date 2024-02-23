@@ -8,9 +8,11 @@ import com.example.currencyconverterapp.BuildConfig
 import com.example.currencyconverterapp.data.ChartsCachedDataSerializer
 import com.example.currencyconverterapp.data.ConverterCachedDataSerializer
 import com.example.currencyconverterapp.data.CurrenciesCachedDataSerializer
+import com.example.currencyconverterapp.data.WatchlistDataSerializer
 import com.example.currencyconverterapp.model.ChartsCachedData
 import com.example.currencyconverterapp.model.ConverterCachedData
 import com.example.currencyconverterapp.model.CurrenciesCachedData
+import com.example.currencyconverterapp.model.WatchlistData
 import com.example.currencyconverterapp.network.CurrencyConverterApiService
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import dagger.Module
@@ -36,6 +38,8 @@ object AppModule {
     private const val CHARTS_DATA_STORE = "charts_data_store"
 
     private const val CURRENCIES_DATA_STORE = "currencies_data_store"
+
+    private const val WATCHLIST_DATA_STORE = "watchlist_data_store"
 
     private val json = Json { ignoreUnknownKeys = true }
 
@@ -89,6 +93,16 @@ object AppModule {
             serializer = CurrenciesCachedDataSerializer,
         ) {
             appContext.dataStoreFile(CURRENCIES_DATA_STORE)
+        }
+    }
+
+    @Provides
+    @Singleton
+    fun provideWatchlistDataStore(@ApplicationContext appContext: Context): DataStore<WatchlistData> {
+        return DataStoreFactory.create(
+            serializer = WatchlistDataSerializer,
+        ) {
+            appContext.dataStoreFile(WATCHLIST_DATA_STORE)
         }
     }
 }

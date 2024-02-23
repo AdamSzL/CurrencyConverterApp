@@ -3,6 +3,7 @@ package com.example.currencyconverterapp.data
 import com.example.currencyconverterapp.model.Currency
 import com.example.currencyconverterapp.model.DateTimeExchangeRatesInfo
 import com.example.currencyconverterapp.model.ExchangeRate
+import com.example.currencyconverterapp.model.WatchlistItem
 import com.example.currencyconverterapp.ui.screens.converter.BaseCurrencyData
 
 val defaultBaseCurrency = Currency(
@@ -47,6 +48,29 @@ val defaultAvailableCurrencies: List<Currency> = listOf(
 
 val defaultBaseCurrencyValue = 1.00
 
+val defaultTargetCurrency = Currency(
+    symbol = "$",
+    name = "US Dollar",
+    symbolNative = "$",
+    decimalDigits = 2,
+    rounding = 0,
+    code = "USD",
+    namePlural = "US dollars"
+)
+
+val defaultWatchlistItems = listOf(
+    WatchlistItem(
+        baseCurrency = defaultBaseCurrency,
+        targetCurrency = defaultTargetCurrency,
+        targetValue = 1.22,
+    ),
+    WatchlistItem(
+        baseCurrency = defaultTargetCurrency,
+        targetCurrency = defaultBaseCurrency,
+        targetValue = 0.85,
+    )
+)
+
 val defaultExchangeRates: List<ExchangeRate> = listOf(
     ExchangeRate(
         code = "USD",
@@ -56,16 +80,6 @@ val defaultExchangeRates: List<ExchangeRate> = listOf(
         code = "PLN",
         value = 4.45,
     ),
-)
-
-val defaultTargetCurrency = Currency(
-    symbol = "$",
-    name = "US Dollar",
-    symbolNative = "$",
-    decimalDigits = 2,
-    rounding = 0,
-    code = "USD",
-    namePlural = "US dollars"
 )
 
 val defaultBaseCurrencyData = BaseCurrencyData(

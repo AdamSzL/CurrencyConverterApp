@@ -13,7 +13,8 @@ import com.example.currencyconverterapp.ui.CurrencyConverterScreen
 
 val screens = listOf(
     CurrencyConverterScreen.Converter,
-    CurrencyConverterScreen.Charts
+    CurrencyConverterScreen.Charts,
+    CurrencyConverterScreen.Watchlist
 )
 
 @Composable

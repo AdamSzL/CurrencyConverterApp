@@ -59,6 +59,7 @@ fun BaseCurrencyController(
         )
         Spacer(modifier = Modifier.width(dimensionResource(R.dimen.converter_input_gap)))
         CurrencyValueTextField(
+            currency = baseCurrencyData.baseCurrency,
             currencyValue = baseCurrencyData.baseCurrencyValue,
             onValueChange = onBaseCurrencyValueChange,
             modifier = Modifier
@@ -72,7 +73,7 @@ fun BaseCurrencyController(
 @Composable
 fun ExposedDropdownMenuBoxScope.BaseCurrencyTextField(
     baseCurrency: Currency?,
-    @StringRes label: Int,
+    @StringRes label: Int?,
     expanded: Boolean,
     modifier: Modifier = Modifier,
 ) {
@@ -84,7 +85,9 @@ fun ExposedDropdownMenuBoxScope.BaseCurrencyTextField(
             value = baseCurrency?.code ?: "",
             onValueChange = {},
             label = {
-                Text(stringResource(label))
+                if (label != null) {
+                    Text(stringResource(label))
+                }
             },
             textStyle = MaterialTheme.typography.displaySmall,
             leadingIcon = {

@@ -16,7 +16,7 @@
     <dimen name="progress_indicator_stroke_width">3dp</dimen>
     <dimen name="app_bar_icons_gap">8dp</dimen>
     <dimen name="top_bar_icon_size">32dp</dimen>
-    <dimen name="dropdown_width">300dp</dimen>
+    <dimen name="dropdown_width">200dp</dimen>
     <dimen name="dropdown_height">300dp</dimen>
     <dimen name="swipe_background_padding">16dp</dimen>
     <dimen name="chart_currency_gap">32dp</dimen>
@@ -37,4 +37,9 @@
     <dimen name="loading_charts_item_gap">8dp</dimen>
     <dimen name="coin_image_size">100dp</dimen>
     <dimen name="currency_code_value_gap">16dp</dimen>
+    <dimen name="watchlist_add_main_margin">16dp</dimen>
+    <dimen name="watchlist_add_additional_gap">8dp</dimen>
+    <dimen name="currency_value_text_field_symbol_margin">8dp</dimen>
+    <dimen name="watchlist_add_item_big_gap">32dp</dimen>
+    <dimen name="exchange_rate_panel_small_gap">4dp</dimen>
 </resources>

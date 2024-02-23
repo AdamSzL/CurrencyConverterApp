@@ -1,8 +1,10 @@
 package com.example.currencyconverterapp
 
 import com.example.currencyconverterapp.model.TimePeriod
+import com.example.currencyconverterapp.ui.screens.charts.DateTimeHandler
 import com.example.currencyconverterapp.ui.screens.charts.DateTimeHandler.formatDateByTimePeriod
 import com.example.currencyconverterapp.ui.screens.charts.DateTimeHandler.formatDigit
+import com.example.currencyconverterapp.ui.screens.charts.DateTimeHandler.getAndFormatTimeDifference
 import com.example.currencyconverterapp.ui.screens.charts.DateTimeHandler.getCurrentDate
 import com.example.currencyconverterapp.ui.screens.charts.DateTimeHandler.getUnitsToSubtractFromTimePeriod
 import com.example.currencyconverterapp.ui.screens.charts.DateTimeHandler.subtractTimePeriodFromDate
@@ -123,5 +125,20 @@ class DateTimeHandlerTests {
     @Test
     fun formatDateByTimePeriod_periodOneYear_returnsDate() {
         assertEquals("2022-01-04", formatDateByTimePeriod("2022-01-04T23:59:59Z", TimePeriod.ONE_YEAR))
+    }
+
+    @Test
+    fun getAndFormatTimeDifference_dateOneHourTwoMinutesThreeSecondsAgo_returnsCorrectDifferenceInCorrectFormat() {
+        assertEquals("1 hour(s) 2 minute(s) 3 second(s) ago", getAndFormatTimeDifference("2024-02-22T16:51:50Z", "2024-02-22T17:53:53Z"))
+    }
+
+    @Test
+    fun getAndFormatTimeDifference_dateTwoDaysTenMinutesAgo_returnsCorrectDifferenceInCorrectFormat() {
+        assertEquals("2 day(s) 10 minute(s) ago", getAndFormatTimeDifference("2024-02-20T17:43:53Z", "2024-02-22T17:53:53Z"))
+    }
+
+    @Test
+    fun getAndFormatTimeDifference_dateNow_returnsNow() {
+        assertEquals("just now", getAndFormatTimeDifference("2024-02-20T17:43:53Z", "2024-02-20T17:43:53Z"))
     }
 }

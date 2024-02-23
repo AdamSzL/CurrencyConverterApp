@@ -7,6 +7,7 @@ import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.minus
+import kotlinx.datetime.periodUntil
 
 data class TimePeriodUnits(val years: Int, val months: Int, val days: Int)
 
@@ -50,4 +51,24 @@ object DateTimeHandler {
     }
 
     fun formatDigit(digit: Int): String = if (digit < 10) "0${digit}" else digit.toString()
+
+    fun getAndFormatTimeDifference(pastDate: String, currentDate: String = Clock.System.now().toString()): String {
+        val instant = Instant.parse(pastDate)
+        val period: DateTimePeriod = instant.periodUntil(Instant.parse(currentDate), TimeZone.UTC)
+        val items = listOf(
+            Pair("day(s)", period.days),
+            Pair("hour(s)", period.hours),
+            Pair("minute(s)", period.minutes),
+            Pair("second(s)", period.seconds)
+        )
+        var result = ""
+        var count = 0
+        for (item in items) {
+            if (item.second != 0) {
+                result += "${if (count != 0) " " else ""}${item.second} ${item.first}"
+                count++
+            }
+        }
+        return if (result.isEmpty()) "just now" else "$result ago"
+    }
 }

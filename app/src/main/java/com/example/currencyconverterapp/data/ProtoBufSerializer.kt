@@ -4,6 +4,7 @@ import androidx.datastore.core.Serializer
 import com.example.currencyconverterapp.model.ChartsCachedData
 import com.example.currencyconverterapp.model.ConverterCachedData
 import com.example.currencyconverterapp.model.CurrenciesCachedData
+import com.example.currencyconverterapp.model.WatchlistData
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.InternalSerializationApi
 import kotlinx.serialization.SerializationException
@@ -48,3 +49,5 @@ object ConverterCachedDataSerializer : ProtoBufSerializer<ConverterCachedData>(C
 object ChartsCachedDataSerializer : ProtoBufSerializer<ChartsCachedData>(ChartsCachedData::class)
 
 object CurrenciesCachedDataSerializer : ProtoBufSerializer<CurrenciesCachedData>(CurrenciesCachedData::class)
+
+object WatchlistDataSerializer : ProtoBufSerializer<WatchlistData>(WatchlistData::class)

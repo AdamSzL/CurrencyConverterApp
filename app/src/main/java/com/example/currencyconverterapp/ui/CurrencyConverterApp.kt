@@ -14,6 +14,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
 import com.example.currencyconverterapp.R
 import com.example.currencyconverterapp.ui.screens.CurrenciesViewModel
@@ -25,6 +26,11 @@ import com.example.currencyconverterapp.ui.screens.converter.ConverterViewModel
 import com.example.currencyconverterapp.ui.screens.converter.CurrenciesUiState
 import com.example.currencyconverterapp.ui.screens.converter.CurrencyConverterTopAppBar
 import com.example.currencyconverterapp.ui.screens.converter.navigation.BottomNavigationBar
+import com.example.currencyconverterapp.ui.screens.watchlist.WatchlistScreen
+import com.example.currencyconverterapp.ui.screens.watchlist.WatchlistViewModel
+import com.example.currencyconverterapp.ui.screens.watchlist.add.WatchlistAddItemScreen
+import com.example.currencyconverterapp.ui.screens.watchlist.add.WatchlistAddItemViewModel
+import com.example.currencyconverterapp.ui.screens.watchlist.edit.WatchlistEditItemScreen
 
 enum class CurrencyConverterScreen(
     val route: String,
@@ -33,14 +39,37 @@ enum class CurrencyConverterScreen(
 ) {
     Converter(
         route = "converter",
-        title = R.string.currency_converter,
+        title = R.string.converter,
         icon = R.drawable.ic_money,
     ),
     Charts(
         route = "charts",
-        title = R.string.currency_charts,
+        title = R.string.charts,
         icon = R.drawable.ic_chart,
     ),
+    Watchlist(
+        route = "watchlist",
+        title = R.string.watchlist,
+        icon = R.drawable.ic_watchlist,
+    )
+}
+
+enum class WatchlistScreen(
+    val route: String,
+    @StringRes val title: Int
+) {
+    WatchlistItems(
+        route = "watchlist_list",
+        title = R.string.watchlist,
+    ),
+    WatchlistAddItem(
+        route = "watchlist_add",
+        title = R.string.watchlist_add,
+    ),
+    WatchlistEditItem(
+        route = "watchlist_edit",
+        title = R.string.watchlist_edit,
+    )
 }
 
 @Composable
@@ -51,9 +80,12 @@ fun CurrencyConverterApp(
 ) {
     val navController = rememberNavController()
     val backStackEntry by navController.currentBackStackEntryAsState()
-    val currentScreen = CurrencyConverterScreen.valueOf(
-        backStackEntry?.destination?.route ?: CurrencyConverterScreen.Converter.name
-    )
+    val route = backStackEntry?.destination?.route
+    val (currentCurrencyConverterScreen, currentWatchlistScreen) = if (route != null && route.contains("Watchlist")) {
+        Pair(CurrencyConverterScreen.Watchlist, WatchlistScreen.valueOf(route))
+    } else {
+        Pair(CurrencyConverterScreen.valueOf(route ?: CurrencyConverterScreen.Converter.name), null)
+    }
 
     val currenciesUiState = currenciesViewModel.currenciesUiState.collectAsStateWithLifecycle().value
     val converterUiState = converterViewModel.converterUiState.collectAsStateWithLifecycle().value
@@ -71,7 +103,10 @@ fun CurrencyConverterApp(
     Scaffold(
         topBar = {
             CurrencyConverterTopAppBar(
-                currentScreen = currentScreen,
+                currentCurrencyConverterScreen = currentCurrencyConverterScreen,
+                currentWatchlistScreen = currentWatchlistScreen,
+                canNavigateBack = currentWatchlistScreen != null && route != WatchlistScreen.WatchlistItems.name,
+                navigateUp = { navController.navigateUp() },
             )
         },
         bottomBar = {
@@ -79,7 +114,7 @@ fun CurrencyConverterApp(
                 navigateTo = { route ->
                     navController.navigate(route)
                 },
-                currentScreen = currentScreen,
+                currentScreen = currentCurrencyConverterScreen,
             )
         }
     ) {
@@ -139,6 +174,65 @@ fun CurrencyConverterApp(
                             onBaseAndTargetCurrenciesSwap = chartsViewModel::swapBaseAndTargetCurrencies,
                             onErrorMessageDisplayed = chartsViewModel::errorMessageDisplayed,
                         )
+                    }
+                }
+                navigation(
+                    startDestination = WatchlistScreen.WatchlistItems.name,
+                    route = CurrencyConverterScreen.Watchlist.name,
+                ) {
+                    composable(route = WatchlistScreen.WatchlistItems.name) {
+                        val watchlistViewModel: WatchlistViewModel = hiltViewModel()
+                        val watchlistItems = watchlistViewModel.watchlistItems.collectAsStateWithLifecycle().value
+                        DataStateHandler(
+                            uiState = currenciesUiState.toString(),
+                            errorMessage = R.string.error_loading_currency_data,
+                            onErrorRetryAction = fetchDataAgain
+                        ) {
+                            WatchlistScreen(
+                                watchlistItems = watchlistItems,
+                                onWatchlistItemEdition = watchlistViewModel::updateWatchlistItem,
+                                onWatchlistItemDeletion = watchlistViewModel::removeWatchlistItem,
+                                onAddButtonClicked = {
+                                    navController.navigate(WatchlistScreen.WatchlistAddItem.name)
+                                }
+                            )
+                        }
+                    }
+                    composable(route = WatchlistScreen.WatchlistAddItem.name) {
+                        val watchlistAddItemViewModel: WatchlistAddItemViewModel = hiltViewModel()
+                        val watchlistAddItemUiState
+                            = watchlistAddItemViewModel.watchlistAddItemUiState.collectAsStateWithLifecycle().value
+                        DataStateHandler(
+                            uiState = currenciesUiState.toString(),
+                            errorMessage = R.string.error_loading_currency_data,
+                            onErrorRetryAction = fetchDataAgain
+                        ) {
+                            WatchlistAddItemScreen(
+                                currencies = (currenciesUiState as CurrenciesUiState.Success).currencies,
+                                watchlistAddItemUiState = watchlistAddItemUiState,
+                                onBaseCurrencySelection = watchlistAddItemViewModel::selectBaseCurrency,
+                                onTargetCurrencySelection = watchlistAddItemViewModel::selectTargetCurrency,
+                                onBaseAndTargetCurrenciesSwap = watchlistAddItemViewModel::swapBaseAndTargetCurrencies,
+                                onExchangeRateRelationSelection = watchlistAddItemViewModel::selectExchangeRateRelation,
+                                onTargetValueChange = watchlistAddItemViewModel::changeTargetValue,
+                                onWatchlistItemAddition = watchlistAddItemViewModel::addWatchlistItem,
+                                onLatestExchangeRateUpdate = watchlistAddItemViewModel::restoreToLoadingStateAndFetchExchangeRate,
+                                navigateUp = {
+                                    navController.navigateUp()
+                                }
+                            )
+                        }
+                    }
+                    composable(route = WatchlistScreen.WatchlistEditItem.name) {
+                        DataStateHandler(
+                            uiState = currenciesUiState.toString(),
+                            errorMessage = R.string.error_loading_currency_data,
+                            onErrorRetryAction = fetchDataAgain
+                        ) {
+                            WatchlistEditItemScreen(
+                                currencies = (currenciesUiState as CurrenciesUiState.Success).currencies,
+                            )
+                        }
                     }
                 }
             }
