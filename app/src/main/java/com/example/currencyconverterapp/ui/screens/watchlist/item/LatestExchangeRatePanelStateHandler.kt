@@ -14,9 +14,9 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.currencyconverterapp.R
-import com.example.currencyconverterapp.data.defaultBaseCurrency
-import com.example.currencyconverterapp.data.defaultTargetCurrency
-import com.example.currencyconverterapp.model.Currency
+import com.example.currencyconverterapp.data.model.Currency
+import com.example.currencyconverterapp.data.util.defaultBaseCurrency
+import com.example.currencyconverterapp.data.util.defaultTargetCurrency
 import com.example.currencyconverterapp.ui.theme.CurrencyConverterAppTheme
 import com.example.currencyconverterapp.ui.theme.Montserrat
 

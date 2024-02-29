@@ -22,8 +22,8 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import com.example.currencyconverterapp.R
-import com.example.currencyconverterapp.model.Currency
-import com.example.currencyconverterapp.model.ExchangeRate
+import com.example.currencyconverterapp.data.model.Currency
+import com.example.currencyconverterapp.data.model.ExchangeRate
 import com.example.currencyconverterapp.ui.screens.converter.ExchangeRatesUiState
 import java.text.NumberFormat
 

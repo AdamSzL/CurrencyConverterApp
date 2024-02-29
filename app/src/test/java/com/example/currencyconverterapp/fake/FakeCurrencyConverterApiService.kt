@@ -1,9 +1,9 @@
 package com.example.currencyconverterapp.fake
 
-import com.example.currencyconverterapp.model.CurrenciesApiResponse
-import com.example.currencyconverterapp.model.HistoricalExchangeRatesApiResponse
-import com.example.currencyconverterapp.model.LatestExchangeRatesApiResponse
-import com.example.currencyconverterapp.network.CurrencyConverterApiService
+import com.example.currencyconverterapp.data.model.CurrenciesApiResponse
+import com.example.currencyconverterapp.data.model.HistoricalExchangeRatesApiResponse
+import com.example.currencyconverterapp.data.model.LatestExchangeRatesApiResponse
+import com.example.currencyconverterapp.data.network.CurrencyConverterApiService
 
 class FakeCurrencyConverterApiService: CurrencyConverterApiService {
     override suspend fun getCurrencies(): CurrenciesApiResponse {

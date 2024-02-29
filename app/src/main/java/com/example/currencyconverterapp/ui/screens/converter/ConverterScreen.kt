@@ -19,7 +19,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import com.example.currencyconverterapp.R
-import com.example.currencyconverterapp.model.Currency
+import com.example.currencyconverterapp.data.model.Currency
 import com.example.currencyconverterapp.ui.screens.converter.base_controller.BaseCurrencyController
 import com.example.currencyconverterapp.ui.screens.converter.conversion_results.ConversionResultsList
 import kotlinx.coroutines.launch

@@ -9,10 +9,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import com.example.currencyconverterapp.R
-import com.example.currencyconverterapp.data.defaultWatchlistItems
-import com.example.currencyconverterapp.model.WatchlistItem
+import com.example.currencyconverterapp.data.model.WatchlistItem
+import com.example.currencyconverterapp.data.util.defaultWatchlistItems
 import com.example.currencyconverterapp.ui.theme.CurrencyConverterAppTheme
 
 @Composable

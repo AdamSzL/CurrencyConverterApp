@@ -13,7 +13,7 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import com.example.currencyconverterapp.R
-import com.example.currencyconverterapp.model.Currency
+import com.example.currencyconverterapp.data.model.Currency
 import com.example.currencyconverterapp.ui.screens.converter.currencies_dropdown.CurrenciesDropdownMenu
 
 @Composable

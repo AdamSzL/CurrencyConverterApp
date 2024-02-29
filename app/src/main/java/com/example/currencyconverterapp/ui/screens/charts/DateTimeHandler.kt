@@ -1,6 +1,6 @@
 package com.example.currencyconverterapp.ui.screens.charts
 
-import com.example.currencyconverterapp.model.TimePeriod
+import com.example.currencyconverterapp.data.model.TimePeriod
 import kotlinx.datetime.Clock
 import kotlinx.datetime.DateTimePeriod
 import kotlinx.datetime.Instant

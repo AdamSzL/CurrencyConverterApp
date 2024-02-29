@@ -14,14 +14,11 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.currencyconverterapp.R
-import com.example.currencyconverterapp.model.WatchlistItem
-import java.util.UUID
 
 @Composable
 fun WatchlistItemScreenControls(
-    watchlistItemUiState: WatchlistItemUiState,
     @StringRes confirmButtonText: Int,
-    onConfirmButtonClicked: (WatchlistItem) -> Unit,
+    onConfirmButtonClicked: () -> Unit,
     onCancelButtonClicked: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -38,18 +35,7 @@ fun WatchlistItemScreenControls(
             Text(text = stringResource(R.string.cancel))
         }
         Button(
-            onClick = {
-                onConfirmButtonClicked(
-                    WatchlistItem(
-                        id = watchlistItemUiState.itemId ?: UUID.randomUUID().toString(),
-                        baseCurrency = watchlistItemUiState.baseCurrency,
-                        targetCurrency = watchlistItemUiState.targetCurrency,
-                        targetValue = watchlistItemUiState.targetValue,
-                        exchangeRateRelation = watchlistItemUiState.exchangeRateRelation,
-                    )
-                )
-                onCancelButtonClicked()
-            },
+            onClick = onConfirmButtonClicked,
             modifier = Modifier.weight(1f)
         ) {
             Text(text = stringResource(confirmButtonText))
@@ -61,7 +47,6 @@ fun WatchlistItemScreenControls(
 @Composable
 private fun WatchlistItemScreenControlsAddPreview() {
     WatchlistItemScreenControls(
-        watchlistItemUiState = WatchlistItemUiState(),
         confirmButtonText = R.string.add,
         onConfirmButtonClicked = { },
         onCancelButtonClicked = { },
@@ -72,7 +57,6 @@ private fun WatchlistItemScreenControlsAddPreview() {
 @Composable
 private fun WatchlistItemScreenControlsUpdatePreview() {
     WatchlistItemScreenControls(
-        watchlistItemUiState = WatchlistItemUiState(),
         confirmButtonText = R.string.update,
         onConfirmButtonClicked = { },
         onCancelButtonClicked = { },

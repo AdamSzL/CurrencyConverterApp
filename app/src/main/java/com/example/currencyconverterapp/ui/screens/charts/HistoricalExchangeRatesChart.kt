@@ -12,8 +12,8 @@ import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import com.example.currencyconverterapp.R
-import com.example.currencyconverterapp.model.Currency
-import com.example.currencyconverterapp.model.TimePeriod
+import com.example.currencyconverterapp.data.model.Currency
+import com.example.currencyconverterapp.data.model.TimePeriod
 import com.example.currencyconverterapp.ui.screens.charts.DateTimeHandler.formatDateByTimePeriod
 import com.example.currencyconverterapp.ui.screens.charts.NumberUtilities.getRoundingByDifference
 import com.patrykandpatrick.vico.compose.axis.horizontal.rememberBottomAxis

@@ -14,11 +14,11 @@ import androidx.compose.ui.Modifier
 import androidx.core.animation.doOnEnd
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import com.example.currencyconverterapp.ui.CurrencyConverterApp
+import com.example.currencyconverterapp.ui.screens.CurrenciesUiState
 import com.example.currencyconverterapp.ui.screens.CurrenciesViewModel
 import com.example.currencyconverterapp.ui.screens.charts.ChartsViewModel
 import com.example.currencyconverterapp.ui.screens.charts.HistoricalExchangeRatesUiState
 import com.example.currencyconverterapp.ui.screens.converter.ConverterViewModel
-import com.example.currencyconverterapp.ui.screens.converter.CurrenciesUiState
 import com.example.currencyconverterapp.ui.screens.converter.ExchangeRatesUiState
 import com.example.currencyconverterapp.ui.theme.CurrencyConverterAppTheme
 import dagger.hilt.android.AndroidEntryPoint

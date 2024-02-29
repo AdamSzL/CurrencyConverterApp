@@ -12,15 +12,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import com.example.currencyconverterapp.R
-import com.example.currencyconverterapp.ui.CurrencyConverterScreen
-import com.example.currencyconverterapp.ui.WatchlistScreen
+import com.example.currencyconverterapp.ui.screens.CurrencyConverterScreen
+import com.example.currencyconverterapp.ui.screens.WatchlistSubScreen
 import com.example.currencyconverterapp.ui.theme.Montserrat
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CurrencyConverterTopAppBar(
     currentCurrencyConverterScreen: CurrencyConverterScreen,
-    currentWatchlistScreen: WatchlistScreen?,
+    currentWatchlistScreen: WatchlistSubScreen?,
     canNavigateBack: Boolean,
     navigateUp: () -> Unit,
     modifier: Modifier = Modifier

@@ -1,9 +1,9 @@
 package com.example.currencyconverterapp.ui.screens.converter
 
-import com.example.currencyconverterapp.data.defaultBaseCurrency
-import com.example.currencyconverterapp.data.defaultBaseCurrencyValue
-import com.example.currencyconverterapp.model.Currency
-import com.example.currencyconverterapp.model.ExchangeRate
+import com.example.currencyconverterapp.data.model.Currency
+import com.example.currencyconverterapp.data.model.ExchangeRate
+import com.example.currencyconverterapp.data.util.defaultBaseCurrency
+import com.example.currencyconverterapp.data.util.defaultBaseCurrencyValue
 
 data class ConverterUiState(
     val baseCurrency: Currency = defaultBaseCurrency,

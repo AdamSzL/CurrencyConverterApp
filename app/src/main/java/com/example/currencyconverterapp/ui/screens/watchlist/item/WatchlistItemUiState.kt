@@ -1,9 +1,9 @@
 package com.example.currencyconverterapp.ui.screens.watchlist.item
 
-import com.example.currencyconverterapp.data.defaultBaseCurrency
-import com.example.currencyconverterapp.data.defaultTargetCurrency
-import com.example.currencyconverterapp.model.Currency
-import com.example.currencyconverterapp.model.ExchangeRateRelation
+import com.example.currencyconverterapp.data.model.Currency
+import com.example.currencyconverterapp.data.model.ExchangeRateRelation
+import com.example.currencyconverterapp.data.util.defaultBaseCurrency
+import com.example.currencyconverterapp.data.util.defaultTargetCurrency
 
 data class WatchlistItemUiState(
     val itemId: String? = null,

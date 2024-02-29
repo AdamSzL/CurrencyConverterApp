@@ -17,7 +17,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import com.example.currencyconverterapp.R
-import com.example.currencyconverterapp.model.Currency
+import com.example.currencyconverterapp.data.model.Currency
 import com.example.currencyconverterapp.ui.screens.converter.base_controller.BaseCurrencyTextField
 
 @OptIn(ExperimentalMaterial3Api::class)

@@ -3,11 +3,11 @@ package com.example.currencyconverterapp.ui.screens.watchlist.item
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.currencyconverterapp.data.CurrencyConverterRepository
-import com.example.currencyconverterapp.data.WatchlistDataRepository
-import com.example.currencyconverterapp.model.Currency
-import com.example.currencyconverterapp.model.ExchangeRateRelation
-import com.example.currencyconverterapp.model.WatchlistItem
+import com.example.currencyconverterapp.data.model.Currency
+import com.example.currencyconverterapp.data.model.ExchangeRateRelation
+import com.example.currencyconverterapp.data.model.WatchlistItem
+import com.example.currencyconverterapp.data.repository.LatestExchangeRatesRepository
+import com.example.currencyconverterapp.data.repository.WatchlistDataRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -21,7 +21,7 @@ import javax.inject.Inject
 @HiltViewModel
 class WatchlistItemViewModel @Inject constructor(
     private val watchlistDataRepository: WatchlistDataRepository,
-    private val currencyConverterRepository: CurrencyConverterRepository,
+    private val latestExchangeRatesRepository: LatestExchangeRatesRepository,
     private val state: SavedStateHandle
 ): ViewModel() {
 
@@ -109,7 +109,7 @@ class WatchlistItemViewModel @Inject constructor(
     private fun fetchLatestExchangeRate() {
         viewModelScope.launch {
             val latestExchangeRateUiState = try {
-                val exchangeRate = currencyConverterRepository.getLatestExchangeRates(
+                val exchangeRate = latestExchangeRatesRepository.getLatestExchangeRates(
                     baseCurrency = watchlistItemUiState.value.baseCurrency.code,
                     currencies = watchlistItemUiState.value.targetCurrency.code,
                 ).data.values.toList().first().value

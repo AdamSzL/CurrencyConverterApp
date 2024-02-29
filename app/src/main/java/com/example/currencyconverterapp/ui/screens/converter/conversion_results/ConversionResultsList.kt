@@ -36,9 +36,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.currencyconverterapp.R
-import com.example.currencyconverterapp.data.defaultBaseCurrencyData
-import com.example.currencyconverterapp.data.defaultExchangeRates
-import com.example.currencyconverterapp.model.ExchangeRate
+import com.example.currencyconverterapp.data.model.ExchangeRate
+import com.example.currencyconverterapp.data.util.defaultBaseCurrencyData
+import com.example.currencyconverterapp.data.util.defaultExchangeRates
 import com.example.currencyconverterapp.ui.screens.converter.BaseCurrencyData
 import com.example.currencyconverterapp.ui.screens.converter.ExchangeRatesUiState
 import kotlinx.coroutines.delay

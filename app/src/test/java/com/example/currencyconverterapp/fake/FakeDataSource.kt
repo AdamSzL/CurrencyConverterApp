@@ -1,12 +1,12 @@
 package com.example.currencyconverterapp.fake
 
-import com.example.currencyconverterapp.model.CurrenciesApiResponse
-import com.example.currencyconverterapp.model.Currency
-import com.example.currencyconverterapp.model.DateTimeExchangeRatesInfo
-import com.example.currencyconverterapp.model.ExchangeRate
-import com.example.currencyconverterapp.model.ExchangeRatesMetaInfo
-import com.example.currencyconverterapp.model.HistoricalExchangeRatesApiResponse
-import com.example.currencyconverterapp.model.LatestExchangeRatesApiResponse
+import com.example.currencyconverterapp.data.model.CurrenciesApiResponse
+import com.example.currencyconverterapp.data.model.Currency
+import com.example.currencyconverterapp.data.model.DateTimeExchangeRatesInfo
+import com.example.currencyconverterapp.data.model.ExchangeRate
+import com.example.currencyconverterapp.data.model.ExchangeRatesMetaInfo
+import com.example.currencyconverterapp.data.model.HistoricalExchangeRatesApiResponse
+import com.example.currencyconverterapp.data.model.LatestExchangeRatesApiResponse
 
 object FakeDataSource {
     val currencies = listOf(

@@ -2,7 +2,6 @@ package com.example.currencyconverterapp.ui.screens.watchlist.list
 
 import android.util.Log
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.MaterialTheme
@@ -15,8 +14,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewScreenSizes
 import com.example.currencyconverterapp.R
-import com.example.currencyconverterapp.data.defaultWatchlistItems
-import com.example.currencyconverterapp.model.WatchlistItem
+import com.example.currencyconverterapp.data.model.WatchlistItem
+import com.example.currencyconverterapp.data.util.defaultWatchlistItems
 
 @Composable
 fun WatchlistScreen(
@@ -26,6 +25,7 @@ fun WatchlistScreen(
     onAddButtonClicked: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    Log.d("XXX", watchlistItems.toString())
     Scaffold(
         floatingActionButton = {
             FloatingActionButton(

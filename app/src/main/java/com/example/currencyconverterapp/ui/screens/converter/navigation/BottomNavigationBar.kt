@@ -9,7 +9,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
-import com.example.currencyconverterapp.ui.CurrencyConverterScreen
+import com.example.currencyconverterapp.ui.screens.CurrencyConverterScreen
 
 val screens = listOf(
     CurrencyConverterScreen.Converter,

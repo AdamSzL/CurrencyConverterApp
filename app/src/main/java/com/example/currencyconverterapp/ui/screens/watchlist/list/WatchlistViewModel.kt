@@ -2,8 +2,8 @@ package com.example.currencyconverterapp.ui.screens.watchlist.list
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.currencyconverterapp.data.WatchlistDataRepository
-import com.example.currencyconverterapp.model.WatchlistItem
+import com.example.currencyconverterapp.data.model.WatchlistItem
+import com.example.currencyconverterapp.data.repository.WatchlistDataRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow

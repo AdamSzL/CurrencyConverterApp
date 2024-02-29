@@ -1,6 +1,6 @@
 package com.example.currencyconverterapp.fake
 
-import com.example.currencyconverterapp.data.NetworkCurrencyConverterRepository
+import com.example.currencyconverterapp.data.repository.NetworkCurrencyConverterRepository
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Test

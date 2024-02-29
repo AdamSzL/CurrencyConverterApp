@@ -2,12 +2,12 @@ package com.example.currencyconverterapp.ui.screens.charts
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.currencyconverterapp.data.ChartsCachedDataRepository
-import com.example.currencyconverterapp.data.CurrencyConverterRepository
-import com.example.currencyconverterapp.data.defaultHistoricalExchangeRates
-import com.example.currencyconverterapp.model.Currency
-import com.example.currencyconverterapp.model.DateTimeExchangeRatesInfo
-import com.example.currencyconverterapp.model.TimePeriod
+import com.example.currencyconverterapp.data.model.Currency
+import com.example.currencyconverterapp.data.model.DateTimeExchangeRatesInfo
+import com.example.currencyconverterapp.data.model.TimePeriod
+import com.example.currencyconverterapp.data.repository.ChartsCachedDataRepository
+import com.example.currencyconverterapp.data.repository.HistoricalExchangeRatesRepository
+import com.example.currencyconverterapp.data.util.defaultHistoricalExchangeRates
 import com.example.currencyconverterapp.ui.screens.charts.DateTimeHandler.getCurrentDate
 import com.example.currencyconverterapp.ui.screens.charts.DateTimeHandler.subtractTimePeriodFromDate
 import com.patrykandpatrick.vico.core.entry.ChartEntryModelProducer
@@ -25,7 +25,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ChartsViewModel @Inject constructor(
-    private val currencyConverterRepository: CurrencyConverterRepository,
+    private val historicalExchangeRatesRepository: HistoricalExchangeRatesRepository,
     private val chartsCachedDataRepository: ChartsCachedDataRepository,
 ): ViewModel() {
     private val _chartsUiState = MutableStateFlow(ChartsUiState())
@@ -77,7 +77,7 @@ class ChartsViewModel @Inject constructor(
         with(chartsUiState.value) {
             viewModelScope.launch {
                 val historicalExchangeRatesUiState = try {
-                    val response = currencyConverterRepository.getHistoricalExchangeRates(
+                    val response = historicalExchangeRatesRepository.getHistoricalExchangeRates(
                         dateTimeStart = subtractTimePeriodFromDate(currentDate, selectedTimePeriod),
                         dateTimeEnd = currentDate,
                         baseCurrency = selectedBaseCurrency.code,

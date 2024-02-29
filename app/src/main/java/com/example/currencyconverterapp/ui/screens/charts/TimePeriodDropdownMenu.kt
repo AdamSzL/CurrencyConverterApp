@@ -4,7 +4,7 @@ import CustomDropdownMenu
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.example.currencyconverterapp.R
-import com.example.currencyconverterapp.model.TimePeriod
+import com.example.currencyconverterapp.data.model.TimePeriod
 
 @Composable
 fun TimePeriodDropdownMenu(

@@ -25,8 +25,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.currencyconverterapp.R
-import com.example.currencyconverterapp.data.defaultBaseCurrency
-import com.example.currencyconverterapp.model.Currency
+import com.example.currencyconverterapp.data.model.Currency
+import com.example.currencyconverterapp.data.util.defaultBaseCurrency
 
 @Composable
 fun CurrencyValueTextField(

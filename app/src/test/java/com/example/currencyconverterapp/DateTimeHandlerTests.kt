@@ -1,6 +1,6 @@
 package com.example.currencyconverterapp
 
-import com.example.currencyconverterapp.model.TimePeriod
+import com.example.currencyconverterapp.data.model.TimePeriod
 import com.example.currencyconverterapp.ui.screens.charts.DateTimeHandler
 import com.example.currencyconverterapp.ui.screens.charts.DateTimeHandler.formatDateByTimePeriod
 import com.example.currencyconverterapp.ui.screens.charts.DateTimeHandler.formatDigit

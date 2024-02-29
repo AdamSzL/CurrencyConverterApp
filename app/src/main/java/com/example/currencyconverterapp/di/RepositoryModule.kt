@@ -1,15 +1,17 @@
 package com.example.currencyconverterapp.di
 
-import com.example.currencyconverterapp.data.ChartsCachedDataRepository
-import com.example.currencyconverterapp.data.ChartsCachedDataRepositoryImpl
-import com.example.currencyconverterapp.data.ConverterCachedDataRepository
-import com.example.currencyconverterapp.data.ConverterCachedDataRepositoryImpl
-import com.example.currencyconverterapp.data.CurrenciesCachedDataRepository
-import com.example.currencyconverterapp.data.CurrenciesCachedDataRepositoryImpl
-import com.example.currencyconverterapp.data.CurrencyConverterRepository
-import com.example.currencyconverterapp.data.NetworkCurrencyConverterRepository
-import com.example.currencyconverterapp.data.WatchlistDataRepository
-import com.example.currencyconverterapp.data.WatchlistDataRepositoryImpl
+import com.example.currencyconverterapp.data.repository.ChartsCachedDataRepository
+import com.example.currencyconverterapp.data.repository.ChartsCachedDataRepositoryImpl
+import com.example.currencyconverterapp.data.repository.ConverterCachedDataRepository
+import com.example.currencyconverterapp.data.repository.ConverterCachedDataRepositoryImpl
+import com.example.currencyconverterapp.data.repository.CurrenciesRepository
+import com.example.currencyconverterapp.data.repository.CurrenciesRepositoryImpl
+import com.example.currencyconverterapp.data.repository.HistoricalExchangeRatesRepository
+import com.example.currencyconverterapp.data.repository.HistoricalExchangeRatesRepositoryImpl
+import com.example.currencyconverterapp.data.repository.LatestExchangeRatesRepository
+import com.example.currencyconverterapp.data.repository.LatestExchangeRatesRepositoryImpl
+import com.example.currencyconverterapp.data.repository.WatchlistDataRepository
+import com.example.currencyconverterapp.data.repository.WatchlistDataRepositoryImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -22,9 +24,21 @@ abstract class RepositoryModule {
 
     @Binds
     @Singleton
-    abstract fun bindCurrencyConverterRepository(
-        networkCurrencyConverterRepository: NetworkCurrencyConverterRepository
-    ): CurrencyConverterRepository
+    abstract fun bindCurrenciesRepository(
+        currenciesRepositoryImpl: CurrenciesRepositoryImpl,
+    ): CurrenciesRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindLatestExchangeRatesRepository(
+        latestExchangeRatesRepositoryImpl: LatestExchangeRatesRepositoryImpl,
+    ): LatestExchangeRatesRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindHistoricalExchangeRatesRepository(
+        historicalExchangeRatesRepositoryImpl: HistoricalExchangeRatesRepositoryImpl,
+    ): HistoricalExchangeRatesRepository
 
     @Binds
     @Singleton
@@ -37,12 +51,6 @@ abstract class RepositoryModule {
     abstract fun bindChartsCachedDataRepository(
         chartsCachedDataRepositoryImpl: ChartsCachedDataRepositoryImpl
     ): ChartsCachedDataRepository
-
-    @Binds
-    @Singleton
-    abstract fun bindCurrenciesCachedDataRepository(
-        currenciesCachedDataRepositoryImpl: CurrenciesCachedDataRepositoryImpl
-    ): CurrenciesCachedDataRepository
 
     @Binds
     @Singleton

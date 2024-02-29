@@ -1,11 +1,12 @@
 package com.example.currencyconverterapp.ui.screens.converter
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.currencyconverterapp.data.ConverterCachedDataRepository
-import com.example.currencyconverterapp.data.CurrencyConverterRepository
-import com.example.currencyconverterapp.model.Currency
-import com.example.currencyconverterapp.model.ExchangeRate
+import com.example.currencyconverterapp.data.model.Currency
+import com.example.currencyconverterapp.data.model.ExchangeRate
+import com.example.currencyconverterapp.data.repository.ConverterCachedDataRepository
+import com.example.currencyconverterapp.data.repository.LatestExchangeRatesRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -18,13 +19,14 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ConverterViewModel @Inject constructor(
-    private val currencyConverterRepository: CurrencyConverterRepository,
+    private val latestExchangeRatesRepository: LatestExchangeRatesRepository,
     private val converterCachedDataRepository: ConverterCachedDataRepository,
 ): ViewModel() {
     private val _converterUiState = MutableStateFlow(ConverterUiState())
     val converterUiState: StateFlow<ConverterUiState> = _converterUiState
 
     init {
+        Log.d("XXX", "Converter ViewModel init")
         viewModelScope.launch {
             converterCachedDataRepository.savedConverterData.first { converterCachedData ->
                 _converterUiState.update {
@@ -67,7 +69,7 @@ class ConverterViewModel @Inject constructor(
         viewModelScope.launch {
             var newExchangeRates = converterUiState.value.exchangeRates
             val exchangeRatesUiState = try {
-                newExchangeRates = currencyConverterRepository.getLatestExchangeRates(
+                newExchangeRates = latestExchangeRatesRepository.getLatestExchangeRates(
                     baseCurrency = baseCurrency.code,
                     currencies = exchangeRates.joinToString(",") { it.code },
                 ).data.values.toList()

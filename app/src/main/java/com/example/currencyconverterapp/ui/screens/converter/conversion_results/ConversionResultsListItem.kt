@@ -17,14 +17,14 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.currencyconverterapp.R
-import com.example.currencyconverterapp.data.defaultAvailableCurrencies
-import com.example.currencyconverterapp.data.defaultBaseCurrency
-import com.example.currencyconverterapp.data.defaultBaseCurrencyValue
-import com.example.currencyconverterapp.data.defaultExchangeRates
-import com.example.currencyconverterapp.model.Currency
-import com.example.currencyconverterapp.model.ExchangeRate
+import com.example.currencyconverterapp.data.model.Currency
+import com.example.currencyconverterapp.data.model.ExchangeRate
+import com.example.currencyconverterapp.data.util.defaultAvailableCurrencies
+import com.example.currencyconverterapp.data.util.defaultBaseCurrency
+import com.example.currencyconverterapp.data.util.defaultBaseCurrencyValue
+import com.example.currencyconverterapp.data.util.defaultExchangeRates
 import com.example.currencyconverterapp.ui.screens.converter.ExchangeRatesUiState
-import com.example.currencyconverterapp.ui.screens.converter.base_controller.BaseControllerHelpers.getFlagResourceByCurrencyCode
+import com.example.currencyconverterapp.ui.screens.converter.base_controller.BaseControllerUtils.getFlagResourceByCurrencyCode
 import com.example.currencyconverterapp.ui.theme.CurrencyConverterAppTheme
 
 @Composable
