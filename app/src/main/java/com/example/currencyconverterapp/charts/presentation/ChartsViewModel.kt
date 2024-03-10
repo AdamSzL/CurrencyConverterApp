@@ -39,17 +39,27 @@ class ChartsViewModel @Inject constructor(
     init {
         viewModelScope.launch {
             chartsCachedDataRepository.savedChartsData.first { savedChartsData ->
+                val isChartDataEmpty = savedChartsData.historicalExchangeRates.isEmpty()
                 _chartsUiState.update {
                     it.copy(
                         selectedBaseCurrency = savedChartsData.baseCurrency,
                         selectedTargetCurrency = savedChartsData.targetCurrency,
                         isColumnChartEnabled = savedChartsData.isColumnChartEnabled,
                         selectedTimePeriod = savedChartsData.selectedTimePeriod,
-                        historicalExchangeRatesUiState = HistoricalExchangeRatesUiState.Success,
+                        historicalExchangeRatesUiState =
+                            if (isChartDataEmpty) {
+                                HistoricalExchangeRatesUiState.Loading
+                            }
+                            else {
+                                HistoricalExchangeRatesUiState.Success
+                            },
                     )
                 }
-                updateChartEntries(savedChartsData.historicalExchangeRates)
-                getHistoricalExchangeRates(shouldShowError = savedChartsData.historicalExchangeRates.isEmpty())
+                if (isChartDataEmpty) {
+                    getHistoricalExchangeRates(shouldShowError = savedChartsData.historicalExchangeRates.isEmpty())
+                } else {
+                    updateChartEntries(savedChartsData.historicalExchangeRates)
+                }
                 true
             }
         }

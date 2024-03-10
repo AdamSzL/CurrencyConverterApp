@@ -6,6 +6,7 @@ import com.example.currencyconverterapp.converter.data.repository.ConverterRepos
 import com.example.currencyconverterapp.core.data.model.Currency
 import com.example.currencyconverterapp.core.data.model.ExchangeRate
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
@@ -42,33 +43,24 @@ class ConverterViewModel @Inject constructor(
         }
     }
 
-    private fun refreshLatestExchangeRatesAndHandleError(
+    fun refreshLatestExchangeRatesAndHandleError(
         baseCurrency: Currency,
         exchangeRates: List<ExchangeRate>
     ) {
-        try {
-            refreshLatestExchangeRates(
-                baseCurrency = baseCurrency,
-                exchangeRates = exchangeRates
-            )
-        } catch (e: IOException) {
-            _converterUiState.update {
-                it.copy(
-                    exchangeRatesUiState = ExchangeRatesUiState.Error
-                )
-            }
-        }
-    }
-
-    fun refreshLatestExchangeRates(
-        baseCurrency: Currency,
-        exchangeRates: List<ExchangeRate>,
-    ) {
         viewModelScope.launch {
-            converterRepository.refreshLatestExchangeRates(
-                baseCurrency = baseCurrency,
-                exchangeRates = exchangeRates
-            )
+            try {
+                converterRepository.refreshLatestExchangeRates(
+                    baseCurrency = baseCurrency,
+                    exchangeRates = exchangeRates
+                )
+            } catch (e: IOException) {
+                delay(200)
+                _converterUiState.update {
+                    it.copy(
+                        exchangeRatesUiState = ExchangeRatesUiState.Error
+                    )
+                }
+            }
         }
     }
 
@@ -104,7 +96,7 @@ class ConverterViewModel @Inject constructor(
                 exchangeRate.copy(value = null)
             }
         resetExchangeRates(updatedExchangeRates)
-        refreshLatestExchangeRates(
+        refreshLatestExchangeRatesAndHandleError(
             baseCurrency = currency,
             exchangeRates = updatedExchangeRates,
         )
@@ -133,7 +125,7 @@ class ConverterViewModel @Inject constructor(
                 exchangeRate.code
             }
         resetExchangeRates(updatedExchangeRates)
-        refreshLatestExchangeRates(
+        refreshLatestExchangeRatesAndHandleError(
             baseCurrency = baseCurrency,
             exchangeRates = updatedExchangeRates
         )

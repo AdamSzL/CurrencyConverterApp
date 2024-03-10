@@ -31,6 +31,7 @@ fun CurrencyConverterNavigation(
     navController: NavHostController,
     currenciesUiState: CurrenciesUiState,
     onCurrenciesRefresh: () -> Unit,
+    onLaunchAppSettingsClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     NavHost(
@@ -44,16 +45,14 @@ fun CurrencyConverterNavigation(
             DataStateHandler(
                 uiState = currenciesUiState.toString(),
                 errorMessage = R.string.error_loading_currency_data,
-                onErrorRetryAction = {
-                    onCurrenciesRefresh()
-                },
+                onErrorRetryAction = onCurrenciesRefresh,
             ) {
                 ConverterScreen(
                     converterUiState = converterUiState,
                     availableCurrencies = (currenciesUiState as CurrenciesUiState.Success).currencies,
                     onExchangeRatesRefresh = {
                         converterViewModel.restoreToSuccessState()
-                        converterViewModel.refreshLatestExchangeRates(
+                        converterViewModel.refreshLatestExchangeRatesAndHandleError(
                             converterUiState.baseCurrency,
                             converterUiState.exchangeRates
                         )
@@ -74,9 +73,7 @@ fun CurrencyConverterNavigation(
             DataStateHandler(
                 uiState = currenciesUiState.toString(),
                 errorMessage = R.string.error_loading_currency_data,
-                onErrorRetryAction = {
-                    onCurrenciesRefresh()
-                },
+                onErrorRetryAction = onCurrenciesRefresh,
             ) {
                 ChartsScreen(
                     chartsUiState = chartsUiState,
@@ -114,7 +111,7 @@ fun CurrencyConverterNavigation(
                         onWatchlistItemDeletion = watchlistViewModel::removeWatchlistItem,
                         onAddButtonClicked = {
                             navController.navigate(WatchlistSubScreen.WatchlistAddItem.name)
-                        }
+                        },
                     )
                 }
             }
@@ -137,7 +134,8 @@ fun CurrencyConverterNavigation(
                                 watchlistItemViewModel.addWatchlistItem(watchlistItem)
                                 navController.navigateUp()
                             },
-                            onCancelButtonClicked = { navController.navigateUp() }
+                            onCancelButtonClicked = { navController.navigateUp() },
+                            onLaunchAppSettingsClick = onLaunchAppSettingsClick,
                         )
                     )
                 }
@@ -168,7 +166,8 @@ fun CurrencyConverterNavigation(
                                 watchlistItemViewModel.editWatchlistItem(watchlistItem)
                                 navController.navigateUp()
                             },
-                            onCancelButtonClicked = { navController.navigateUp() }
+                            onCancelButtonClicked = { navController.navigateUp() },
+                            onLaunchAppSettingsClick = onLaunchAppSettingsClick,
                         )
                     )
                 }
@@ -183,6 +182,7 @@ private fun constructWatchlistItemProps(
     @StringRes confirmButtonText: Int,
     onConfirmButtonClicked: (WatchlistItem) -> Unit,
     onCancelButtonClicked: () -> Unit,
+    onLaunchAppSettingsClick: () -> Unit,
 ): WatchlistItemProps {
     return WatchlistItemProps(
         watchlistItemUiState = watchlistItemUiState,
@@ -195,5 +195,7 @@ private fun constructWatchlistItemProps(
         onConfirmButtonClicked = onConfirmButtonClicked,
         onCancelButtonClicked = onCancelButtonClicked,
         onLatestExchangeRateUpdate = watchlistItemViewModel::restoreToLoadingStateAndFetchExchangeRate,
+        onNotificationsPermissionRejectionStateUpdate = watchlistItemViewModel::updateNotificationsPermissionRejectionState,
+        onLaunchAppSettingsClick = onLaunchAppSettingsClick,
     )
 }

@@ -18,6 +18,7 @@ import com.example.currencyconverterapp.core.presentation.util.NavigationUtils.g
 
 @Composable
 fun CurrencyConverterApp(
+    onLaunchAppSettingsClick: () -> Unit,
     currenciesViewModel: CurrenciesViewModel = hiltViewModel()
 ) {
     val navController = rememberNavController()
@@ -54,6 +55,7 @@ fun CurrencyConverterApp(
                 navController = navController,
                 currenciesUiState = currenciesUiState,
                 onCurrenciesRefresh = currenciesViewModel::restoreToLoadingStateAndRefreshCurrencies,
+                onLaunchAppSettingsClick = onLaunchAppSettingsClick,
             )
         }
     }

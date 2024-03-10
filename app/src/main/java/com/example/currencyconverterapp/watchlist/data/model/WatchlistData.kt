@@ -4,5 +4,6 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class WatchlistData(
-    val watchlistItems: List<WatchlistItem> = emptyList()
+    val watchlistItems: List<WatchlistItem> = emptyList(),
+    val isNotificationsPermissionPermanentlyRejected: Boolean = false,
 )

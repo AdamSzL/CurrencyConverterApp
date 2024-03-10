@@ -12,9 +12,11 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.currencyconverterapp.R
 import com.example.currencyconverterapp.ui.theme.CurrencyConverterAppTheme
 import com.example.currencyconverterapp.ui.theme.Montserrat
 
@@ -32,7 +34,7 @@ fun NotificationRequestInfo(
             imageVector = Icons.Filled.Notifications,
             tint = MaterialTheme.colorScheme.secondary,
             contentDescription = "notifications",
-            modifier = Modifier.size(64.dp)
+            modifier = Modifier.size(dimensionResource(R.dimen.notifications_icon_size_big))
         )
         Text(
             text = "Get Notified!",

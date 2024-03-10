@@ -10,6 +10,7 @@ import com.example.currencyconverterapp.watchlist.data.repository.LatestExchange
 import com.example.currencyconverterapp.watchlist.data.repository.WatchlistDataRepository
 import com.example.currencyconverterapp.watchlist.presentation.item.latest_exchange_rate.LatestExchangeRateUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.first
@@ -31,9 +32,9 @@ class WatchlistItemViewModel @Inject constructor(
 
     init {
         val watchlistItemId = state.get<String>("watchlist_item_id")
-        if (watchlistItemId != null) {
-            viewModelScope.launch {
-                watchlistDataRepository.watchlistData.first { watchlistData ->
+        viewModelScope.launch {
+            watchlistDataRepository.watchlistData.first { watchlistData ->
+                if (watchlistItemId != null) {
                     val watchlistItem = watchlistData.watchlistItems.first { it.id == watchlistItemId }
                     _watchlistItemUiState.update {
                         it.copy(
@@ -42,15 +43,20 @@ class WatchlistItemViewModel @Inject constructor(
                             targetCurrency = watchlistItem.targetCurrency,
                             exchangeRateRelation = watchlistItem.exchangeRateRelation,
                             targetValue = watchlistItem.targetValue,
-                            latestExchangeRateUiState = LatestExchangeRateUiState.Loading
+                            latestExchangeRateUiState = LatestExchangeRateUiState.Loading,
+                            isNotificationsPermissionPermanentlyRejected = watchlistData.isNotificationsPermissionPermanentlyRejected,
                         )
                     }
-                    fetchLatestExchangeRate()
-                    true
+                } else {
+                    _watchlistItemUiState.update {
+                        it.copy(
+                            isNotificationsPermissionPermanentlyRejected = watchlistData.isNotificationsPermissionPermanentlyRejected
+                        )
+                    }
                 }
+                fetchLatestExchangeRate()
+                true
             }
-        } else {
-            fetchLatestExchangeRate()
         }
     }
 
@@ -120,6 +126,7 @@ class WatchlistItemViewModel @Inject constructor(
                     lastUpdatedAt
                 )
             } catch (e: IOException) {
+                delay(200)
                 LatestExchangeRateUiState.Error
             }
             _watchlistItemUiState.update {
@@ -139,6 +146,17 @@ class WatchlistItemViewModel @Inject constructor(
     fun editWatchlistItem(watchlistItem: WatchlistItem) {
         viewModelScope.launch {
             watchlistDataRepository.updateWatchlistItem(watchlistItem)
+        }
+    }
+
+    fun updateNotificationsPermissionRejectionState(state: Boolean) {
+        _watchlistItemUiState.update {
+            it.copy(
+                isNotificationsPermissionPermanentlyRejected = state
+            )
+        }
+        viewModelScope.launch {
+            watchlistDataRepository.updateNotificationsPermissionRejectionState(state)
         }
     }
 }

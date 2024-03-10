@@ -12,5 +12,6 @@ data class WatchlistItemUiState(
     val targetCurrency: Currency = defaultTargetCurrency,
     val exchangeRateRelation: ExchangeRateRelation = ExchangeRateRelation.LESS_THAN,
     val targetValue: Double = 1.15,
-    val latestExchangeRateUiState: LatestExchangeRateUiState = LatestExchangeRateUiState.Loading
+    val latestExchangeRateUiState: LatestExchangeRateUiState = LatestExchangeRateUiState.Loading,
+    val isNotificationsPermissionPermanentlyRejected: Boolean = false,
 )

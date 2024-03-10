@@ -43,12 +43,12 @@ fun LatestExchangeRatePanelStateHandler(
             }
             is LatestExchangeRateUiState.Error -> {
                 Column(
-                    horizontalAlignment = Alignment.CenterHorizontally,
+                    horizontalAlignment = Alignment.End,
                     modifier = Modifier.align(Alignment.BottomEnd)
                 ) {
                     Text(
                         text = stringResource(R.string.failed_to_load_latest_exchange_rate),
-                        style = MaterialTheme.typography.labelSmall.copy(fontFamily = Montserrat),
+                        style = MaterialTheme.typography.labelMedium.copy(fontFamily = Montserrat),
                     )
                     Button(
                         onClick = onLatestExchangeRateUpdate,

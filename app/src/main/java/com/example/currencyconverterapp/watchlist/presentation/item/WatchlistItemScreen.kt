@@ -4,10 +4,6 @@ import android.Manifest
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.AnimatedContent
-import androidx.compose.animation.core.tween
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.animation.togetherWith
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -23,8 +19,11 @@ import com.example.currencyconverterapp.core.data.util.defaultAvailableCurrencie
 import com.example.currencyconverterapp.ui.theme.CurrencyConverterAppTheme
 import com.example.currencyconverterapp.watchlist.data.model.WatchlistItem
 import com.example.currencyconverterapp.watchlist.presentation.item.latest_exchange_rate.LatestExchangeRateUiState
+import com.example.currencyconverterapp.watchlist.presentation.notifications.NotificationsPermissionSettingsDialog
+import com.example.currencyconverterapp.watchlist.presentation.notifications.NotificationsPermissionState
 import com.example.currencyconverterapp.watchlist.presentation.notifications.WatchlistNotificationRequestPermissionRationale
 import com.example.currencyconverterapp.watchlist.presentation.util.NotificationUtils.getNotificationsPermissionState
+import com.example.currencyconverterapp.watchlist.presentation.util.WatchlistItemState
 import java.util.UUID
 
 @Composable
@@ -42,18 +41,34 @@ fun WatchlistItemScreen(
             getNotificationsPermissionState(context)
         )
     }
+    var shouldDisplayPermissionSettingsDialog by remember {
+        mutableStateOf(false)
+    }
+    val watchlistItemState = remember(shouldDisplayPermissionSettingsDialog, shouldShowRationale) {
+        if (shouldDisplayPermissionSettingsDialog) {
+            WatchlistItemState.SHOW_DIALOG
+        } else if (shouldShowRationale) {
+            WatchlistItemState.SHOW_RATIONALE
+        } else {
+            WatchlistItemState.SHOW_ITEM_DETAILS
+        }
+    }
 
     val permissionLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestPermission(),
         onResult = { isGranted ->
+            notificationsPermissionState = getNotificationsPermissionState(context)
             if (isGranted) {
-//                notificationsPermissionState = NotificationsPermissionState.PERMISSION_GRANTED
+                watchlistItemProps.onNotificationsPermissionRejectionStateUpdate(false)
                 watchlistItemProps
                     .onConfirmButtonClicked(
                         getWatchlistItemFromUiState(watchlistItemProps.watchlistItemUiState)
                     )
             } else {
-                watchlistItemProps.onCancelButtonClicked()
+                if (notificationsPermissionState == NotificationsPermissionState.ASK_FOR_PERMISSION) {
+                    watchlistItemProps.onNotificationsPermissionRejectionStateUpdate(true)
+                    shouldShowRationale = false
+                }
             }
         }
     )
@@ -63,30 +78,40 @@ fun WatchlistItemScreen(
     }
 
     AnimatedContent(
-        targetState = shouldShowRationale,
-        transitionSpec = {
-            fadeIn(
-                animationSpec = tween(1000)
-            ) togetherWith fadeOut(animationSpec = tween(1000))
-        }
+        targetState = watchlistItemState,
+        modifier = modifier
     ) { targetState ->
-        if (targetState) {
-            WatchlistNotificationRequestPermissionRationale(
-                onNotInterestedButtonClicked = watchlistItemProps.onCancelButtonClicked,
-                onIAmInButtonClicked = onNotificationsPermissionRequest,
-                modifier = modifier
-            )
-        } else {
-            WatchlistItemDetails(
-                currencies = currencies,
-                watchlistItemProps = watchlistItemProps,
-                notificationsPermissionState = notificationsPermissionState,
-                onRationaleDisplay = {
-                    shouldShowRationale = true
-                },
-                onNotificationsPermissionRequest = onNotificationsPermissionRequest,
-                modifier = modifier
-            )
+        when (targetState) {
+            WatchlistItemState.SHOW_DIALOG -> {
+                NotificationsPermissionSettingsDialog(
+                    onLaunchAppSettingsClicked = watchlistItemProps.onLaunchAppSettingsClick,
+                    onCancelClicked = {
+                        shouldDisplayPermissionSettingsDialog = false
+                    },
+                )
+            }
+            WatchlistItemState.SHOW_RATIONALE -> {
+                WatchlistNotificationRequestPermissionRationale(
+                    onNotInterestedButtonClicked = {
+                        watchlistItemProps.onNotificationsPermissionRejectionStateUpdate(true)
+                        shouldShowRationale = false
+                    },
+                    onIAmInButtonClicked = onNotificationsPermissionRequest,
+                )
+            }
+            WatchlistItemState.SHOW_ITEM_DETAILS -> {
+                WatchlistItemDetails(
+                    currencies = currencies,
+                    watchlistItemProps = watchlistItemProps,
+                    onRationaleDisplay = {
+                        shouldShowRationale = true
+                    },
+                    onNotificationsPermissionSettingsDialogDisplay = {
+                        shouldDisplayPermissionSettingsDialog = true
+                    },
+                    onNotificationsPermissionRequest = onNotificationsPermissionRequest,
+                )
+            }
         }
     }
 }
@@ -126,6 +151,8 @@ fun WatchlistAddItemScreenPreview() {
                 onConfirmButtonClicked = { },
                 onCancelButtonClicked = { },
                 onLatestExchangeRateUpdate = { },
+                onNotificationsPermissionRejectionStateUpdate = { },
+                onLaunchAppSettingsClick = { }
             )
         )
     }

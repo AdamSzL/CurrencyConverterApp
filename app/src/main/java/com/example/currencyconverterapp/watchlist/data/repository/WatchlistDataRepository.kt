@@ -15,6 +15,8 @@ interface WatchlistDataRepository {
     suspend fun removeWatchlistItem(itemId: String)
 
     suspend fun updateWatchlistItem(watchlistItem: WatchlistItem)
+
+    suspend fun updateNotificationsPermissionRejectionState(state: Boolean)
 }
 
 class WatchlistDataRepositoryImpl @Inject constructor(
@@ -45,6 +47,14 @@ class WatchlistDataRepositoryImpl @Inject constructor(
             mutableItems[itemIndex] = watchlistItem
             watchlistData.copy(
                 watchlistItems = mutableItems
+            )
+        }
+    }
+
+    override suspend fun updateNotificationsPermissionRejectionState(state: Boolean) {
+        watchlistDataStore.updateData {
+            it.copy(
+                isNotificationsPermissionPermanentlyRejected = state
             )
         }
     }

@@ -47,4 +47,6 @@
     <dimen name="watchlist_remove_icon_margin">8dp</dimen>
     <dimen name="watchlist_entry_list_item_gap">16dp</dimen>
     <dimen name="watchlist_entry_list_margin">16dp</dimen>
+    <dimen name="notifications_icon_size_big">64dp</dimen>
+    <dimen name="notifications_icon_size_small">32dp</dimen>
 </resources>

@@ -16,4 +16,6 @@ class WatchlistItemProps(
     val onConfirmButtonClicked: (WatchlistItem) -> Unit,
     val onCancelButtonClicked: () -> Unit,
     val onLatestExchangeRateUpdate: () -> Unit,
+    val onNotificationsPermissionRejectionStateUpdate: (Boolean) -> Unit,
+    val onLaunchAppSettingsClick: () -> Unit,
 )

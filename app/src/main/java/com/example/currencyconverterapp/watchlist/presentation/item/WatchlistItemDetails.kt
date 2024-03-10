@@ -11,6 +11,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import com.example.currencyconverterapp.R
@@ -18,16 +19,19 @@ import com.example.currencyconverterapp.converter.presentation.base_controller.C
 import com.example.currencyconverterapp.core.data.model.Currency
 import com.example.currencyconverterapp.watchlist.presentation.item.latest_exchange_rate.LatestExchangeRatePanelStateHandler
 import com.example.currencyconverterapp.watchlist.presentation.notifications.NotificationsPermissionState
+import com.example.currencyconverterapp.watchlist.presentation.util.NotificationUtils.getNotificationsPermissionState
 
 @Composable
 fun WatchlistItemDetails(
     currencies: List<Currency>,
     watchlistItemProps: WatchlistItemProps,
-    notificationsPermissionState: NotificationsPermissionState,
     onRationaleDisplay: () -> Unit,
+    onNotificationsPermissionSettingsDialogDisplay: () -> Unit,
     onNotificationsPermissionRequest: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val context = LocalContext.current
+
     Column(
         modifier = modifier.fillMaxSize()
     ) {
@@ -82,15 +86,24 @@ fun WatchlistItemDetails(
                 confirmButtonText = confirmButtonText,
                 onCancelButtonClicked = onCancelButtonClicked,
                 onConfirmButtonClicked = {
-                    when (notificationsPermissionState) {
+                    val newNotificationsPermissionState = getNotificationsPermissionState(context)
+                    when (newNotificationsPermissionState) {
                         NotificationsPermissionState.PERMISSION_GRANTED -> {
                             onConfirmButtonClicked(getWatchlistItemFromUiState(watchlistItemUiState))
                         }
                         NotificationsPermissionState.ASK_FOR_PERMISSION -> {
-                            onNotificationsPermissionRequest()
+                            if (watchlistItemProps.watchlistItemUiState.isNotificationsPermissionPermanentlyRejected) {
+                                onNotificationsPermissionSettingsDialogDisplay()
+                            } else {
+                                onNotificationsPermissionRequest()
+                            }
                         }
                         NotificationsPermissionState.SHOW_RATIONALE -> {
-                            onRationaleDisplay()
+                            if (watchlistItemProps.watchlistItemUiState.isNotificationsPermissionPermanentlyRejected) {
+                                onNotificationsPermissionSettingsDialogDisplay()
+                            } else {
+                                onRationaleDisplay()
+                            }
                         }
                     }
                 },

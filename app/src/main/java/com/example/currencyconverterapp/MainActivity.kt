@@ -1,7 +1,11 @@
 package com.example.currencyconverterapp
 
 import android.animation.ObjectAnimator
+import android.app.Activity
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
+import android.provider.Settings
 import android.view.View
 import android.view.animation.OvershootInterpolator
 import androidx.activity.ComponentActivity
@@ -62,9 +66,18 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    CurrencyConverterApp()
+                    CurrencyConverterApp(
+                        onLaunchAppSettingsClick = ::openAppSettings,
+                    )
                 }
             }
         }
     }
+}
+
+fun Activity.openAppSettings() {
+    Intent(
+        Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
+        Uri.fromParts("package", packageName, null)
+    ).also(::startActivity)
 }

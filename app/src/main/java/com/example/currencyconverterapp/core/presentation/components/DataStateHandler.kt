@@ -1,6 +1,7 @@
 package com.example.currencyconverterapp.core.presentation.components
 
 import androidx.annotation.StringRes
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.runtime.Composable
 
 @Composable
@@ -10,12 +11,16 @@ fun DataStateHandler(
     onErrorRetryAction: () -> Unit,
     content: @Composable () -> Unit,
 ) {
-    when (uiState) {
-        "Error" -> ErrorScreen(
-            errorMessage = errorMessage,
-            onErrorRetryAction = onErrorRetryAction,
-        )
-        "Loading" -> LoadingScreen()
-        else -> content()
+    AnimatedContent(
+        targetState = uiState
+    ) { targetState ->
+        when (targetState) {
+            "Error" -> ErrorScreen(
+                errorMessage = errorMessage,
+                onErrorRetryAction = onErrorRetryAction,
+            )
+            "Loading" -> LoadingScreen()
+            else -> content()
+        }
     }
 }
