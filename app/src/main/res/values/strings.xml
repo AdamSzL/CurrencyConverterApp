@@ -34,11 +34,12 @@
     <string name="notify_me">Notify me when the value of 1 %s is</string>
     <string name="failed_to_load_latest_exchange_rate">Failed to load latest exchange rate</string>
     <string name="retry">Retry</string>
-    <string name="notification_when">%s is %s %s</string>
+    <string name="notification_when">Notification when %s is %s %s</string>
     <string name="update">Update</string>
     <string name="watchlist_notifications">Watchlist Notifications</string>
     <string name="notifications_dialog_title">Notifications Permission Required</string>
     <string name="notifications_dialog_text">You have permanently declined the notifications permission. You can go to the app settings to grant it.</string>
     <string name="launch_app_settings">Launch App Settings</string>
     <string name="watchlist_item_notification_text">%s is now worth %s</string>
+    <string name="watchlist_entry_title">%s (%s) to %s (%s)</string>
 </resources>

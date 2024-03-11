@@ -1,4 +1,4 @@
-package com.example.currencyconverterapp.watchlist.presentation
+package com.example.currencyconverterapp.watchlist.presentation.item
 
 import android.content.Context
 import androidx.compose.foundation.Image

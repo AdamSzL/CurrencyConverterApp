@@ -20,7 +20,7 @@ import com.example.currencyconverterapp.charts.presentation.util.DateTimeUtils.g
 import com.example.currencyconverterapp.charts.presentation.util.NumberUtils.printDecimalWithoutScientificNotation
 import com.example.currencyconverterapp.core.data.model.Currency
 import com.example.currencyconverterapp.ui.theme.Montserrat
-import com.example.currencyconverterapp.watchlist.presentation.WatchlistItemCurrencyFlags
+import com.example.currencyconverterapp.watchlist.presentation.item.WatchlistItemCurrencyFlags
 import kotlinx.coroutines.delay
 
 @Composable

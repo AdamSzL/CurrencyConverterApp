@@ -2,9 +2,10 @@ package com.example.currencyconverterapp.watchlist.presentation.list
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
@@ -26,13 +27,21 @@ fun WatchlistScreen(
 ) {
     Scaffold(
         floatingActionButton = {
-            FloatingActionButton(
-                onClick = onAddButtonClicked
-            ) {
-                Image(
-                    painter = painterResource(R.drawable.ic_watchlist),
-                    colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.secondary),
-                    contentDescription = stringResource(R.string.watchlist_add)
+            if (watchlistItems.size < 5) {
+                ExtendedFloatingActionButton(
+                    onClick = onAddButtonClicked,
+                    icon = {
+                        Image(
+                            painter = painterResource(R.drawable.ic_watchlist),
+                            colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.secondary),
+                            contentDescription = stringResource(R.string.watchlist_add)
+                        )
+                    },
+                    text = {
+                        Text(
+                            text = "Add Watchlist Item"
+                        )
+                    }
                 )
             }
         },
