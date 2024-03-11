@@ -4,12 +4,15 @@ import android.content.Context
 import androidx.datastore.core.DataStore
 import androidx.datastore.core.DataStoreFactory
 import androidx.datastore.dataStoreFile
+import androidx.work.WorkManager
 import com.example.currencyconverterapp.watchlist.data.local.WatchlistDataSerializer
 import com.example.currencyconverterapp.watchlist.data.model.WatchlistData
 import com.example.currencyconverterapp.watchlist.data.repository.LatestExchangeRatesRepository
 import com.example.currencyconverterapp.watchlist.data.repository.LatestExchangeRatesRepositoryImpl
 import com.example.currencyconverterapp.watchlist.data.repository.WatchlistDataRepository
 import com.example.currencyconverterapp.watchlist.data.repository.WatchlistDataRepositoryImpl
+import com.example.currencyconverterapp.watchlist.data.repository.WatchlistWorkManagerRepository
+import com.example.currencyconverterapp.watchlist.data.repository.WatchlistWorkManagerRepositoryImpl
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
@@ -34,8 +37,14 @@ abstract class WatchlistRepositoryModule {
         watchlistDataRepositoryImpl: WatchlistDataRepositoryImpl
     ): WatchlistDataRepository
 
+    @Binds
+    @Singleton
+    abstract fun bindWatchlistWorkManagerRepository(
+        watchlistWorkManagerRepositoryImpl: WatchlistWorkManagerRepositoryImpl
+    ): WatchlistWorkManagerRepository
+
     companion object {
-        private const val WATCHLIST_DATA_STORE = "watchlist_data_store"
+        const val WATCHLIST_DATA_STORE = "watchlist_data_store"
 
         @Provides
         @Singleton
@@ -45,6 +54,12 @@ abstract class WatchlistRepositoryModule {
             ) {
                 appContext.dataStoreFile(WATCHLIST_DATA_STORE)
             }
+        }
+
+        @Provides
+        @Singleton
+        fun provideWorkManager(@ApplicationContext context: Context): WorkManager {
+            return WorkManager.getInstance(context)
         }
     }
 }

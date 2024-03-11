@@ -20,7 +20,7 @@ interface WatchlistDataRepository {
 }
 
 class WatchlistDataRepositoryImpl @Inject constructor(
-    private val watchlistDataStore: DataStore<WatchlistData>
+    private val watchlistDataStore: DataStore<WatchlistData>,
 ): WatchlistDataRepository {
 
     override val watchlistData: Flow<WatchlistData>

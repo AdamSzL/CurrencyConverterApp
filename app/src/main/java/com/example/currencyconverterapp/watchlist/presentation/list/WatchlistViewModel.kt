@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.currencyconverterapp.watchlist.data.model.WatchlistItem
 import com.example.currencyconverterapp.watchlist.data.repository.WatchlistDataRepository
+import com.example.currencyconverterapp.watchlist.data.repository.WatchlistWorkManagerRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -14,11 +15,17 @@ import javax.inject.Inject
 
 @HiltViewModel
 class WatchlistViewModel @Inject constructor(
-    private val watchlistDataRepository: WatchlistDataRepository
+    private val watchlistDataRepository: WatchlistDataRepository,
+    private val watchlistWorkManagerRepository: WatchlistWorkManagerRepository,
 ): ViewModel() {
 
     val watchlistItems: StateFlow<List<WatchlistItem>> = watchlistDataRepository.watchlistData
-        .map { watchlistData -> watchlistData.watchlistItems }
+        .map { watchlistData ->
+            if (watchlistData.watchlistItems.isEmpty()) {
+                watchlistWorkManagerRepository.cancelWatchlistWork()
+            }
+            watchlistData.watchlistItems
+        }
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5000L),

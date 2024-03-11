@@ -40,4 +40,5 @@
     <string name="notifications_dialog_title">Notifications Permission Required</string>
     <string name="notifications_dialog_text">You have permanently declined the notifications permission. You can go to the app settings to grant it.</string>
     <string name="launch_app_settings">Launch App Settings</string>
+    <string name="watchlist_item_notification_text">%s is now worth %s</string>
 </resources>

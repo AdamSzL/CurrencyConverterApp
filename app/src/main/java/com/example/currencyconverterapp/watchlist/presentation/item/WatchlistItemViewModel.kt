@@ -8,6 +8,7 @@ import com.example.currencyconverterapp.watchlist.data.model.ExchangeRateRelatio
 import com.example.currencyconverterapp.watchlist.data.model.WatchlistItem
 import com.example.currencyconverterapp.watchlist.data.repository.LatestExchangeRatesRepository
 import com.example.currencyconverterapp.watchlist.data.repository.WatchlistDataRepository
+import com.example.currencyconverterapp.watchlist.data.repository.WatchlistWorkManagerRepository
 import com.example.currencyconverterapp.watchlist.presentation.item.latest_exchange_rate.LatestExchangeRateUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
@@ -24,7 +25,8 @@ import javax.inject.Inject
 class WatchlistItemViewModel @Inject constructor(
     private val watchlistDataRepository: WatchlistDataRepository,
     private val latestExchangeRatesRepository: LatestExchangeRatesRepository,
-    private val state: SavedStateHandle
+    private val watchlistWorkManagerRepository: WatchlistWorkManagerRepository,
+    private val state: SavedStateHandle,
 ): ViewModel() {
 
     private val _watchlistItemUiState = MutableStateFlow(WatchlistItemUiState())
@@ -141,6 +143,7 @@ class WatchlistItemViewModel @Inject constructor(
         viewModelScope.launch {
             watchlistDataRepository.addWatchlistItem(watchlistItem)
         }
+        watchlistWorkManagerRepository.startWatchlistWork()
     }
 
     fun editWatchlistItem(watchlistItem: WatchlistItem) {
