@@ -3,7 +3,7 @@ package com.example.currencyconverterapp.charts.data.model
 import kotlinx.serialization.Serializable
 
 @Serializable
-enum class TimePeriod(val label: String) {
+enum class RecentTimePeriod(val label: String) {
     ONE_YEAR("1 Year"),
     SIX_MONTHS("6 Months"),
     THREE_MONTHS("3 Months"),
@@ -13,7 +13,7 @@ enum class TimePeriod(val label: String) {
     ONE_DAY("Last 24 Hours");
 
     companion object {
-        fun getByLabel(label: String): TimePeriod {
+        fun getByLabel(label: String): RecentTimePeriod {
             return entries.find { it.label == label } ?: ONE_YEAR
         }
     }

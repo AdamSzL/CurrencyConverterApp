@@ -21,10 +21,16 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import com.example.currencyconverterapp.R
-import com.example.currencyconverterapp.charts.data.model.TimePeriod
+import com.example.currencyconverterapp.charts.data.model.ChartType
+import com.example.currencyconverterapp.charts.data.model.RecentTimePeriod
+import com.example.currencyconverterapp.charts.data.model.TimePeriodType
 import com.example.currencyconverterapp.core.data.model.Currency
+import com.example.currencyconverterapp.core.data.util.defaultAvailableCurrencies
 import com.example.currencyconverterapp.core.presentation.components.DataStateHandler
+import com.example.currencyconverterapp.ui.theme.CurrencyConverterAppTheme
 import com.patrykandpatrick.vico.core.entry.ChartEntryModelProducer
 import com.patrykandpatrick.vico.core.entry.diff.ExtraStore
 import kotlinx.coroutines.launch
@@ -37,7 +43,7 @@ fun ChartsScreen(
     currencies: List<Currency>,
     onBaseCurrencySelection: (Currency) -> Unit,
     onTargetCurrencySelection: (Currency) -> Unit,
-    onTimePeriodSelection: (TimePeriod) -> Unit,
+    onRecentTimePeriodSelection: (RecentTimePeriod) -> Unit,
     onColumnChartToggle: (Boolean) -> Unit,
     onLoadingStateRestore: () -> Unit,
     onChartUpdate: () -> Unit,
@@ -81,27 +87,38 @@ fun ChartsScreen(
                 onTargetCurrencySelection = onTargetCurrencySelection,
                 onBaseAndTargetCurrenciesSwap = onBaseAndTargetCurrenciesSwap,
             )
-            Row(
-                horizontalArrangement = Arrangement.Center,
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.fillMaxWidth(),
-            ) {
-                Switch(
-                    checked = chartsUiState.isColumnChartEnabled,
-                    onCheckedChange = {
-                        onColumnChartToggle(it)
-                    },
-                )
-                Spacer(modifier = Modifier.width(dimensionResource(R.dimen.column_chart_switch_text_gap)))
-                Text(
-                    text = stringResource(R.string.column_chart)
-                )
-            }
-            TimePeriodDropdownMenu(
-                chartsUiState = chartsUiState,
-                onTimePeriodSelection = onTimePeriodSelection,
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            ChartTypeController(
+                selectedChartType = ChartType.LINE,
             )
-            Spacer(modifier = modifier.height(dimensionResource(R.dimen.chart_currency_gap)))
+//            Row(
+//                horizontalArrangement = Arrangement.Center,
+//                verticalAlignment = Alignment.CenterVertically,
+//                modifier = Modifier.fillMaxWidth(),
+//            ) {
+//                Switch(
+//                    checked = chartsUiState.isColumnChartEnabled,
+//                    onCheckedChange = {
+//                        onColumnChartToggle(it)
+//                    },
+//                )
+//                Spacer(modifier = Modifier.width(dimensionResource(R.dimen.column_chart_switch_text_gap)))
+//                Text(
+//                    text = stringResource(R.string.column_chart)
+//                )
+//            }
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            TimePeriodController(
+                chartsUiState = chartsUiState,
+                selectedTimePeriodType = TimePeriodType.RANGE,
+                onRecentTimePeriodSelection = onRecentTimePeriodSelection,
+            )
+
+//            Spacer(modifier = modifier.height(dimensionResource(R.dimen.chart_currency_gap)))
             DataStateHandler(
                 uiState = chartsUiState.historicalExchangeRatesUiState.toString(),
                 errorMessage = R.string.error_loading_chart_data,
@@ -113,12 +130,54 @@ fun ChartsScreen(
                 HistoricalExchangeRatesChart(
                     baseCurrency = chartsUiState.selectedBaseCurrency,
                     targetCurrency = chartsUiState.selectedTargetCurrency,
-                    selectedTimePeriod = chartsUiState.selectedTimePeriod,
+                    selectedRecentTimePeriod = chartsUiState.selectedRecentTimePeriod,
                     isColumnChartEnabled = chartsUiState.isColumnChartEnabled,
                     chartEntryModelProducer = chartEntryModelProducer,
                     axisExtraKey = axisExtraKey,
                 )
             }
         }
+    }
+}
+
+@Preview
+@Composable
+private fun ChartsScreenLoadingStatePreview() {
+    CurrencyConverterAppTheme {
+        ChartsScreen(
+            chartsUiState = ChartsUiState(),
+            chartEntryModelProducer = ChartEntryModelProducer(),
+            axisExtraKey = ExtraStore.Key<List<String>>(),
+            currencies = defaultAvailableCurrencies,
+            onBaseCurrencySelection = { },
+            onTargetCurrencySelection = { },
+            onRecentTimePeriodSelection = { },
+            onColumnChartToggle = { },
+            onLoadingStateRestore = { },
+            onChartUpdate = { },
+            onBaseAndTargetCurrenciesSwap = { },
+            onErrorMessageDisplayed = {  }
+        )
+    }
+}
+
+@Preview
+@Composable
+private fun ChartsScreenErrorStatePreview() {
+    CurrencyConverterAppTheme {
+        ChartsScreen(
+            chartsUiState = ChartsUiState().copy(historicalExchangeRatesUiState = HistoricalExchangeRatesUiState.Error),
+            chartEntryModelProducer = ChartEntryModelProducer(),
+            axisExtraKey = ExtraStore.Key<List<String>>(),
+            currencies = defaultAvailableCurrencies,
+            onBaseCurrencySelection = { },
+            onTargetCurrencySelection = { },
+            onRecentTimePeriodSelection = { },
+            onColumnChartToggle = { },
+            onLoadingStateRestore = { },
+            onChartUpdate = { },
+            onBaseAndTargetCurrenciesSwap = { },
+            onErrorMessageDisplayed = {  }
+        )
     }
 }

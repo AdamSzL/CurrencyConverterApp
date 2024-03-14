@@ -10,6 +10,6 @@ data class ChartsCachedData(
     val baseCurrency: Currency = defaultBaseCurrency,
     val targetCurrency: Currency = defaultTargetCurrency,
     val isColumnChartEnabled: Boolean = false,
-    val selectedTimePeriod: TimePeriod = TimePeriod.ONE_MONTH,
+    val selectedRecentTimePeriod: RecentTimePeriod = RecentTimePeriod.ONE_MONTH,
     val historicalExchangeRates: List<DateTimeExchangeRatesInfo> = emptyList(),
 )

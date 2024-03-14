@@ -12,7 +12,7 @@ import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import com.example.currencyconverterapp.R
-import com.example.currencyconverterapp.charts.data.model.TimePeriod
+import com.example.currencyconverterapp.charts.data.model.RecentTimePeriod
 import com.example.currencyconverterapp.charts.presentation.util.DateTimeUtils.formatDateByTimePeriod
 import com.example.currencyconverterapp.charts.presentation.util.NumberUtils.getRoundingByDifference
 import com.example.currencyconverterapp.core.data.model.Currency
@@ -37,9 +37,10 @@ fun HistoricalExchangeRatesChart(
     baseCurrency: Currency,
     targetCurrency: Currency,
     isColumnChartEnabled: Boolean,
-    selectedTimePeriod: TimePeriod,
+    selectedRecentTimePeriod: RecentTimePeriod,
     chartEntryModelProducer: ChartEntryModelProducer,
     axisExtraKey: ExtraStore.Key<List<String>>,
+    modifier: Modifier = Modifier,
 ) {
 
     val startAxis = rememberStartAxis(
@@ -58,10 +59,10 @@ fun HistoricalExchangeRatesChart(
         valueFormatter = { value, _ ->
             val axisData = chartEntryModelProducer.getModel()!!.extraStore.get(axisExtraKey)
             val labelDate = axisData[value.toInt() % axisData.size]
-            formatDateByTimePeriod(labelDate, selectedTimePeriod)
+            formatDateByTimePeriod(labelDate, selectedRecentTimePeriod)
         },
         labelRotationDegrees = -90f,
-        title = if (selectedTimePeriod == TimePeriod.ONE_DAY) stringResource(R.string.hour) else stringResource(R.string.day),
+        title = if (selectedRecentTimePeriod == RecentTimePeriod.ONE_DAY) stringResource(R.string.hour) else stringResource(R.string.day),
         titleComponent = textComponent {
             color = MaterialTheme.colorScheme.primary.toArgb()
             margins = MutableDimensions(0f, 5f)
@@ -74,7 +75,7 @@ fun HistoricalExchangeRatesChart(
 
     Column(
         verticalArrangement = Arrangement.Center,
-        modifier = Modifier.fillMaxHeight()
+        modifier = modifier.fillMaxHeight()
     ) {
         Chart(
             chart = if (isColumnChartEnabled) columnChart(
@@ -103,7 +104,7 @@ fun HistoricalExchangeRatesChart(
             bottomAxis = bottomAxis,
             modifier = Modifier
                 .padding(dimensionResource(R.dimen.chart_padding))
-                .fillMaxHeight(0.9f)
+                .fillMaxHeight()
         )
     }
 }

@@ -3,7 +3,7 @@ package com.example.currencyconverterapp.charts.data.repository
 import androidx.datastore.core.DataStore
 import com.example.currencyconverterapp.charts.data.model.ChartsCachedData
 import com.example.currencyconverterapp.charts.data.model.DateTimeExchangeRatesInfo
-import com.example.currencyconverterapp.charts.data.model.TimePeriod
+import com.example.currencyconverterapp.charts.data.model.RecentTimePeriod
 import com.example.currencyconverterapp.core.data.model.Currency
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
@@ -18,7 +18,7 @@ interface ChartsCachedDataRepository {
         historicalExchangeRates: List<DateTimeExchangeRatesInfo>,
         baseCurrency: Currency,
         targetCurrency: Currency,
-        selectedTimePeriod: TimePeriod,
+        selectedRecentTimePeriod: RecentTimePeriod,
     )
 }
 
@@ -39,14 +39,14 @@ class ChartsCachedDataRepositoryImpl @Inject constructor(
         historicalExchangeRates: List<DateTimeExchangeRatesInfo>,
         baseCurrency: Currency,
         targetCurrency: Currency,
-        selectedTimePeriod: TimePeriod
+        selectedRecentTimePeriod: RecentTimePeriod
     ) {
         chartsCachedDataStore.updateData {
             it.copy(
                 historicalExchangeRates = historicalExchangeRates,
                 baseCurrency = baseCurrency,
                 targetCurrency = targetCurrency,
-                selectedTimePeriod = selectedTimePeriod
+                selectedRecentTimePeriod = selectedRecentTimePeriod
             )
         }
     }

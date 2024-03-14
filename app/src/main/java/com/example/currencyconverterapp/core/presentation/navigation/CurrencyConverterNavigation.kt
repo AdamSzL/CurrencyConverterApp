@@ -82,7 +82,7 @@ fun CurrencyConverterNavigation(
                     currencies = (currenciesUiState as CurrenciesUiState.Success).currencies,
                     onBaseCurrencySelection = chartsViewModel::selectBaseCurrency,
                     onTargetCurrencySelection = chartsViewModel::selectTargetCurrency,
-                    onTimePeriodSelection = chartsViewModel::selectTimePeriod,
+                    onRecentTimePeriodSelection = chartsViewModel::selectRecentTimePeriod,
                     onColumnChartToggle = chartsViewModel::toggleColumnChart,
                     onChartUpdate = chartsViewModel::getHistoricalExchangeRates,
                     onLoadingStateRestore = chartsViewModel::restoreToLoadingState,

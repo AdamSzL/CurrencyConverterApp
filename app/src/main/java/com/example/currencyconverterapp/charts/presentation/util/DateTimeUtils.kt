@@ -1,6 +1,6 @@
 package com.example.currencyconverterapp.charts.presentation.util
 
-import com.example.currencyconverterapp.charts.data.model.TimePeriod
+import com.example.currencyconverterapp.charts.data.model.RecentTimePeriod
 import kotlinx.datetime.Clock
 import kotlinx.datetime.DateTimePeriod
 import kotlinx.datetime.Instant
@@ -16,33 +16,33 @@ object DateTimeUtils {
 
     fun getCurrentDate(): String = "${getCurrentInstant().toString().substringBeforeLast('.')}Z"
 
-    fun getUnitsToSubtractFromTimePeriod(timePeriod: TimePeriod): TimePeriodUnits {
-        val years = if (timePeriod == TimePeriod.ONE_YEAR) 1 else 0
-        val months = when (timePeriod) {
-            TimePeriod.SIX_MONTHS -> 6
-            TimePeriod.THREE_MONTHS -> 3
-            TimePeriod.ONE_MONTH -> 1
+    fun getUnitsToSubtractFromTimePeriod(recentTimePeriod: RecentTimePeriod): TimePeriodUnits {
+        val years = if (recentTimePeriod == RecentTimePeriod.ONE_YEAR) 1 else 0
+        val months = when (recentTimePeriod) {
+            RecentTimePeriod.SIX_MONTHS -> 6
+            RecentTimePeriod.THREE_MONTHS -> 3
+            RecentTimePeriod.ONE_MONTH -> 1
             else -> 0
         }
-        val days = when (timePeriod) {
-            TimePeriod.TWO_WEEKS -> 14
-            TimePeriod.ONE_WEEK -> 7
-            TimePeriod.ONE_DAY -> 1
+        val days = when (recentTimePeriod) {
+            RecentTimePeriod.TWO_WEEKS -> 14
+            RecentTimePeriod.ONE_WEEK -> 7
+            RecentTimePeriod.ONE_DAY -> 1
             else -> 0
         }
         return TimePeriodUnits(years, months, days)
     }
 
-    fun subtractTimePeriodFromDate(date: String, timePeriod: TimePeriod): String {
+    fun subtractTimePeriodFromDate(date: String, recentTimePeriod: RecentTimePeriod): String {
         val instant = Instant.parse(date)
         val timeZone = TimeZone.currentSystemDefault()
-        val (years, months, days) = getUnitsToSubtractFromTimePeriod(timePeriod)
+        val (years, months, days) = getUnitsToSubtractFromTimePeriod(recentTimePeriod)
         return instant.minus(DateTimePeriod(years = years, months = months, days = days), timeZone).toString()
     }
 
-    fun formatDateByTimePeriod(date: String, timePeriod: TimePeriod): String {
+    fun formatDateByTimePeriod(date: String, recentTimePeriod: RecentTimePeriod): String {
         val localDateTime = LocalDateTime.parse(date.dropLast(1))
-        return if (timePeriod == TimePeriod.ONE_DAY) {
+        return if (recentTimePeriod == RecentTimePeriod.ONE_DAY) {
             "${formatDigit(localDateTime.hour)}:${formatDigit(localDateTime.minute)}:${formatDigit(localDateTime.second)}"
         } else {
             "${localDateTime.year}-${formatDigit(localDateTime.monthNumber)}-${formatDigit(localDateTime.dayOfMonth)}"

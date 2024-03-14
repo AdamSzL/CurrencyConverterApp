@@ -1,6 +1,6 @@
 package com.example.currencyconverterapp
 
-import com.example.currencyconverterapp.charts.data.model.TimePeriod
+import com.example.currencyconverterapp.charts.data.model.RecentTimePeriod
 import com.example.currencyconverterapp.charts.presentation.util.DateTimeUtils.formatDateByTimePeriod
 import com.example.currencyconverterapp.charts.presentation.util.DateTimeUtils.formatDigit
 import com.example.currencyconverterapp.charts.presentation.util.DateTimeUtils.getAndFormatTimeDifference
@@ -25,31 +25,31 @@ class DateTimeUtilsTests {
 
     @Test
     fun getUnitsToSubtractFromTimePeriod_timePeriodTwoWeeks_returnsCorrectUnits() {
-        val result = getUnitsToSubtractFromTimePeriod(TimePeriod.TWO_WEEKS)
+        val result = getUnitsToSubtractFromTimePeriod(RecentTimePeriod.TWO_WEEKS)
         assertEquals(TimePeriodUnits(0, 0, 14), result)
     }
 
     @Test
     fun getUnitsToSubtractFromTimePeriod_timePeriodToday_returnsCorrectUnits() {
-        val result = getUnitsToSubtractFromTimePeriod(TimePeriod.ONE_DAY)
+        val result = getUnitsToSubtractFromTimePeriod(RecentTimePeriod.ONE_DAY)
         assertEquals(TimePeriodUnits(0, 0, 1), result)
     }
 
     @Test
     fun getUnitsToSubtractFromTimePeriod_timePeriodSixMonths_returnsCorrectUnits() {
-        val result = getUnitsToSubtractFromTimePeriod(TimePeriod.SIX_MONTHS)
+        val result = getUnitsToSubtractFromTimePeriod(RecentTimePeriod.SIX_MONTHS)
         assertEquals(TimePeriodUnits(0, 6, 0), result)
     }
 
     @Test
     fun getUnitsToSubtractFromTimePeriod_timePeriodThreeMonths_returnsCorrectUnits() {
-        val result = getUnitsToSubtractFromTimePeriod(TimePeriod.THREE_MONTHS)
+        val result = getUnitsToSubtractFromTimePeriod(RecentTimePeriod.THREE_MONTHS)
         assertEquals(TimePeriodUnits(0, 3, 0), result)
     }
 
     @Test
     fun subtractTimePeriodFromDate_timePeriodOneYear_returnsCorrectDate() {
-        val result = subtractTimePeriodFromDate(date, TimePeriod.ONE_YEAR)
+        val result = subtractTimePeriodFromDate(date, RecentTimePeriod.ONE_YEAR)
         val dateTime = LocalDateTime.parse(result.dropLast(1))
         assertEquals(2021, dateTime.year)
         assertEquals(2, dateTime.monthNumber)
@@ -58,7 +58,7 @@ class DateTimeUtilsTests {
 
     @Test
     fun subtractTimePeriodFromDate_timePeriodSixMonths_returnsCorrectDate() {
-        val result = subtractTimePeriodFromDate(date, TimePeriod.SIX_MONTHS)
+        val result = subtractTimePeriodFromDate(date, RecentTimePeriod.SIX_MONTHS)
         val dateTime = LocalDateTime.parse(result.dropLast(1))
         assertEquals(2021, dateTime.year)
         assertEquals(8, dateTime.monthNumber)
@@ -67,7 +67,7 @@ class DateTimeUtilsTests {
 
     @Test
     fun subtractTimePeriodFromDate_timePeriodThreeMonths_returnsCorrectDate() {
-        val result = subtractTimePeriodFromDate(date, TimePeriod.THREE_MONTHS)
+        val result = subtractTimePeriodFromDate(date, RecentTimePeriod.THREE_MONTHS)
         val dateTime = LocalDateTime.parse(result.dropLast(1))
         assertEquals(2021, dateTime.year)
         assertEquals(11, dateTime.monthNumber)
@@ -76,7 +76,7 @@ class DateTimeUtilsTests {
 
     @Test
     fun subtractTimePeriodFromDate_timePeriodOneMonth_returnsCorrectDate() {
-        val result = subtractTimePeriodFromDate(date, TimePeriod.ONE_MONTH)
+        val result = subtractTimePeriodFromDate(date, RecentTimePeriod.ONE_MONTH)
         val dateTime = LocalDateTime.parse(result.dropLast(1))
         assertEquals(2022, dateTime.year)
         assertEquals(1, dateTime.monthNumber)
@@ -85,7 +85,7 @@ class DateTimeUtilsTests {
 
     @Test
     fun subtractTimePeriodFromDate_timePeriodTwoWeeks_returnCorrectDate() {
-        val result = subtractTimePeriodFromDate(date, TimePeriod.TWO_WEEKS)
+        val result = subtractTimePeriodFromDate(date, RecentTimePeriod.TWO_WEEKS)
         val dateTime = LocalDateTime.parse(result.dropLast(1))
         assertEquals(2022, dateTime.year)
         assertEquals(1, dateTime.monthNumber)
@@ -94,7 +94,7 @@ class DateTimeUtilsTests {
 
     @Test
     fun subtractTimePeriodFromDate_timePeriodToday_returnCorrectDate() {
-        val result = subtractTimePeriodFromDate(date, TimePeriod.ONE_DAY)
+        val result = subtractTimePeriodFromDate(date, RecentTimePeriod.ONE_DAY)
         val dateTime = LocalDateTime.parse(result.dropLast(1))
         assertEquals(2022, dateTime.year)
         assertEquals(2, dateTime.monthNumber)
@@ -116,12 +116,12 @@ class DateTimeUtilsTests {
 
     @Test
     fun formatDateByTimePeriod_periodToday_returnsTime() {
-        assertEquals("23:59:59", formatDateByTimePeriod("2022-01-04T23:59:59Z", TimePeriod.ONE_DAY))
+        assertEquals("23:59:59", formatDateByTimePeriod("2022-01-04T23:59:59Z", RecentTimePeriod.ONE_DAY))
     }
 
     @Test
     fun formatDateByTimePeriod_periodOneYear_returnsDate() {
-        assertEquals("2022-01-04", formatDateByTimePeriod("2022-01-04T23:59:59Z", TimePeriod.ONE_YEAR))
+        assertEquals("2022-01-04", formatDateByTimePeriod("2022-01-04T23:59:59Z", RecentTimePeriod.ONE_YEAR))
     }
 
     @Test
