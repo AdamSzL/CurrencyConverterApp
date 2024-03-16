@@ -9,6 +9,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.tooling.preview.Preview
+import com.example.currencyconverterapp.ui.theme.CurrencyConverterAppTheme
 
 val screens = listOf(
     CurrencyConverterScreen.Converter,
@@ -17,9 +19,9 @@ val screens = listOf(
 )
 
 @Composable
-fun BottomNavigationBar(
-    navigateTo: (String) -> Unit,
+fun CurrencyConverterBottomNavigationBar(
     currentScreen: CurrencyConverterScreen,
+    navigateTo: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
     NavigationBar(
@@ -43,5 +45,16 @@ fun BottomNavigationBar(
                 onClick = { navigateTo(screen.route) }
             )
         }
+    }
+}
+
+@Preview
+@Composable
+private fun CurrencyConverterBottomNavigationBarPreview() {
+    CurrencyConverterAppTheme {
+        CurrencyConverterBottomNavigationBar(
+            currentScreen = CurrencyConverterScreen.Converter,
+            navigateTo = { }
+        )
     }
 }

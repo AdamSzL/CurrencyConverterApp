@@ -79,6 +79,7 @@ dependencies {
     implementation("androidx.hilt:hilt-navigation-compose:1.1.0")
     implementation("com.patrykandpatrick.vico:compose:1.13.1")
     implementation("androidx.hilt:hilt-work:1.2.0")
+    implementation("androidx.compose.material3:material3-window-size-class")
     kapt("androidx.hilt:hilt-compiler:1.2.0")
     kapt("com.google.dagger:hilt-android-compiler:2.50")
     testImplementation("junit:junit:4.13.2")
