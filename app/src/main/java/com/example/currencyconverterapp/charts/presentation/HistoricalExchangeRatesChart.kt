@@ -12,8 +12,10 @@ import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import com.example.currencyconverterapp.R
+import com.example.currencyconverterapp.charts.data.model.ChartType
 import com.example.currencyconverterapp.charts.data.model.RecentTimePeriod
-import com.example.currencyconverterapp.charts.presentation.util.DateTimeUtils.formatDateByTimePeriod
+import com.example.currencyconverterapp.charts.data.model.TimePeriodType
+import com.example.currencyconverterapp.charts.presentation.util.DateTimeUtils.formatDateByTimePeriodType
 import com.example.currencyconverterapp.charts.presentation.util.NumberUtils.getRoundingByDifference
 import com.example.currencyconverterapp.core.data.model.Currency
 import com.patrykandpatrick.vico.compose.axis.horizontal.rememberBottomAxis
@@ -36,8 +38,8 @@ import com.patrykandpatrick.vico.core.entry.diff.ExtraStore
 fun HistoricalExchangeRatesChart(
     baseCurrency: Currency,
     targetCurrency: Currency,
-    isColumnChartEnabled: Boolean,
-    selectedRecentTimePeriod: RecentTimePeriod,
+    chartType: ChartType,
+    selectedTimePeriodType: TimePeriodType,
     chartEntryModelProducer: ChartEntryModelProducer,
     axisExtraKey: ExtraStore.Key<List<String>>,
     modifier: Modifier = Modifier,
@@ -59,10 +61,15 @@ fun HistoricalExchangeRatesChart(
         valueFormatter = { value, _ ->
             val axisData = chartEntryModelProducer.getModel()!!.extraStore.get(axisExtraKey)
             val labelDate = axisData[value.toInt() % axisData.size]
-            formatDateByTimePeriod(labelDate, selectedRecentTimePeriod)
+            formatDateByTimePeriodType(labelDate, selectedTimePeriodType)
         },
         labelRotationDegrees = -90f,
-        title = if (selectedRecentTimePeriod == RecentTimePeriod.ONE_DAY) stringResource(R.string.hour) else stringResource(R.string.day),
+        title =
+            if (selectedTimePeriodType is TimePeriodType.Recent && selectedTimePeriodType.recentTimePeriod == RecentTimePeriod.ONE_DAY) {
+                stringResource(R.string.hour)
+            } else {
+                stringResource(R.string.day)
+            },
         titleComponent = textComponent {
             color = MaterialTheme.colorScheme.primary.toArgb()
             margins = MutableDimensions(0f, 5f)
@@ -78,7 +85,7 @@ fun HistoricalExchangeRatesChart(
         modifier = modifier.fillMaxHeight()
     ) {
         Chart(
-            chart = if (isColumnChartEnabled) columnChart(
+            chart = if (chartType == ChartType.COLUMN) columnChart(
                 columns = listOf(LineComponent(
                     color = MaterialTheme.colorScheme.primary.toArgb(),
                     thicknessDp = dimensionResource(R.dimen.column_chart_width).value,

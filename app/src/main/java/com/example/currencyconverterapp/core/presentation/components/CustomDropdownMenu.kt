@@ -29,7 +29,7 @@ fun <T>CustomDropdownMenu(
     ExposedDropdownMenuBox(
         expanded = expanded,
         onExpandedChange = { expanded = !expanded },
-        modifier = modifier,
+        modifier = modifier
     ) {
         OutlinedTextField(
             modifier = Modifier

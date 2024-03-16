@@ -49,4 +49,8 @@
     <dimen name="watchlist_entry_list_margin">16dp</dimen>
     <dimen name="notifications_icon_size_big">64dp</dimen>
     <dimen name="notifications_icon_size_small">32dp</dimen>
+    <dimen name="charts_gap_small">4.dp</dimen>
+    <dimen name="charts_gap_big">16.dp</dimen>
+    <dimen name="charts_gap_medium">8.dp</dimen>
+    <dimen name="recent_time_period_dropdown_width">200.dp</dimen>
 </resources>

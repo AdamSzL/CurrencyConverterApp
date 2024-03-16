@@ -1,10 +1,13 @@
 package com.example.currencyconverterapp
 
 import com.example.currencyconverterapp.charts.data.model.RecentTimePeriod
-import com.example.currencyconverterapp.charts.presentation.util.DateTimeUtils.formatDateByTimePeriod
+import com.example.currencyconverterapp.charts.data.model.TimePeriodType
+import com.example.currencyconverterapp.charts.presentation.util.DateTimeUtils.convertDateTimeToDate
+import com.example.currencyconverterapp.charts.presentation.util.DateTimeUtils.formatDateByTimePeriodType
 import com.example.currencyconverterapp.charts.presentation.util.DateTimeUtils.formatDigit
 import com.example.currencyconverterapp.charts.presentation.util.DateTimeUtils.getAndFormatTimeDifference
 import com.example.currencyconverterapp.charts.presentation.util.DateTimeUtils.getCurrentDate
+import com.example.currencyconverterapp.charts.presentation.util.DateTimeUtils.getDateFromMilliseconds
 import com.example.currencyconverterapp.charts.presentation.util.DateTimeUtils.getUnitsToSubtractFromTimePeriod
 import com.example.currencyconverterapp.charts.presentation.util.DateTimeUtils.subtractTimePeriodFromDate
 import com.example.currencyconverterapp.charts.presentation.util.TimePeriodUnits
@@ -116,12 +119,12 @@ class DateTimeUtilsTests {
 
     @Test
     fun formatDateByTimePeriod_periodToday_returnsTime() {
-        assertEquals("23:59:59", formatDateByTimePeriod("2022-01-04T23:59:59Z", RecentTimePeriod.ONE_DAY))
+        assertEquals("23:59:59", formatDateByTimePeriodType("2022-01-04T23:59:59Z", TimePeriodType.Recent(RecentTimePeriod.ONE_DAY)))
     }
 
     @Test
     fun formatDateByTimePeriod_periodOneYear_returnsDate() {
-        assertEquals("2022-01-04", formatDateByTimePeriod("2022-01-04T23:59:59Z", RecentTimePeriod.ONE_YEAR))
+        assertEquals("2022-01-04", formatDateByTimePeriodType("2022-01-04T23:59:59Z", TimePeriodType.Recent(RecentTimePeriod.ONE_YEAR)))
     }
 
     @Test
@@ -137,5 +140,15 @@ class DateTimeUtilsTests {
     @Test
     fun getAndFormatTimeDifference_dateNow_returnsNow() {
         assertEquals("just now", getAndFormatTimeDifference("2024-02-20T17:43:53Z", "2024-02-20T17:43:53Z"))
+    }
+
+    @Test
+    fun getDateFromMilliseconds_millisNow_returnsCorrectDate() {
+        assertEquals("2024-03-16", getDateFromMilliseconds(1710598286412))
+    }
+
+    @Test
+    fun convertDateTimeToDate_dateTimeNow_returnsCorrectDatePart() {
+        assertEquals("2023-12-16", convertDateTimeToDate("2023-12-16T14:48:20Z"))
     }
 }

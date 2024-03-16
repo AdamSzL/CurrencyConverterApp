@@ -13,7 +13,7 @@
     <string name="add">Add</string>
     <string name="close">Close</string>
     <string name="delete">Delete</string>
-    <string name="recent_time_period">Time Period</string>
+    <string name="recent_time_period">Recent Time Period</string>
     <string name="column_chart">Column Charts</string>
     <string name="swap_currencies">Swap Currencies</string>
     <string name="currency_deleted_message">Currency Deleted</string>
@@ -42,4 +42,12 @@
     <string name="launch_app_settings">Launch App Settings</string>
     <string name="watchlist_item_notification_text">%s is now worth %s</string>
     <string name="watchlist_entry_title">%s (%s) to %s (%s)</string>
+    <string name="chart_type">Chart Type</string>
+    <string name="recent">Recent</string>
+    <string name="range">Range</string>
+    <string name="save">Save</string>
+    <string name="select_date_range">Select Date Range</string>
+    <string name="time_period_type">Time Period Type</string>
+    <string name="time_period">Time Period</string>
+    <string name="change">Change</string>
 </resources>

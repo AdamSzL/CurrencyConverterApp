@@ -1,6 +1,7 @@
 package com.example.currencyconverterapp.charts.presentation.util
 
 import com.example.currencyconverterapp.charts.data.model.RecentTimePeriod
+import com.example.currencyconverterapp.charts.data.model.TimePeriodType
 import kotlinx.datetime.Clock
 import kotlinx.datetime.DateTimePeriod
 import kotlinx.datetime.Instant
@@ -8,6 +9,7 @@ import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.minus
 import kotlinx.datetime.periodUntil
+import kotlinx.datetime.toLocalDateTime
 
 
 object DateTimeUtils {
@@ -40,9 +42,9 @@ object DateTimeUtils {
         return instant.minus(DateTimePeriod(years = years, months = months, days = days), timeZone).toString()
     }
 
-    fun formatDateByTimePeriod(date: String, recentTimePeriod: RecentTimePeriod): String {
+    fun formatDateByTimePeriodType(date: String, timePeriodType: TimePeriodType): String {
         val localDateTime = LocalDateTime.parse(date.dropLast(1))
-        return if (recentTimePeriod == RecentTimePeriod.ONE_DAY) {
+        return if (timePeriodType is TimePeriodType.Recent && timePeriodType.recentTimePeriod == RecentTimePeriod.ONE_DAY) {
             "${formatDigit(localDateTime.hour)}:${formatDigit(localDateTime.minute)}:${formatDigit(localDateTime.second)}"
         } else {
             "${localDateTime.year}-${formatDigit(localDateTime.monthNumber)}-${formatDigit(localDateTime.dayOfMonth)}"
@@ -69,5 +71,14 @@ object DateTimeUtils {
             }
         }
         return if (result.isEmpty()) "just now" else "$result ago"
+    }
+
+    fun getDateFromMilliseconds(epochMilliseconds: Long): String {
+        val instant = Instant.fromEpochMilliseconds(epochMilliseconds)
+        return instant.toLocalDateTime(TimeZone.currentSystemDefault()).date.toString()
+    }
+
+    fun convertDateTimeToDate(dateTime: String): String {
+        return LocalDateTime.parse(dateTime.dropLast(1)).date.toString()
     }
 }

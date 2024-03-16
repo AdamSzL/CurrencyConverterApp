@@ -2,8 +2,10 @@ package com.example.currencyconverterapp.charts.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.currencyconverterapp.charts.data.model.ChartType
 import com.example.currencyconverterapp.charts.data.model.DateTimeExchangeRatesInfo
 import com.example.currencyconverterapp.charts.data.model.RecentTimePeriod
+import com.example.currencyconverterapp.charts.data.model.TimePeriodType
 import com.example.currencyconverterapp.charts.data.repository.ChartsCachedDataRepository
 import com.example.currencyconverterapp.charts.data.repository.HistoricalExchangeRatesRepository
 import com.example.currencyconverterapp.charts.presentation.util.DateTimeUtils.getCurrentDate
@@ -44,8 +46,8 @@ class ChartsViewModel @Inject constructor(
                     it.copy(
                         selectedBaseCurrency = savedChartsData.baseCurrency,
                         selectedTargetCurrency = savedChartsData.targetCurrency,
-                        isColumnChartEnabled = savedChartsData.isColumnChartEnabled,
-                        selectedRecentTimePeriod = savedChartsData.selectedRecentTimePeriod,
+                        selectedChartType = savedChartsData.chartType,
+                        selectedTimePeriodType = savedChartsData.selectedTimePeriodType,
                         historicalExchangeRatesUiState =
                             if (isChartDataEmpty) {
                                 HistoricalExchangeRatesUiState.Loading
@@ -87,19 +89,35 @@ class ChartsViewModel @Inject constructor(
         with(chartsUiState.value) {
             viewModelScope.launch {
                 val historicalExchangeRatesUiState = try {
+                    val dateTimeStart = if (selectedTimePeriodType is TimePeriodType.Recent) {
+                        subtractTimePeriodFromDate(currentDate, selectedTimePeriodType.recentTimePeriod)
+                    } else {
+                        (selectedTimePeriodType as TimePeriodType.Range).start
+                    }
+                    val dateTimeEnd = if (selectedTimePeriodType is TimePeriodType.Range) {
+                        selectedTimePeriodType.end
+                    } else {
+                        currentDate
+                    }
                     val response = historicalExchangeRatesRepository.getHistoricalExchangeRates(
-                        dateTimeStart = subtractTimePeriodFromDate(currentDate, selectedRecentTimePeriod),
-                        dateTimeEnd = currentDate,
+                        dateTimeStart = dateTimeStart,
+                        dateTimeEnd = dateTimeEnd,
                         baseCurrency = selectedBaseCurrency.code,
                         currencies = selectedTargetCurrency.code,
-                        accuracy = if (selectedRecentTimePeriod == RecentTimePeriod.ONE_DAY) "hour" else "day"
+                        accuracy = if (
+                            selectedTimePeriodType is TimePeriodType.Recent && selectedTimePeriodType.recentTimePeriod == RecentTimePeriod.ONE_DAY
+                        ) {
+                            "hour"
+                        } else {
+                            "day"
+                        }
                     )
                     updateChartEntries(response.data)
                     updateSavedChartData(
                         response.data,
                         selectedBaseCurrency,
                         selectedTargetCurrency,
-                        selectedRecentTimePeriod
+                        selectedTimePeriodType
                     )
                     HistoricalExchangeRatesUiState.Success
                 } catch (e: IOException) {
@@ -117,9 +135,9 @@ class ChartsViewModel @Inject constructor(
         }
     }
 
-    private fun updateSavedIsColumnChartEnabled(isColumnChartEnabled: Boolean) {
+    private fun updateSavedChartType(chartType: ChartType) {
         viewModelScope.launch {
-            chartsCachedDataRepository.updateSavedIsColumnChartEnabled(isColumnChartEnabled)
+            chartsCachedDataRepository.updateSavedChartType(chartType)
         }
     }
 
@@ -127,14 +145,14 @@ class ChartsViewModel @Inject constructor(
         historicalExchangeRates: List<DateTimeExchangeRatesInfo>,
         baseCurrency: Currency,
         targetCurrency: Currency,
-        selectedRecentTimePeriod: RecentTimePeriod,
+        selectedTimePeriodType: TimePeriodType,
     ) {
         viewModelScope.launch {
             chartsCachedDataRepository.updateSavedChartData(
                 historicalExchangeRates,
                 baseCurrency,
                 targetCurrency,
-                selectedRecentTimePeriod
+                selectedTimePeriodType
             )
         }
     }
@@ -165,19 +183,19 @@ class ChartsViewModel @Inject constructor(
         getHistoricalExchangeRates()
     }
 
-    fun toggleColumnChart(isColumn: Boolean) {
+    fun updateChartType(chartType: ChartType) {
         _chartsUiState.update {
             it.copy(
-                isColumnChartEnabled = isColumn,
+                selectedChartType = chartType,
             )
         }
-        updateSavedIsColumnChartEnabled(isColumn)
+        updateSavedChartType(chartType)
     }
 
-    fun selectRecentTimePeriod(recentTimePeriod: RecentTimePeriod) {
+    fun updateTimePeriodType(timePeriodType: TimePeriodType) {
         _chartsUiState.update {
             it.copy(
-                selectedRecentTimePeriod = recentTimePeriod,
+                selectedTimePeriodType = timePeriodType
             )
         }
         getHistoricalExchangeRates()

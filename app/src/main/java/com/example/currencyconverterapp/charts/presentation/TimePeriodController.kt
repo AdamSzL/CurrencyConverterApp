@@ -1,100 +1,148 @@
 package com.example.currencyconverterapp.charts.presentation
 
-import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material3.Button
-import androidx.compose.material3.DateRangePicker
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.MultiChoiceSegmentedButtonRow
 import androidx.compose.material3.SegmentedButton
 import androidx.compose.material3.SegmentedButtonDefaults
 import androidx.compose.material3.SingleChoiceSegmentedButtonRow
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import com.example.currencyconverterapp.R
 import com.example.currencyconverterapp.charts.data.model.RecentTimePeriod
 import com.example.currencyconverterapp.charts.data.model.TimePeriodType
+import com.example.currencyconverterapp.charts.presentation.util.DateTimeUtils.convertDateTimeToDate
+import com.example.currencyconverterapp.charts.presentation.util.DateTimeUtils.getCurrentDate
+import com.example.currencyconverterapp.charts.presentation.util.DateTimeUtils.subtractTimePeriodFromDate
 import com.example.currencyconverterapp.ui.theme.CurrencyConverterAppTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TimePeriodController(
     chartsUiState: ChartsUiState,
-    selectedTimePeriodType: TimePeriodType,
-    onRecentTimePeriodSelection: (RecentTimePeriod) -> Unit,
+    onTimePeriodTypeUpdate: (TimePeriodType) -> Unit,
+    onRangeTimePeriodPickerLaunch: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(4.dp),
         modifier = modifier
+            .padding(horizontal = dimensionResource(R.dimen.converter_horizontal_margin))
+            .fillMaxWidth()
     ) {
-        Text(
-            text = "Time Period Type",
-            style = MaterialTheme.typography.displaySmall,
-        )
-        SingleChoiceSegmentedButtonRow {
-            TimePeriodType.entries.forEachIndexed { index, timePeriodType ->
+        Row(
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier
+                .fillMaxWidth()
+        ) {
+            Text(
+                text = stringResource(R.string.time_period_type),
+                style = MaterialTheme.typography.displaySmall,
+            )
+            SingleChoiceSegmentedButtonRow {
                 SegmentedButton(
-                    selected = selectedTimePeriodType == timePeriodType,
-                    onClick = {},
+                    selected = chartsUiState.selectedTimePeriodType is TimePeriodType.Recent,
+                    onClick = {
+                        onTimePeriodTypeUpdate(TimePeriodType.Recent(RecentTimePeriod.ONE_MONTH))
+                    },
                     shape = SegmentedButtonDefaults.itemShape(
-                        index = index,
-                        count = TimePeriodType.entries.size
+                        index = 0,
+                        count = 2,
                     )
                 ) {
                     Text(
-                        text = timePeriodType.label,
+                        text = stringResource(R.string.recent)
+                    )
+                }
+
+                SegmentedButton(
+                    selected = chartsUiState.selectedTimePeriodType is TimePeriodType.Range,
+                    onClick = {
+                        if (chartsUiState.selectedTimePeriodType is TimePeriodType.Recent) {
+                            val currentDate = getCurrentDate()
+                            onTimePeriodTypeUpdate(
+                                TimePeriodType.Range(
+                                    convertDateTimeToDate(
+                                        dateTime = subtractTimePeriodFromDate(
+                                            currentDate,
+                                            if (chartsUiState.selectedTimePeriodType.recentTimePeriod != RecentTimePeriod.ONE_DAY) {
+                                                chartsUiState.selectedTimePeriodType.recentTimePeriod
+                                            } else {
+                                                RecentTimePeriod.ONE_MONTH
+                                            }
+                                        )
+                                    ),
+                                    convertDateTimeToDate(currentDate)
+                                )
+                            )
+                        }
+                    },
+                    shape = SegmentedButtonDefaults.itemShape(
+                        index = 1,
+                        count = 2,
+                    )
+                ) {
+                    Text(
+                        text = stringResource(R.string.range)
                     )
                 }
             }
         }
-        Spacer(modifier = Modifier.height(8.dp))
-        if (selectedTimePeriodType == TimePeriodType.RECENT) {
-            RecentTimePeriodDropdownMenu(
-                chartsUiState = chartsUiState,
-                onRecentTimePeriodSelection = onRecentTimePeriodSelection,
+
+        Spacer(modifier = Modifier.height(dimensionResource(R.dimen.charts_gap_big)))
+
+        Row(
+            horizontalArrangement = Arrangement.SpaceBetween,
+            modifier = Modifier
+                .fillMaxWidth()
+        ) {
+            Text(
+                text = stringResource(R.string.time_period),
+                style = MaterialTheme.typography.displaySmall,
             )
-        } else {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-            ) {
-                Box(
-                    modifier = Modifier.weight(1f)
+
+            if (chartsUiState.selectedTimePeriodType is TimePeriodType.Recent) {
+                RecentTimePeriodDropdownMenu(
+                    selectedTimePeriodType = chartsUiState.selectedTimePeriodType,
+                    onRecentTimePeriodSelection = {
+                        onTimePeriodTypeUpdate(TimePeriodType.Recent(it))
+                    },
+                    modifier = Modifier.width(dimensionResource(R.dimen.recent_time_period_dropdown_width))
+                )
+            } else {
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
-                    Button(
-                        onClick = { Log.d("XXX", "Open date range picker") },
-                        modifier = Modifier.align(Alignment.Center)
+                    val rangeTimePeriodType = chartsUiState.selectedTimePeriodType as TimePeriodType.Range
+                    Text(
+                        text = "${rangeTimePeriodType.start} - ${rangeTimePeriodType.end}",
+                        style = MaterialTheme.typography.displaySmall,
+                    )
+                    TextButton(
+                        onClick = onRangeTimePeriodPickerLaunch,
                     ) {
                         Text(
-                            text = "Select Date Range"
+                            text = stringResource(R.string.change),
                         )
                     }
                 }
-                Box(
-                    modifier = Modifier.weight(1f)
-                ) {
-                    Text(
-                        text = "15 Nov. - 12 Dec.",
-                        style = MaterialTheme.typography.displaySmall,
-                        modifier = Modifier.align(Alignment.Center)
-                    )
-                }
             }
-//            DateRangePicker()
         }
+
     }
 }
 
@@ -103,9 +151,11 @@ fun TimePeriodController(
 private fun TimePeriodControllerDateRangePreview() {
     CurrencyConverterAppTheme {
         TimePeriodController(
-            chartsUiState = ChartsUiState(),
-            selectedTimePeriodType = TimePeriodType.RANGE,
-            onRecentTimePeriodSelection = { }
+            chartsUiState = ChartsUiState(
+                selectedTimePeriodType = TimePeriodType.Range("From", "To")
+            ),
+            onTimePeriodTypeUpdate = { },
+            onRangeTimePeriodPickerLaunch = { }
         )
     }
 }
@@ -115,9 +165,11 @@ private fun TimePeriodControllerDateRangePreview() {
 private fun TimePeriodControllerRecentPreview() {
     CurrencyConverterAppTheme {
         TimePeriodController(
-            chartsUiState = ChartsUiState(),
-            selectedTimePeriodType = TimePeriodType.RECENT,
-            onRecentTimePeriodSelection = { }
+            chartsUiState = ChartsUiState(
+                selectedTimePeriodType = TimePeriodType.Recent(RecentTimePeriod.ONE_MONTH)
+            ),
+            onTimePeriodTypeUpdate = { },
+            onRangeTimePeriodPickerLaunch = { }
         )
     }
 }

@@ -9,7 +9,7 @@ import kotlinx.serialization.Serializable
 data class ChartsCachedData(
     val baseCurrency: Currency = defaultBaseCurrency,
     val targetCurrency: Currency = defaultTargetCurrency,
-    val isColumnChartEnabled: Boolean = false,
-    val selectedRecentTimePeriod: RecentTimePeriod = RecentTimePeriod.ONE_MONTH,
+    val chartType: ChartType = ChartType.LINE,
+    val selectedTimePeriodType: TimePeriodType = TimePeriodType.Recent(RecentTimePeriod.ONE_MONTH),
     val historicalExchangeRates: List<DateTimeExchangeRatesInfo> = emptyList(),
 )
