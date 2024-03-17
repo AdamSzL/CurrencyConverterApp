@@ -18,6 +18,7 @@ import androidx.compose.ui.res.stringResource
 import com.example.currencyconverterapp.R
 import com.example.currencyconverterapp.converter.presentation.currencies_dropdown.CurrenciesDropdownMenu
 import com.example.currencyconverterapp.core.data.model.Currency
+import com.example.currencyconverterapp.watchlist.presentation.util.WatchlistItemProps
 
 @Composable
 fun ColumnScope.WatchlistItemDetailsBaseTargetCurrenciesPanel(

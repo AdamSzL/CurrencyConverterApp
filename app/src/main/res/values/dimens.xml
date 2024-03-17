@@ -53,6 +53,8 @@
     <dimen name="charts_gap_big">16.dp</dimen>
     <dimen name="charts_gap_medium">8.dp</dimen>
     <dimen name="recent_time_period_dropdown_width">200.dp</dimen>
-    <dimen name="permanent_drawer_width">180.dp</dimen>
-    <dimen name="nav_top_margin">12dp</dimen>
+    <dimen name="permanent_drawer_width">240.dp</dimen>
+    <dimen name="nav_margin">16dp</dimen>
+    <dimen name="nav_small_margin">8dp</dimen>
+    <dimen name="nav_rail_icon_size">32dp</dimen>
 </resources>

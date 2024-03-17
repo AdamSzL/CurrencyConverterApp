@@ -1,25 +1,20 @@
 package com.example.currencyconverterapp.watchlist.presentation.list
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.ExtendedFloatingActionButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.ColorFilter
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewScreenSizes
-import com.example.currencyconverterapp.R
 import com.example.currencyconverterapp.core.data.util.defaultWatchlistItems
+import com.example.currencyconverterapp.core.presentation.util.FabSize
+import com.example.currencyconverterapp.core.presentation.util.FloatingActionButtonType
 import com.example.currencyconverterapp.watchlist.data.model.WatchlistItem
 
 @Composable
 fun WatchlistScreen(
     watchlistItems: List<WatchlistItem>,
+    fabType: FloatingActionButtonType,
     onWatchlistItemClicked: (String) -> Unit,
     onWatchlistItemDeletion: (String) -> Unit,
     onAddButtonClicked: () -> Unit,
@@ -27,21 +22,10 @@ fun WatchlistScreen(
 ) {
     Scaffold(
         floatingActionButton = {
-            if (watchlistItems.size < 5) {
-                ExtendedFloatingActionButton(
-                    onClick = onAddButtonClicked,
-                    icon = {
-                        Image(
-                            painter = painterResource(R.drawable.ic_watchlist),
-                            colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.secondary),
-                            contentDescription = stringResource(R.string.watchlist_add)
-                        )
-                    },
-                    text = {
-                        Text(
-                            text = "Add Watchlist Item"
-                        )
-                    }
+            if (watchlistItems.size < 5 && fabType == FloatingActionButtonType.BOTTOM_RIGHT) {
+                WatchlistFloatingActionButton(
+                    size = FabSize.SMALL,
+                    onClick = onAddButtonClicked
                 )
             }
         },
@@ -62,6 +46,7 @@ fun WatchlistScreen(
 fun WatchlistScreenPreview() {
     WatchlistScreen(
         watchlistItems = defaultWatchlistItems,
+        fabType = FloatingActionButtonType.BOTTOM_RIGHT,
         onWatchlistItemClicked = { },
         onWatchlistItemDeletion = { },
         onAddButtonClicked = { },

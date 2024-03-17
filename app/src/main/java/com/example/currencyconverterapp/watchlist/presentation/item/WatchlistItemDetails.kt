@@ -20,6 +20,7 @@ import com.example.currencyconverterapp.core.data.model.Currency
 import com.example.currencyconverterapp.watchlist.presentation.item.latest_exchange_rate.LatestExchangeRatePanelStateHandler
 import com.example.currencyconverterapp.watchlist.presentation.notifications.NotificationsPermissionState
 import com.example.currencyconverterapp.watchlist.presentation.util.NotificationUtils.getNotificationsPermissionState
+import com.example.currencyconverterapp.watchlist.presentation.util.WatchlistItemProps
 
 @Composable
 fun WatchlistItemDetails(

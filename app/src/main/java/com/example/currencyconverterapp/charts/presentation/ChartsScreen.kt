@@ -21,8 +21,8 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.currencyconverterapp.R
-import com.example.currencyconverterapp.charts.data.model.ChartType
 import com.example.currencyconverterapp.charts.data.model.TimePeriodType
+import com.example.currencyconverterapp.charts.presentation.util.ChartsScreenActions
 import com.example.currencyconverterapp.core.data.model.Currency
 import com.example.currencyconverterapp.core.data.util.defaultAvailableCurrencies
 import com.example.currencyconverterapp.core.presentation.components.DataStateHandler
@@ -37,14 +37,7 @@ fun ChartsScreen(
     chartEntryModelProducer: ChartEntryModelProducer,
     axisExtraKey: ExtraStore.Key<List<String>>,
     currencies: List<Currency>,
-    onBaseCurrencySelection: (Currency) -> Unit,
-    onTargetCurrencySelection: (Currency) -> Unit,
-    onTimePeriodTypeUpdate: (TimePeriodType) -> Unit,
-    onChartTypeUpdate: (ChartType) -> Unit,
-    onLoadingStateRestore: () -> Unit,
-    onChartUpdate: () -> Unit,
-    onBaseAndTargetCurrenciesSwap: () -> Unit,
-    onErrorMessageDisplayed: () -> Unit,
+    chartsScreenActions: ChartsScreenActions,
     modifier: Modifier = Modifier
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
@@ -64,76 +57,78 @@ fun ChartsScreen(
             scope.launch {
                 snackbarHostState.currentSnackbarData?.dismiss()
                 snackbarHostState.showSnackbar(snackbarErrorMessage)
-                onErrorMessageDisplayed()
+                chartsScreenActions.onErrorMessageDisplayed()
             }
         }
     }
 
-    Scaffold(
-        snackbarHost = {
-            SnackbarHost(hostState = snackbarHostState)
-        }
-    ) { paddingValues ->
-        AnimatedContent(
-            targetState = isRangeTimePeriodPickerVisible
-        ) { targetState ->
-            if (targetState) {
-                RangeTimePeriodPicker(
-                    onDismiss = {
-                        isRangeTimePeriodPickerVisible = false
-                    },
-                    onSave = { startDate, endDate ->
-                        onTimePeriodTypeUpdate(TimePeriodType.Range(startDate, endDate))
-                    },
-                )
-            } else {
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    modifier = modifier
-                        .padding(paddingValues)
-                ) {
-
-                    BaseTargetCurrenciesController(
-                        chartsUiState = chartsUiState,
-                        currencies = currencies,
-                        onBaseCurrencySelection = onBaseCurrencySelection,
-                        onTargetCurrencySelection = onTargetCurrencySelection,
-                        onBaseAndTargetCurrenciesSwap = onBaseAndTargetCurrenciesSwap,
+    with (chartsScreenActions) {
+        Scaffold(
+            snackbarHost = {
+                SnackbarHost(hostState = snackbarHostState)
+            }
+        ) { paddingValues ->
+            AnimatedContent(
+                targetState = isRangeTimePeriodPickerVisible
+            ) { targetState ->
+                if (targetState) {
+                    RangeTimePeriodPicker(
+                        onDismiss = {
+                            isRangeTimePeriodPickerVisible = false
+                        },
+                        onSave = { startDate, endDate ->
+                            onTimePeriodTypeUpdate(TimePeriodType.Range(startDate, endDate))
+                        },
                     )
-
-                    Spacer(modifier = Modifier.height(dimensionResource(R.dimen.charts_gap_big)))
-
-                    ChartTypeController(
-                        selectedChartType = chartsUiState.selectedChartType,
-                        onChartTypeUpdate = onChartTypeUpdate,
-                    )
-
-                    Spacer(modifier = Modifier.height(dimensionResource(R.dimen.charts_gap_big)))
-
-                    TimePeriodController(
-                        chartsUiState = chartsUiState,
-                        onTimePeriodTypeUpdate = onTimePeriodTypeUpdate,
-                        onRangeTimePeriodPickerLaunch = {
-                            isRangeTimePeriodPickerVisible = true
-                        }
-                    )
-
-                    DataStateHandler(
-                        uiState = chartsUiState.historicalExchangeRatesUiState.toString(),
-                        errorMessage = R.string.error_loading_chart_data,
-                        onErrorRetryAction = {
-                            onLoadingStateRestore()
-                            onChartUpdate()
-                        }
+                } else {
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        modifier = modifier
+                            .padding(paddingValues)
                     ) {
-                        HistoricalExchangeRatesChart(
-                            baseCurrency = chartsUiState.selectedBaseCurrency,
-                            targetCurrency = chartsUiState.selectedTargetCurrency,
-                            selectedTimePeriodType = chartsUiState.selectedTimePeriodType,
-                            chartType = chartsUiState.selectedChartType,
-                            chartEntryModelProducer = chartEntryModelProducer,
-                            axisExtraKey = axisExtraKey,
+
+                        BaseTargetCurrenciesController(
+                            chartsUiState = chartsUiState,
+                            currencies = currencies,
+                            onBaseCurrencySelection = onBaseCurrencySelection,
+                            onTargetCurrencySelection = onTargetCurrencySelection,
+                            onBaseAndTargetCurrenciesSwap = onBaseAndTargetCurrenciesSwap,
                         )
+
+                        Spacer(modifier = Modifier.height(dimensionResource(R.dimen.charts_gap_big)))
+
+                        ChartTypeController(
+                            selectedChartType = chartsUiState.selectedChartType,
+                            onChartTypeUpdate = onChartTypeUpdate,
+                        )
+
+                        Spacer(modifier = Modifier.height(dimensionResource(R.dimen.charts_gap_big)))
+
+                        TimePeriodController(
+                            chartsUiState = chartsUiState,
+                            onTimePeriodTypeUpdate = onTimePeriodTypeUpdate,
+                            onRangeTimePeriodPickerLaunch = {
+                                isRangeTimePeriodPickerVisible = true
+                            }
+                        )
+
+                        DataStateHandler(
+                            uiState = chartsUiState.historicalExchangeRatesUiState.toString(),
+                            errorMessage = R.string.error_loading_chart_data,
+                            onErrorRetryAction = {
+                                onLoadingStateRestore()
+                                onChartUpdate()
+                            }
+                        ) {
+                            HistoricalExchangeRatesChart(
+                                baseCurrency = chartsUiState.selectedBaseCurrency,
+                                targetCurrency = chartsUiState.selectedTargetCurrency,
+                                selectedTimePeriodType = chartsUiState.selectedTimePeriodType,
+                                chartType = chartsUiState.selectedChartType,
+                                chartEntryModelProducer = chartEntryModelProducer,
+                                axisExtraKey = axisExtraKey,
+                            )
+                        }
                     }
                 }
             }
@@ -150,14 +145,16 @@ private fun ChartsScreenLoadingStatePreview() {
             chartEntryModelProducer = ChartEntryModelProducer(),
             axisExtraKey = ExtraStore.Key<List<String>>(),
             currencies = defaultAvailableCurrencies,
-            onBaseCurrencySelection = { },
-            onTargetCurrencySelection = { },
-            onTimePeriodTypeUpdate = { },
-            onChartTypeUpdate = { },
-            onLoadingStateRestore = { },
-            onChartUpdate = { },
-            onBaseAndTargetCurrenciesSwap = { },
-            onErrorMessageDisplayed = {  }
+            chartsScreenActions = ChartsScreenActions(
+                onBaseCurrencySelection = { },
+                onTargetCurrencySelection = { },
+                onTimePeriodTypeUpdate = { },
+                onChartTypeUpdate = { },
+                onLoadingStateRestore = { },
+                onChartUpdate = { },
+                onBaseAndTargetCurrenciesSwap = { },
+                onErrorMessageDisplayed = {  }
+            ),
         )
     }
 }
@@ -171,14 +168,16 @@ private fun ChartsScreenErrorStatePreview() {
             chartEntryModelProducer = ChartEntryModelProducer(),
             axisExtraKey = ExtraStore.Key<List<String>>(),
             currencies = defaultAvailableCurrencies,
-            onBaseCurrencySelection = { },
-            onTargetCurrencySelection = { },
-            onTimePeriodTypeUpdate = { },
-            onChartTypeUpdate = { },
-            onLoadingStateRestore = { },
-            onChartUpdate = { },
-            onBaseAndTargetCurrenciesSwap = { },
-            onErrorMessageDisplayed = {  }
+            chartsScreenActions = ChartsScreenActions(
+                onBaseCurrencySelection = { },
+                onTargetCurrencySelection = { },
+                onTimePeriodTypeUpdate = { },
+                onChartTypeUpdate = { },
+                onLoadingStateRestore = { },
+                onChartUpdate = { },
+                onBaseAndTargetCurrenciesSwap = { },
+                onErrorMessageDisplayed = {  }
+            ),
         )
     }
 }

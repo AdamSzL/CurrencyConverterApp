@@ -1,7 +1,11 @@
 package com.example.currencyconverterapp.core.presentation.navigation
 
-import androidx.annotation.StringRes
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.SheetValue
+import androidx.compose.material3.rememberBottomSheetScaffoldState
+import androidx.compose.material3.rememberStandardBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -14,26 +18,42 @@ import androidx.navigation.navArgument
 import com.example.currencyconverterapp.R
 import com.example.currencyconverterapp.charts.presentation.ChartsScreen
 import com.example.currencyconverterapp.charts.presentation.ChartsViewModel
+import com.example.currencyconverterapp.charts.presentation.util.constructChartsScreenActions
 import com.example.currencyconverterapp.converter.presentation.ConverterScreen
 import com.example.currencyconverterapp.converter.presentation.ConverterViewModel
+import com.example.currencyconverterapp.converter.presentation.util.constructConverterScreenActions
 import com.example.currencyconverterapp.core.presentation.CurrenciesUiState
-import com.example.currencyconverterapp.core.presentation.components.DataStateHandler
-import com.example.currencyconverterapp.watchlist.data.model.WatchlistItem
-import com.example.currencyconverterapp.watchlist.presentation.item.WatchlistItemProps
+import com.example.currencyconverterapp.core.presentation.components.ScreenAdaptiveNavigationWrapper
+import com.example.currencyconverterapp.core.presentation.util.CurrencyConverterNavigationType
+import com.example.currencyconverterapp.core.presentation.util.FloatingActionButtonType
 import com.example.currencyconverterapp.watchlist.presentation.item.WatchlistItemScreen
-import com.example.currencyconverterapp.watchlist.presentation.item.WatchlistItemUiState
 import com.example.currencyconverterapp.watchlist.presentation.item.WatchlistItemViewModel
 import com.example.currencyconverterapp.watchlist.presentation.list.WatchlistScreen
 import com.example.currencyconverterapp.watchlist.presentation.list.WatchlistViewModel
+import com.example.currencyconverterapp.watchlist.presentation.util.constructWatchlistItemProps
+import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CurrencyConverterNavigation(
     navController: NavHostController,
+    navigationType: CurrencyConverterNavigationType,
+    currentCurrencyConverterScreen: CurrencyConverterScreen,
     currenciesUiState: CurrenciesUiState,
+    fabType: FloatingActionButtonType,
     onCurrenciesRefresh: () -> Unit,
     onLaunchAppSettingsClick: () -> Unit,
+    navigateTo: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val screenAdaptiveNavigationWrapperProps = ScreenAdaptiveNavigationWrapperProps(
+        navigationType = navigationType,
+        currentCurrencyConverterScreen = currentCurrencyConverterScreen,
+        navigateTo = navigateTo,
+        dataHandlerUiState = currenciesUiState.toString(),
+        onRetryAction = onCurrenciesRefresh
+    )
+
     NavHost(
         navController = navController,
         startDestination = CurrencyConverterScreen.Converter.name,
@@ -42,52 +62,51 @@ fun CurrencyConverterNavigation(
         composable(route = CurrencyConverterScreen.Converter.name) {
             val converterViewModel: ConverterViewModel = hiltViewModel()
             val converterUiState = converterViewModel.converterUiState.collectAsStateWithLifecycle().value
-            DataStateHandler(
-                uiState = currenciesUiState.toString(),
-                errorMessage = R.string.error_loading_currency_data,
-                onErrorRetryAction = onCurrenciesRefresh,
+            val bottomSheetScaffoldState = rememberBottomSheetScaffoldState(
+                bottomSheetState = rememberStandardBottomSheetState(
+                    initialValue = SheetValue.Hidden,
+                    skipHiddenState = false,
+                )
+            )
+            val scope = rememberCoroutineScope()
+            ScreenAdaptiveNavigationWrapper(
+                screenAdaptiveNavigationWrapperProps = screenAdaptiveNavigationWrapperProps,
+                fabAction = {
+                    scope.launch {
+                        bottomSheetScaffoldState.bottomSheetState.expand()
+                    }
+                }
             ) {
                 ConverterScreen(
                     converterUiState = converterUiState,
+                    bottomSheetScaffoldState = bottomSheetScaffoldState,
+                    fabType = fabType,
                     availableCurrencies = (currenciesUiState as CurrenciesUiState.Success).currencies,
-                    onExchangeRatesRefresh = {
-                        converterViewModel.restoreToSuccessState()
-                        converterViewModel.refreshLatestExchangeRatesAndHandleError(
-                            converterUiState.baseCurrency,
-                            converterUiState.exchangeRates
-                        )
-                    },
-                    onBaseCurrencySelection = converterViewModel::selectBaseCurrency,
-                    onBaseCurrencyValueChange = converterViewModel::setBaseCurrencyValue,
-                    onTargetCurrencySelection = converterViewModel::selectTargetCurrency,
-                    onTargetCurrencyAddition = converterViewModel::addTargetCurrency,
-                    onConversionEntryDeletion = converterViewModel::deleteConversionEntry,
-                    onConversionEntryDeletionUndo = converterViewModel::undoConversionEntryDeletion,
-                    onErrorMessageDisplayed = converterViewModel::errorMessageDisplayed,
+                    converterScreenActions = constructConverterScreenActions(
+                        converterViewModel = converterViewModel,
+                        onExchangeRatesRefresh = {
+                            converterViewModel.restoreToSuccessState()
+                            converterViewModel.refreshLatestExchangeRatesAndHandleError(
+                                converterUiState.baseCurrency,
+                                converterUiState.exchangeRates
+                            )
+                        }
+                    )
                 )
             }
         }
         composable(route = CurrencyConverterScreen.Charts.name) {
             val chartsViewModel: ChartsViewModel = hiltViewModel()
             val chartsUiState = chartsViewModel.chartsUiState.collectAsStateWithLifecycle().value
-            DataStateHandler(
-                uiState = currenciesUiState.toString(),
-                errorMessage = R.string.error_loading_currency_data,
-                onErrorRetryAction = onCurrenciesRefresh,
+            ScreenAdaptiveNavigationWrapper(
+                screenAdaptiveNavigationWrapperProps = screenAdaptiveNavigationWrapperProps,
             ) {
                 ChartsScreen(
                     chartsUiState = chartsUiState,
                     chartEntryModelProducer = chartsViewModel.chartEntryModelProducer,
                     axisExtraKey = chartsViewModel.axisExtraKey,
                     currencies = (currenciesUiState as CurrenciesUiState.Success).currencies,
-                    onBaseCurrencySelection = chartsViewModel::selectBaseCurrency,
-                    onTargetCurrencySelection = chartsViewModel::selectTargetCurrency,
-                    onTimePeriodTypeUpdate = chartsViewModel::updateTimePeriodType,
-                    onChartTypeUpdate = chartsViewModel::updateChartType,
-                    onChartUpdate = chartsViewModel::getHistoricalExchangeRates,
-                    onLoadingStateRestore = chartsViewModel::restoreToLoadingState,
-                    onBaseAndTargetCurrenciesSwap = chartsViewModel::swapBaseAndTargetCurrencies,
-                    onErrorMessageDisplayed = chartsViewModel::errorMessageDisplayed,
+                    chartsScreenActions = constructChartsScreenActions(chartsViewModel)
                 )
             }
         }
@@ -98,13 +117,15 @@ fun CurrencyConverterNavigation(
             composable(route = WatchlistSubScreen.WatchlistItems.name) {
                 val watchlistViewModel: WatchlistViewModel = hiltViewModel()
                 val watchlistItems = watchlistViewModel.watchlistItems.collectAsStateWithLifecycle().value
-                DataStateHandler(
-                    uiState = currenciesUiState.toString(),
-                    errorMessage = R.string.error_loading_currency_data,
-                    onErrorRetryAction = onCurrenciesRefresh,
+                ScreenAdaptiveNavigationWrapper(
+                    screenAdaptiveNavigationWrapperProps = screenAdaptiveNavigationWrapperProps,
+                    fabAction = {
+                        navController.navigate(WatchlistSubScreen.WatchlistAddItem.name)
+                    }
                 ) {
                     WatchlistScreen(
                         watchlistItems = watchlistItems,
+                        fabType = fabType,
                         onWatchlistItemClicked = { watchlistItemId ->
                             navController.navigate("${WatchlistSubScreen.WatchlistEditItem.name}/${watchlistItemId}")
                         },
@@ -119,10 +140,8 @@ fun CurrencyConverterNavigation(
                 val watchlistItemViewModel: WatchlistItemViewModel = hiltViewModel()
                 val watchlistItemUiState
                         = watchlistItemViewModel.watchlistItemUiState.collectAsStateWithLifecycle().value
-                DataStateHandler(
-                    uiState = currenciesUiState.toString(),
-                    errorMessage = R.string.error_loading_currency_data,
-                    onErrorRetryAction = onCurrenciesRefresh,
+                ScreenAdaptiveNavigationWrapper(
+                    screenAdaptiveNavigationWrapperProps = screenAdaptiveNavigationWrapperProps
                 ) {
                     WatchlistItemScreen(
                         currencies = (currenciesUiState as CurrenciesUiState.Success).currencies,
@@ -151,10 +170,8 @@ fun CurrencyConverterNavigation(
                 val watchlistItemViewModel: WatchlistItemViewModel = hiltViewModel()
                 val watchlistItemUiState
                         = watchlistItemViewModel.watchlistItemUiState.collectAsStateWithLifecycle().value
-                DataStateHandler(
-                    uiState = currenciesUiState.toString(),
-                    errorMessage = R.string.error_loading_currency_data,
-                    onErrorRetryAction = onCurrenciesRefresh,
+                ScreenAdaptiveNavigationWrapper(
+                    screenAdaptiveNavigationWrapperProps = screenAdaptiveNavigationWrapperProps
                 ) {
                     WatchlistItemScreen(
                         currencies = (currenciesUiState as CurrenciesUiState.Success).currencies,
@@ -176,26 +193,10 @@ fun CurrencyConverterNavigation(
     }
 }
 
-private fun constructWatchlistItemProps(
-    watchlistItemViewModel: WatchlistItemViewModel,
-    watchlistItemUiState: WatchlistItemUiState,
-    @StringRes confirmButtonText: Int,
-    onConfirmButtonClicked: (WatchlistItem) -> Unit,
-    onCancelButtonClicked: () -> Unit,
-    onLaunchAppSettingsClick: () -> Unit,
-): WatchlistItemProps {
-    return WatchlistItemProps(
-        watchlistItemUiState = watchlistItemUiState,
-        confirmButtonText = confirmButtonText,
-        onBaseCurrencySelection = watchlistItemViewModel::selectBaseCurrency,
-        onTargetCurrencySelection = watchlistItemViewModel::selectTargetCurrency,
-        onBaseAndTargetCurrenciesSwap = watchlistItemViewModel::swapBaseAndTargetCurrencies,
-        onExchangeRateRelationSelection = watchlistItemViewModel::selectExchangeRateRelation,
-        onTargetValueChange = watchlistItemViewModel::changeTargetValue,
-        onConfirmButtonClicked = onConfirmButtonClicked,
-        onCancelButtonClicked = onCancelButtonClicked,
-        onLatestExchangeRateUpdate = watchlistItemViewModel::restoreToLoadingStateAndFetchExchangeRate,
-        onNotificationsPermissionRejectionStateUpdate = watchlistItemViewModel::updateNotificationsPermissionRejectionState,
-        onLaunchAppSettingsClick = onLaunchAppSettingsClick,
-    )
-}
+class ScreenAdaptiveNavigationWrapperProps(
+    val navigationType: CurrencyConverterNavigationType,
+    val currentCurrencyConverterScreen: CurrencyConverterScreen,
+    val navigateTo: (String) -> Unit,
+    val dataHandlerUiState: String,
+    val onRetryAction: () -> Unit,
+)

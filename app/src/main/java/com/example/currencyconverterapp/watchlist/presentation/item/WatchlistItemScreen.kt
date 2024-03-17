@@ -23,6 +23,7 @@ import com.example.currencyconverterapp.watchlist.presentation.notifications.Not
 import com.example.currencyconverterapp.watchlist.presentation.notifications.NotificationsPermissionState
 import com.example.currencyconverterapp.watchlist.presentation.notifications.WatchlistNotificationRequestPermissionRationale
 import com.example.currencyconverterapp.watchlist.presentation.util.NotificationUtils.getNotificationsPermissionState
+import com.example.currencyconverterapp.watchlist.presentation.util.WatchlistItemProps
 import com.example.currencyconverterapp.watchlist.presentation.util.WatchlistItemState
 import java.util.UUID
 

@@ -1,8 +1,6 @@
 package com.example.currencyconverterapp.core.presentation
 
-import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
@@ -17,10 +15,9 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.currencyconverterapp.core.presentation.navigation.CurrencyConverterBottomNavigationBar
 import com.example.currencyconverterapp.core.presentation.navigation.CurrencyConverterNavigation
-import com.example.currencyconverterapp.core.presentation.navigation.CurrencyConverterNavigationRail
-import com.example.currencyconverterapp.core.presentation.navigation.CurrencyConverterPermanentNavigationDrawer
 import com.example.currencyconverterapp.core.presentation.navigation.WatchlistSubScreen
 import com.example.currencyconverterapp.core.presentation.util.CurrencyConverterNavigationType
+import com.example.currencyconverterapp.core.presentation.util.FloatingActionButtonType
 import com.example.currencyconverterapp.core.presentation.util.NavigationUtils.getCurrentConverterWatchlistScreen
 
 @Composable
@@ -51,65 +48,54 @@ fun CurrencyConverterApp(
         }
     }
 
+    val fabType = when (windowSize) {
+        WindowWidthSizeClass.Compact -> {
+            FloatingActionButtonType.BOTTOM_RIGHT
+        }
+        else -> {
+            FloatingActionButtonType.TOP_LEFT
+        }
+    }
+
     val navigateTo = { targetRoute: String ->
         navController.navigate(targetRoute)
     }
 
-    val mainContent: @Composable () -> Unit = {
-        Scaffold(
-            topBar = {
-                if (navigationType == CurrencyConverterNavigationType.BOTTOM_NAVIGATION) {
-                    CurrencyConverterTopAppBar(
-                        currentCurrencyConverterScreen = currentCurrencyConverterScreen,
-                        currentWatchlistScreen = currentWatchlistScreen,
-                        canNavigateBack = currentWatchlistScreen != null && route != WatchlistSubScreen.WatchlistItems.name,
-                        navigateUp = { navController.navigateUp() },
-                    )
-                }
-            },
-            bottomBar = {
-                AnimatedVisibility(visible = navigationType == CurrencyConverterNavigationType.BOTTOM_NAVIGATION) {
-                    CurrencyConverterBottomNavigationBar(
-                        currentScreen = currentCurrencyConverterScreen,
-                        navigateTo = navigateTo,
-                    )
-                }
+    Scaffold(
+        topBar = {
+            if (navigationType == CurrencyConverterNavigationType.BOTTOM_NAVIGATION) {
+                CurrencyConverterTopAppBar(
+                    currentCurrencyConverterScreen = currentCurrencyConverterScreen,
+                    currentWatchlistScreen = currentWatchlistScreen,
+                    canNavigateBack = currentWatchlistScreen != null && route != WatchlistSubScreen.WatchlistItems.name,
+                    navigateUp = { navController.navigateUp() },
+                )
             }
-        ) {
-            Surface(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(it)
-            ) {
-                Row {
-                    AnimatedVisibility(visible = navigationType == CurrencyConverterNavigationType.NAVIGATION_RAIL) {
-                        CurrencyConverterNavigationRail(
-                            currentCurrencyConverterScreen = currentCurrencyConverterScreen,
-                            navigateTo = navigateTo,
-                        )
-                    }
-                    CurrencyConverterNavigation(
-                        navController = navController,
-                        currenciesUiState = currenciesUiState,
-                        onCurrenciesRefresh = currenciesViewModel::restoreToLoadingStateAndRefreshCurrencies,
-                        onLaunchAppSettingsClick = onLaunchAppSettingsClick,
-                    )
-                }
+        },
+        bottomBar = {
+            AnimatedVisibility(visible = navigationType == CurrencyConverterNavigationType.BOTTOM_NAVIGATION) {
+                CurrencyConverterBottomNavigationBar(
+                    currentScreen = currentCurrencyConverterScreen,
+                    navigateTo = navigateTo,
+                )
             }
         }
-    }
-
-    if (navigationType == CurrencyConverterNavigationType.PERMANENT_NAVIGATION_DRAWER) {
-        CurrencyConverterPermanentNavigationDrawer(
-            currentCurrencyConverterScreen = currentCurrencyConverterScreen,
-            navigateTo = {
-                navController.navigate(it)
-            }
+    ) {
+        Surface(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(it)
         ) {
-            mainContent()
+            CurrencyConverterNavigation(
+                navController = navController,
+                navigationType = navigationType,
+                currentCurrencyConverterScreen = currentCurrencyConverterScreen,
+                currenciesUiState = currenciesUiState,
+                fabType = fabType,
+                onCurrenciesRefresh = currenciesViewModel::restoreToLoadingStateAndRefreshCurrencies,
+                onLaunchAppSettingsClick = onLaunchAppSettingsClick,
+                navigateTo = navigateTo,
+            )
         }
-    }
-    else {
-        mainContent()
     }
 }

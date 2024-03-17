@@ -5,3 +5,8 @@ enum class CurrencyConverterNavigationType {
     NAVIGATION_RAIL,
     PERMANENT_NAVIGATION_DRAWER,
 }
+
+enum class FloatingActionButtonType {
+    TOP_LEFT,
+    BOTTOM_RIGHT
+}
