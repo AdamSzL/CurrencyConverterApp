@@ -4,6 +4,7 @@ package com.example.currencyconverterapp.converter.presentation.conversion_resul
 
 import androidx.compose.animation.core.LinearOutSlowInEasing
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -66,7 +67,6 @@ fun ConversionResultsList(
                 SwipeToDismissCurrencyContainer(
                     exchangeRate = exchangeRate,
                     onConversionEntryDeletion = onConversionEntryDeletion,
-                    modifier = Modifier.fillMaxWidth()
                 ) {
                     ConversionResultsListItem(
                         conversionResultsListItemSize = conversionResultsListItemSize,
@@ -77,7 +77,6 @@ fun ConversionResultsList(
                         exchangeRate = exchangeRate,
                         onExchangeRatesRefresh = onExchangeRatesRefresh,
                         modifier = Modifier
-                            .fillMaxWidth()
                     )
                 }
                 if (index == exchangeRates.size - 1) {

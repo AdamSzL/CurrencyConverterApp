@@ -1,5 +1,6 @@
 package com.example.currencyconverterapp.converter.presentation
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.currencyconverterapp.converter.data.repository.ConverterRepository
@@ -114,6 +115,12 @@ class ConverterViewModel @Inject constructor(
         }
     }
 
+    private fun resetTargetCurrency() {
+        _converterUiState.update {
+            it.copy(selectedTargetCurrency = null)
+        }
+    }
+
     fun addTargetCurrency(
         baseCurrency: Currency,
         currency: Currency
@@ -125,6 +132,7 @@ class ConverterViewModel @Inject constructor(
                 exchangeRate.code
             }
         resetExchangeRates(updatedExchangeRates)
+        resetTargetCurrency()
         refreshLatestExchangeRatesAndHandleError(
             baseCurrency = baseCurrency,
             exchangeRates = updatedExchangeRates

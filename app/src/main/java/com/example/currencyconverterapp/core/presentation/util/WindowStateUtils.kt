@@ -76,6 +76,15 @@ fun getAdaptiveContentTypes(
         }
     }
 
+    val converterAddCurrencyContainerType = when (windowWidthSizeClass) {
+        WindowWidthSizeClass.Expanded -> {
+            ConverterAddCurrencyContainerType.SIDE_PANEL
+        }
+        else -> {
+            ConverterAddCurrencyContainerType.BOTTOM_SHEET
+        }
+    }
+
     return AdaptiveContentTypes(
         navigationType = navigationType,
         fabType = fabType,
@@ -84,6 +93,7 @@ fun getAdaptiveContentTypes(
         chartsScreenContentType = chartsScreenContentType,
         conversionResultsListItemSize = conversionResultsListItemSize,
         watchlistEntrySize = watchlistEntrySize,
+        converterAddCurrencyContainerType = converterAddCurrencyContainerType,
     )
 }
 
@@ -95,6 +105,7 @@ data class AdaptiveContentTypes(
     val chartsScreenContentType: ChartsScreenContentType,
     val conversionResultsListItemSize: ConversionResultsListItemSize,
     val watchlistEntrySize: WatchlistEntrySize,
+    val converterAddCurrencyContainerType: ConverterAddCurrencyContainerType
 )
 
 enum class CurrencyConverterNavigationType {
@@ -131,4 +142,9 @@ enum class ConversionResultsListItemSize {
 enum class WatchlistEntrySize {
     DEFAULT,
     BIG
+}
+
+enum class ConverterAddCurrencyContainerType {
+    SIDE_PANEL,
+    BOTTOM_SHEET
 }

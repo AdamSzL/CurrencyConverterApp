@@ -60,4 +60,5 @@
     <dimen name="swap_icon_offset">20dp</dimen>
     <dimen name="charts_padding_small">8dp</dimen>
     <dimen name="big_flag_size">40dp</dimen>
+    <dimen name="side_panel_rounded_corner">16dp</dimen>
 </resources>

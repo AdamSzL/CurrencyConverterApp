@@ -20,6 +20,7 @@ import com.example.currencyconverterapp.charts.presentation.ChartsScreen
 import com.example.currencyconverterapp.charts.presentation.ChartsViewModel
 import com.example.currencyconverterapp.charts.presentation.util.constructChartsScreenActions
 import com.example.currencyconverterapp.converter.presentation.ConverterScreen
+import com.example.currencyconverterapp.converter.presentation.ConverterScreenWrapper
 import com.example.currencyconverterapp.converter.presentation.ConverterViewModel
 import com.example.currencyconverterapp.converter.presentation.util.constructConverterScreenActions
 import com.example.currencyconverterapp.core.presentation.CurrenciesUiState
@@ -52,7 +53,8 @@ fun CurrencyConverterNavigation(
         chartControllerType,
         chartsScreenContentType,
         conversionResultsListItemSize,
-        watchlistEntrySize
+        watchlistEntrySize,
+        converterAddCurrencyContainerType,
     ) = adaptiveContentTypes
 
     val screenAdaptiveNavigationWrapperProps = ScreenAdaptiveNavigationWrapperProps(
@@ -71,39 +73,24 @@ fun CurrencyConverterNavigation(
         composable(route = CurrencyConverterScreen.Converter.name) {
             val converterViewModel: ConverterViewModel = hiltViewModel()
             val converterUiState = converterViewModel.converterUiState.collectAsStateWithLifecycle().value
-            val bottomSheetScaffoldState = rememberBottomSheetScaffoldState(
-                bottomSheetState = rememberStandardBottomSheetState(
-                    initialValue = SheetValue.Hidden,
-                    skipHiddenState = false,
+            ConverterScreenWrapper(
+                converterUiState = converterUiState,
+                currenciesUiState = currenciesUiState,
+                fabType = fabType,
+                screenAdaptiveNavigationWrapperProps = screenAdaptiveNavigationWrapperProps,
+                conversionResultsListItemSize = conversionResultsListItemSize,
+                converterAddCurrencyContainerType = converterAddCurrencyContainerType,
+                converterScreenActions = constructConverterScreenActions(
+                    converterViewModel = converterViewModel,
+                    onExchangeRatesRefresh = {
+                        converterViewModel.restoreToSuccessState()
+                        converterViewModel.refreshLatestExchangeRatesAndHandleError(
+                            converterUiState.baseCurrency,
+                            converterUiState.exchangeRates
+                        )
+                    }
                 )
             )
-            val scope = rememberCoroutineScope()
-            ScreenAdaptiveNavigationWrapper(
-                screenAdaptiveNavigationWrapperProps = screenAdaptiveNavigationWrapperProps,
-                fabAction = {
-                    scope.launch {
-                        bottomSheetScaffoldState.bottomSheetState.expand()
-                    }
-                }
-            ) {
-                ConverterScreen(
-                    converterUiState = converterUiState,
-                    bottomSheetScaffoldState = bottomSheetScaffoldState,
-                    fabType = fabType,
-                    conversionResultsListItemSize = conversionResultsListItemSize,
-                    availableCurrencies = (currenciesUiState as CurrenciesUiState.Success).currencies,
-                    converterScreenActions = constructConverterScreenActions(
-                        converterViewModel = converterViewModel,
-                        onExchangeRatesRefresh = {
-                            converterViewModel.restoreToSuccessState()
-                            converterViewModel.refreshLatestExchangeRatesAndHandleError(
-                                converterUiState.baseCurrency,
-                                converterUiState.exchangeRates
-                            )
-                        }
-                    )
-                )
-            }
         }
         composable(route = CurrencyConverterScreen.Charts.name) {
             val chartsViewModel: ChartsViewModel = hiltViewModel()

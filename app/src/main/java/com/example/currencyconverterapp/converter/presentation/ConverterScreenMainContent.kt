@@ -1,9 +1,11 @@
 package com.example.currencyconverterapp.converter.presentation
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import com.example.currencyconverterapp.converter.presentation.base_controller.BaseCurrencyController
 import com.example.currencyconverterapp.converter.presentation.conversion_results.ConversionResultsList
 import com.example.currencyconverterapp.core.data.model.Currency
@@ -35,8 +37,6 @@ fun ConverterScreenMainContent(
             baseCurrencyData = baseCurrencyData,
             onBaseCurrencyValueChange = onBaseCurrencyValueChange,
             onBaseCurrencySelection = onBaseCurrencySelection,
-            modifier = Modifier
-                .fillMaxWidth()
         )
 
         if (converterUiState.exchangeRatesUiState == ExchangeRatesUiState.Loading) {

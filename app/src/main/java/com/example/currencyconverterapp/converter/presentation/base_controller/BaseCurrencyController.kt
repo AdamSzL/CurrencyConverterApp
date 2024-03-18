@@ -1,5 +1,6 @@
 package com.example.currencyconverterapp.converter.presentation.base_controller
 
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -40,7 +41,6 @@ fun BaseCurrencyController(
             textLabel = R.string.base_currency,
             selectedCurrency = baseCurrencyData.baseCurrency,
             onCurrencySelection = onBaseCurrencySelection,
-            modifier = Modifier
         )
         Spacer(modifier = Modifier.width(dimensionResource(R.dimen.converter_input_gap)))
         CurrencyValueTextField(
