@@ -24,8 +24,8 @@ import com.example.currencyconverterapp.converter.presentation.ConverterViewMode
 import com.example.currencyconverterapp.converter.presentation.util.constructConverterScreenActions
 import com.example.currencyconverterapp.core.presentation.CurrenciesUiState
 import com.example.currencyconverterapp.core.presentation.components.ScreenAdaptiveNavigationWrapper
+import com.example.currencyconverterapp.core.presentation.util.AdaptiveContentTypes
 import com.example.currencyconverterapp.core.presentation.util.CurrencyConverterNavigationType
-import com.example.currencyconverterapp.core.presentation.util.FloatingActionButtonType
 import com.example.currencyconverterapp.watchlist.presentation.item.WatchlistItemScreen
 import com.example.currencyconverterapp.watchlist.presentation.item.WatchlistItemViewModel
 import com.example.currencyconverterapp.watchlist.presentation.list.WatchlistScreen
@@ -37,15 +37,16 @@ import kotlinx.coroutines.launch
 @Composable
 fun CurrencyConverterNavigation(
     navController: NavHostController,
-    navigationType: CurrencyConverterNavigationType,
+    adaptiveContentTypes: AdaptiveContentTypes,
     currentCurrencyConverterScreen: CurrencyConverterScreen,
     currenciesUiState: CurrenciesUiState,
-    fabType: FloatingActionButtonType,
     onCurrenciesRefresh: () -> Unit,
     onLaunchAppSettingsClick: () -> Unit,
     navigateTo: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val (navigationType, fabType, _, chartControllerType, chartsScreenContentType) = adaptiveContentTypes
+
     val screenAdaptiveNavigationWrapperProps = ScreenAdaptiveNavigationWrapperProps(
         navigationType = navigationType,
         currentCurrencyConverterScreen = currentCurrencyConverterScreen,
@@ -103,6 +104,8 @@ fun CurrencyConverterNavigation(
             ) {
                 ChartsScreen(
                     chartsUiState = chartsUiState,
+                    contentType = chartsScreenContentType,
+                    controllerType = chartControllerType,
                     chartEntryModelProducer = chartsViewModel.chartEntryModelProducer,
                     axisExtraKey = chartsViewModel.axisExtraKey,
                     currencies = (currenciesUiState as CurrenciesUiState.Success).currencies,

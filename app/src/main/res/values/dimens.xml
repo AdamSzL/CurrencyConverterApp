@@ -57,4 +57,6 @@
     <dimen name="nav_margin">16dp</dimen>
     <dimen name="nav_small_margin">8dp</dimen>
     <dimen name="nav_rail_icon_size">32dp</dimen>
+    <dimen name="swap_icon_offset">20dp</dimen>
+    <dimen name="charts_padding_small">8dp</dimen>
 </resources>

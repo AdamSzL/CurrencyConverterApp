@@ -1,7 +1,5 @@
 package com.example.currencyconverterapp.charts.presentation
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
@@ -18,6 +16,7 @@ import com.example.currencyconverterapp.charts.data.model.TimePeriodType
 import com.example.currencyconverterapp.charts.presentation.util.DateTimeUtils.formatDateByTimePeriodType
 import com.example.currencyconverterapp.charts.presentation.util.NumberUtils.getRoundingByDifference
 import com.example.currencyconverterapp.core.data.model.Currency
+import com.example.currencyconverterapp.core.presentation.util.ChartsScreenContentType
 import com.patrykandpatrick.vico.compose.axis.horizontal.rememberBottomAxis
 import com.patrykandpatrick.vico.compose.axis.vertical.rememberStartAxis
 import com.patrykandpatrick.vico.compose.chart.Chart
@@ -38,6 +37,7 @@ import com.patrykandpatrick.vico.core.entry.diff.ExtraStore
 fun HistoricalExchangeRatesChart(
     baseCurrency: Currency,
     targetCurrency: Currency,
+    chartsScreenContentType: ChartsScreenContentType,
     chartType: ChartType,
     selectedTimePeriodType: TimePeriodType,
     chartEntryModelProducer: ChartEntryModelProducer,
@@ -80,38 +80,41 @@ fun HistoricalExchangeRatesChart(
 
     val marker = rememberMarker()
 
-    Column(
-        verticalArrangement = Arrangement.Center,
-        modifier = modifier.fillMaxHeight()
-    ) {
-        Chart(
-            chart = if (chartType == ChartType.COLUMN) columnChart(
-                columns = listOf(LineComponent(
-                    color = MaterialTheme.colorScheme.primary.toArgb(),
-                    thicknessDp = dimensionResource(R.dimen.column_chart_width).value,
-                )),
-                axisValuesOverrider = axisValuesOverrider,
-            ) else lineChart(
-                lines = listOf(LineChart.LineSpec(
-                    lineColor = MaterialTheme.colorScheme.primary.toArgb(),
-                    lineBackgroundShader = DynamicShaders.fromBrush(
-                        brush = Brush.verticalGradient(
-                            listOf(
-                                MaterialTheme.colorScheme.primary.copy(DefaultAlpha.LINE_BACKGROUND_SHADER_START),
-                                MaterialTheme.colorScheme.primary.copy(DefaultAlpha.LINE_BACKGROUND_SHADER_END),
-                            )
+    Chart(
+        chart = if (chartType == ChartType.COLUMN) columnChart(
+            columns = listOf(LineComponent(
+                color = MaterialTheme.colorScheme.primary.toArgb(),
+                thicknessDp = dimensionResource(R.dimen.column_chart_width).value,
+            )),
+            axisValuesOverrider = axisValuesOverrider,
+        ) else lineChart(
+            lines = listOf(LineChart.LineSpec(
+                lineColor = MaterialTheme.colorScheme.primary.toArgb(),
+                lineBackgroundShader = DynamicShaders.fromBrush(
+                    brush = Brush.verticalGradient(
+                        listOf(
+                            MaterialTheme.colorScheme.primary.copy(DefaultAlpha.LINE_BACKGROUND_SHADER_START),
+                            MaterialTheme.colorScheme.primary.copy(DefaultAlpha.LINE_BACKGROUND_SHADER_END),
                         )
-                    ),
-                )),
-                axisValuesOverrider = axisValuesOverrider,
-            ),
-            chartModelProducer = chartEntryModelProducer,
-            marker = marker,
-            startAxis = startAxis,
-            bottomAxis = bottomAxis,
-            modifier = Modifier
-                .padding(dimensionResource(R.dimen.chart_padding))
-                .fillMaxHeight()
-        )
-    }
+                    )
+                ),
+            )),
+            axisValuesOverrider = axisValuesOverrider,
+        ),
+        chartModelProducer = chartEntryModelProducer,
+        marker = marker,
+        startAxis = startAxis,
+        bottomAxis = bottomAxis,
+        modifier = modifier
+            .padding(
+                dimensionResource(
+                    if (chartsScreenContentType == ChartsScreenContentType.FULL) {
+                        R.dimen.chart_padding
+                    } else {
+                        R.dimen.charts_padding_small
+                    }
+                )
+            )
+            .fillMaxHeight()
+    )
 }

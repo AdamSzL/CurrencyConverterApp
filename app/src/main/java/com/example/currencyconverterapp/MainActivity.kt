@@ -71,7 +71,8 @@ class MainActivity : ComponentActivity() {
                 ) {
                     val windowClass = calculateWindowSizeClass(this)
                     CurrencyConverterApp(
-                        windowSize = windowClass.widthSizeClass,
+                        windowWidthSizeClass = windowClass.widthSizeClass,
+                        windowHeightSizeClass = windowClass.heightSizeClass,
                         onLaunchAppSettingsClick = ::openAppSettings,
                     )
                 }

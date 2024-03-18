@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
+import androidx.compose.material3.windowsizeclass.WindowHeightSizeClass
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -17,12 +18,14 @@ import com.example.currencyconverterapp.core.presentation.navigation.CurrencyCon
 import com.example.currencyconverterapp.core.presentation.navigation.CurrencyConverterNavigation
 import com.example.currencyconverterapp.core.presentation.navigation.WatchlistSubScreen
 import com.example.currencyconverterapp.core.presentation.util.CurrencyConverterNavigationType
-import com.example.currencyconverterapp.core.presentation.util.FloatingActionButtonType
 import com.example.currencyconverterapp.core.presentation.util.NavigationUtils.getCurrentConverterWatchlistScreen
+import com.example.currencyconverterapp.core.presentation.util.TopAppBarType
+import com.example.currencyconverterapp.core.presentation.util.getAdaptiveContentTypes
 
 @Composable
 fun CurrencyConverterApp(
-    windowSize: WindowWidthSizeClass,
+    windowWidthSizeClass: WindowWidthSizeClass,
+    windowHeightSizeClass: WindowHeightSizeClass,
     onLaunchAppSettingsClick: () -> Unit,
     currenciesViewModel: CurrenciesViewModel = hiltViewModel()
 ) {
@@ -33,29 +36,7 @@ fun CurrencyConverterApp(
 
     val currenciesUiState = currenciesViewModel.currenciesUiState.collectAsStateWithLifecycle().value
 
-    val navigationType = when (windowSize) {
-        WindowWidthSizeClass.Compact -> {
-            CurrencyConverterNavigationType.BOTTOM_NAVIGATION
-        }
-        WindowWidthSizeClass.Medium -> {
-            CurrencyConverterNavigationType.NAVIGATION_RAIL
-        }
-        WindowWidthSizeClass.Expanded -> {
-            CurrencyConverterNavigationType.PERMANENT_NAVIGATION_DRAWER
-        }
-        else -> {
-            CurrencyConverterNavigationType.BOTTOM_NAVIGATION
-        }
-    }
-
-    val fabType = when (windowSize) {
-        WindowWidthSizeClass.Compact -> {
-            FloatingActionButtonType.BOTTOM_RIGHT
-        }
-        else -> {
-            FloatingActionButtonType.TOP_LEFT
-        }
-    }
+    val adaptiveContentTypes = getAdaptiveContentTypes(windowWidthSizeClass, windowHeightSizeClass)
 
     val navigateTo = { targetRoute: String ->
         navController.navigate(targetRoute)
@@ -63,7 +44,7 @@ fun CurrencyConverterApp(
 
     Scaffold(
         topBar = {
-            if (navigationType == CurrencyConverterNavigationType.BOTTOM_NAVIGATION) {
+            if (adaptiveContentTypes.topAppBarType == TopAppBarType.VISIBLE) {
                 CurrencyConverterTopAppBar(
                     currentCurrencyConverterScreen = currentCurrencyConverterScreen,
                     currentWatchlistScreen = currentWatchlistScreen,
@@ -73,7 +54,7 @@ fun CurrencyConverterApp(
             }
         },
         bottomBar = {
-            AnimatedVisibility(visible = navigationType == CurrencyConverterNavigationType.BOTTOM_NAVIGATION) {
+            AnimatedVisibility(visible = adaptiveContentTypes.navigationType == CurrencyConverterNavigationType.BOTTOM_NAVIGATION) {
                 CurrencyConverterBottomNavigationBar(
                     currentScreen = currentCurrencyConverterScreen,
                     navigateTo = navigateTo,
@@ -88,10 +69,9 @@ fun CurrencyConverterApp(
         ) {
             CurrencyConverterNavigation(
                 navController = navController,
-                navigationType = navigationType,
+                adaptiveContentTypes = adaptiveContentTypes,
                 currentCurrencyConverterScreen = currentCurrencyConverterScreen,
                 currenciesUiState = currenciesUiState,
-                fabType = fabType,
                 onCurrenciesRefresh = currenciesViewModel::restoreToLoadingStateAndRefreshCurrencies,
                 onLaunchAppSettingsClick = onLaunchAppSettingsClick,
                 navigateTo = navigateTo,
