@@ -45,7 +45,15 @@ fun CurrencyConverterNavigation(
     navigateTo: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val (navigationType, fabType, _, chartControllerType, chartsScreenContentType) = adaptiveContentTypes
+    val (
+        navigationType,
+        fabType,
+        _,
+        chartControllerType,
+        chartsScreenContentType,
+        conversionResultsListItemSize,
+        watchlistEntrySize
+    ) = adaptiveContentTypes
 
     val screenAdaptiveNavigationWrapperProps = ScreenAdaptiveNavigationWrapperProps(
         navigationType = navigationType,
@@ -82,6 +90,7 @@ fun CurrencyConverterNavigation(
                     converterUiState = converterUiState,
                     bottomSheetScaffoldState = bottomSheetScaffoldState,
                     fabType = fabType,
+                    conversionResultsListItemSize = conversionResultsListItemSize,
                     availableCurrencies = (currenciesUiState as CurrenciesUiState.Success).currencies,
                     converterScreenActions = constructConverterScreenActions(
                         converterViewModel = converterViewModel,
@@ -128,6 +137,7 @@ fun CurrencyConverterNavigation(
                 ) {
                     WatchlistScreen(
                         watchlistItems = watchlistItems,
+                        watchlistEntrySize = watchlistEntrySize,
                         fabType = fabType,
                         onWatchlistItemClicked = { watchlistItemId ->
                             navController.navigate("${WatchlistSubScreen.WatchlistEditItem.name}/${watchlistItemId}")

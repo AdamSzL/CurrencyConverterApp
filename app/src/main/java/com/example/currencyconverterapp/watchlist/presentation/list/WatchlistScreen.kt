@@ -9,11 +9,13 @@ import androidx.compose.ui.tooling.preview.PreviewScreenSizes
 import com.example.currencyconverterapp.core.data.util.defaultWatchlistItems
 import com.example.currencyconverterapp.core.presentation.util.FabSize
 import com.example.currencyconverterapp.core.presentation.util.FloatingActionButtonType
+import com.example.currencyconverterapp.core.presentation.util.WatchlistEntrySize
 import com.example.currencyconverterapp.watchlist.data.model.WatchlistItem
 
 @Composable
 fun WatchlistScreen(
     watchlistItems: List<WatchlistItem>,
+    watchlistEntrySize: WatchlistEntrySize,
     fabType: FloatingActionButtonType,
     onWatchlistItemClicked: (String) -> Unit,
     onWatchlistItemDeletion: (String) -> Unit,
@@ -33,6 +35,7 @@ fun WatchlistScreen(
     ) { paddingValues ->
         WatchlistEntryList(
             watchlistItems = watchlistItems,
+            watchlistEntrySize = watchlistEntrySize,
             onWatchlistItemClicked = onWatchlistItemClicked,
             onWatchlistItemDeletion = onWatchlistItemDeletion,
             modifier = Modifier.padding(paddingValues)
@@ -46,6 +49,7 @@ fun WatchlistScreen(
 fun WatchlistScreenPreview() {
     WatchlistScreen(
         watchlistItems = defaultWatchlistItems,
+        watchlistEntrySize = WatchlistEntrySize.DEFAULT,
         fabType = FloatingActionButtonType.BOTTOM_RIGHT,
         onWatchlistItemClicked = { },
         onWatchlistItemDeletion = { },

@@ -25,10 +25,12 @@ import com.example.currencyconverterapp.core.data.util.defaultAvailableCurrencie
 import com.example.currencyconverterapp.core.data.util.defaultBaseCurrency
 import com.example.currencyconverterapp.core.data.util.defaultBaseCurrencyValue
 import com.example.currencyconverterapp.core.data.util.defaultExchangeRates
+import com.example.currencyconverterapp.core.presentation.util.ConversionResultsListItemSize
 import com.example.currencyconverterapp.ui.theme.CurrencyConverterAppTheme
 
 @Composable
 fun ConversionResultsListItem(
+    conversionResultsListItemSize: ConversionResultsListItemSize,
     exchangeRatesUiState: ExchangeRatesUiState,
     baseCurrency: Currency,
     baseCurrencyValue: Double,
@@ -43,13 +45,19 @@ fun ConversionResultsListItem(
             .padding(dimensionResource(R.dimen.conversion_result_item_margin))
     ) {
         val context = LocalContext.current
+        val flagSizeModifier = if (conversionResultsListItemSize == ConversionResultsListItemSize.DEFAULT) {
+            Modifier.size(dimensionResource(R.dimen.flag_size))
+        } else {
+            Modifier.size(dimensionResource(R.dimen.big_flag_size))
+        }
         Image(
             painter = painterResource(getFlagResourceByCurrencyCode(context, exchangeRate.code.lowercase())),
             contentDescription = null,
-            modifier = Modifier.size(dimensionResource(R.dimen.flag_size)),
+            modifier = flagSizeModifier
         )
         Spacer(modifier = Modifier.width(dimensionResource(R.dimen.conversion_result_item_flag_gap)))
         ConversionItemMainContent(
+            conversionResultsListItemSize = conversionResultsListItemSize,
             exchangeRatesUiState = exchangeRatesUiState,
             baseCurrency = baseCurrency,
             baseCurrencyValue = baseCurrencyValue,
@@ -64,11 +72,13 @@ fun ConversionResultsListItem(
 @Preview(showBackground = true)
 @Composable
 fun ConversionResultsListItemPreview(
+    conversionResultsListItemSize: ConversionResultsListItemSize = ConversionResultsListItemSize.DEFAULT,
     exchangeRatesUiState: ExchangeRatesUiState = ExchangeRatesUiState.Success,
     isLoading: Boolean = false,
 ) {
     CurrencyConverterAppTheme {
         ConversionResultsListItem(
+            conversionResultsListItemSize = conversionResultsListItemSize,
             exchangeRatesUiState = exchangeRatesUiState,
             baseCurrency = defaultBaseCurrency,
             targetCurrency = defaultAvailableCurrencies.find { it.code == "GBP" }!!,
@@ -105,5 +115,13 @@ fun ConversionResultsListItemPreviewUiStateErrorValueNull() {
 fun ConversionResultsLoadingListItemPreview() {
     ConversionResultsListItemPreview(
         isLoading = true,
+    )
+}
+
+@Preview(showBackground = true)
+@Composable
+fun ConversionResultsListItemBigSizePreview() {
+    ConversionResultsListItemPreview(
+        conversionResultsListItemSize = ConversionResultsListItemSize.BIG
     )
 }

@@ -11,12 +11,14 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.currencyconverterapp.R
 import com.example.currencyconverterapp.core.data.util.defaultWatchlistItems
+import com.example.currencyconverterapp.core.presentation.util.WatchlistEntrySize
 import com.example.currencyconverterapp.ui.theme.CurrencyConverterAppTheme
 import com.example.currencyconverterapp.watchlist.data.model.WatchlistItem
 
 @Composable
 fun WatchlistEntryList(
     watchlistItems: List<WatchlistItem>,
+    watchlistEntrySize: WatchlistEntrySize,
     onWatchlistItemClicked: (String) -> Unit,
     onWatchlistItemDeletion: (String) -> Unit,
     modifier: Modifier = Modifier
@@ -30,6 +32,7 @@ fun WatchlistEntryList(
         items(watchlistItems) { watchlistItem ->
             WatchlistEntry(
                 watchlistItem = watchlistItem,
+                watchlistEntrySize = watchlistEntrySize,
                 onWatchlistItemClicked = onWatchlistItemClicked,
                 onWatchlistItemDeletion = onWatchlistItemDeletion,
             )
@@ -43,6 +46,7 @@ fun WatchlistEntryListPreview() {
     CurrencyConverterAppTheme {
         WatchlistEntryList(
             watchlistItems = defaultWatchlistItems,
+            watchlistEntrySize = WatchlistEntrySize.DEFAULT,
             onWatchlistItemClicked = { },
             onWatchlistItemDeletion = { }
         )

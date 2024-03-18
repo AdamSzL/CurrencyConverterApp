@@ -21,12 +21,14 @@ import com.example.currencyconverterapp.converter.presentation.util.BaseControll
 import com.example.currencyconverterapp.core.data.model.Currency
 import com.example.currencyconverterapp.core.data.util.defaultBaseCurrency
 import com.example.currencyconverterapp.core.data.util.defaultTargetCurrency
+import com.example.currencyconverterapp.core.presentation.util.WatchlistEntrySize
 import com.example.currencyconverterapp.ui.theme.CurrencyConverterAppTheme
 import com.example.currencyconverterapp.watchlist.presentation.util.TriangleShape
 import com.example.currencyconverterapp.watchlist.presentation.util.TriangleType
 
 @Composable
 fun WatchlistEntryFlags(
+    watchlistEntrySize: WatchlistEntrySize,
     context: Context,
     baseCurrency: Currency,
     targetCurrency: Currency,
@@ -56,7 +58,7 @@ fun WatchlistEntryFlags(
             contentScale = ContentScale.Crop,
             contentDescription = null,
             modifier = modifier
-                .size(dimensionResource(R.dimen.flag_size))
+                .size(dimensionResource(if (watchlistEntrySize == WatchlistEntrySize.BIG) R.dimen.big_flag_size else R.dimen.flag_size))
                 .clip(TriangleShape(TriangleType.TOP_LEFT))
         )
         Image(
@@ -64,7 +66,7 @@ fun WatchlistEntryFlags(
             contentScale = ContentScale.Crop,
             contentDescription = null,
             modifier = modifier
-                .size(dimensionResource(R.dimen.flag_size))
+                .size(dimensionResource(if (watchlistEntrySize == WatchlistEntrySize.BIG) R.dimen.big_flag_size else R.dimen.flag_size))
                 .clip(TriangleShape(TriangleType.BOTTOM_RIGHT))
         )
     }
@@ -76,6 +78,21 @@ private fun WatchlistEntryFlagsPreview() {
     val context = LocalContext.current
     CurrencyConverterAppTheme {
         WatchlistEntryFlags(
+            watchlistEntrySize = WatchlistEntrySize.DEFAULT,
+            context = context,
+            baseCurrency = defaultBaseCurrency,
+            targetCurrency = defaultTargetCurrency,
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun WatchlistEntryFlagsBigPreview() {
+    val context = LocalContext.current
+    CurrencyConverterAppTheme {
+        WatchlistEntryFlags(
+            watchlistEntrySize = WatchlistEntrySize.BIG,
             context = context,
             baseCurrency = defaultBaseCurrency,
             targetCurrency = defaultTargetCurrency,

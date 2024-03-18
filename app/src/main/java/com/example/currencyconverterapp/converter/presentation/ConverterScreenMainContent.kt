@@ -8,10 +8,12 @@ import com.example.currencyconverterapp.converter.presentation.base_controller.B
 import com.example.currencyconverterapp.converter.presentation.conversion_results.ConversionResultsList
 import com.example.currencyconverterapp.core.data.model.Currency
 import com.example.currencyconverterapp.core.presentation.components.LoadingScreen
+import com.example.currencyconverterapp.core.presentation.util.ConversionResultsListItemSize
 
 @Composable
 fun ConverterScreenMainContent(
     converterUiState: ConverterUiState,
+    conversionResultsListItemSize: ConversionResultsListItemSize,
     availableCurrencies: List<Currency>,
     onExchangeRatesRefresh: () -> Unit,
     onBaseCurrencySelection: (Currency) -> Unit,
@@ -41,6 +43,7 @@ fun ConverterScreenMainContent(
             LoadingScreen()
         } else {
             ConversionResultsList(
+                conversionResultsListItemSize = conversionResultsListItemSize,
                 baseCurrencyData = baseCurrencyData,
                 exchangeRatesUiState = converterUiState.exchangeRatesUiState,
                 exchangeRates = converterUiState.exchangeRates,

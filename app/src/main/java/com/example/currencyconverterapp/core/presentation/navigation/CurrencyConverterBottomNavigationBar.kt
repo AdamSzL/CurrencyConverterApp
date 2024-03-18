@@ -38,7 +38,7 @@ fun CurrencyConverterBottomNavigationBar(
                 },
                 label = {
                     Text(
-                        text = screen.route.lowercase().replaceFirstChar { it.uppercase() }
+                        text = screen.route.lowercase().replaceFirstChar { it.uppercase() },
                     )
                 },
                 selected = currentScreen.route == screen.route,

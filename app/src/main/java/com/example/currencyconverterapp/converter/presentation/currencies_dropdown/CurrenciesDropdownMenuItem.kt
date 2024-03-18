@@ -18,6 +18,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import com.example.currencyconverterapp.R
 import com.example.currencyconverterapp.converter.presentation.util.BaseControllerUtils.determineColorFilter
@@ -64,7 +65,7 @@ fun CurrencyDropdownMenuItem(
                 )
                 Text(
                     text = currency.name,
-                    style = MaterialTheme.typography.bodyLarge,
+                    style = MaterialTheme.typography.titleSmall,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                 )

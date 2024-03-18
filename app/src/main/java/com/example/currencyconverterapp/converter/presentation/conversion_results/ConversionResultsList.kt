@@ -27,10 +27,12 @@ import com.example.currencyconverterapp.converter.presentation.ExchangeRatesUiSt
 import com.example.currencyconverterapp.core.data.model.ExchangeRate
 import com.example.currencyconverterapp.core.data.util.defaultBaseCurrencyData
 import com.example.currencyconverterapp.core.data.util.defaultExchangeRates
+import com.example.currencyconverterapp.core.presentation.util.ConversionResultsListItemSize
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ConversionResultsList(
+    conversionResultsListItemSize: ConversionResultsListItemSize,
     baseCurrencyData: BaseCurrencyData,
     exchangeRatesUiState: ExchangeRatesUiState,
     exchangeRates: List<ExchangeRate>,
@@ -67,6 +69,7 @@ fun ConversionResultsList(
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     ConversionResultsListItem(
+                        conversionResultsListItemSize = conversionResultsListItemSize,
                         exchangeRatesUiState = exchangeRatesUiState,
                         baseCurrency = baseCurrencyData.baseCurrency,
                         baseCurrencyValue = baseCurrencyData.baseCurrencyValue,
@@ -97,6 +100,7 @@ fun ConversionResultsListPreview(
     isSelectionModeEnabled: Boolean = false,
 ) {
     ConversionResultsList(
+        conversionResultsListItemSize = ConversionResultsListItemSize.DEFAULT,
         baseCurrencyData = defaultBaseCurrencyData,
         exchangeRates = defaultExchangeRates,
         onConversionEntryDeletion = { },

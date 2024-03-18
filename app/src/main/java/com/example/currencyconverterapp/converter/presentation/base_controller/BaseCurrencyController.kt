@@ -3,6 +3,7 @@ package com.example.currencyconverterapp.converter.presentation.base_controller
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.runtime.Composable
@@ -10,6 +11,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import com.example.currencyconverterapp.R
 import com.example.currencyconverterapp.converter.presentation.BaseCurrencyData
 import com.example.currencyconverterapp.converter.presentation.currencies_dropdown.CurrenciesDropdownMenu
@@ -25,8 +27,9 @@ fun BaseCurrencyController(
 ) {
     Row(
         verticalAlignment = Alignment.Top,
-        horizontalArrangement = Arrangement.Center,
+        horizontalArrangement = Arrangement.End,
         modifier = modifier
+            .fillMaxWidth()
             .padding(
                 horizontal = dimensionResource(R.dimen.converter_horizontal_margin),
                 vertical = dimensionResource(R.dimen.converter_vertical_margin)
@@ -38,7 +41,6 @@ fun BaseCurrencyController(
             selectedCurrency = baseCurrencyData.baseCurrency,
             onCurrencySelection = onBaseCurrencySelection,
             modifier = Modifier
-                .weight(1f)
         )
         Spacer(modifier = Modifier.width(dimensionResource(R.dimen.converter_input_gap)))
         CurrencyValueTextField(
@@ -46,7 +48,7 @@ fun BaseCurrencyController(
             currencyValue = baseCurrencyData.baseCurrencyValue,
             onValueChange = onBaseCurrencyValueChange,
             modifier = Modifier
-                .weight(1f)
+                .width(dimensionResource(R.dimen.dropdown_width))
         )
     }
 }
@@ -54,6 +56,18 @@ fun BaseCurrencyController(
 @Preview(showBackground = true)
 @Composable
 fun BaseCurrencyControllerPreview() {
+    BaseCurrencyController(
+        baseCurrencyData = defaultBaseCurrencyData,
+        onBaseCurrencySelection = { },
+        onBaseCurrencyValueChange = { },
+    )
+}
+
+@Preview(showBackground = true,
+    device = "spec:id=reference_tablet,shape=Normal,width=1280,height=800,unit=dp,dpi=240"
+)
+@Composable
+fun BaseCurrencyControllerExpandedWidthPreview() {
     BaseCurrencyController(
         baseCurrencyData = defaultBaseCurrencyData,
         onBaseCurrencySelection = { },

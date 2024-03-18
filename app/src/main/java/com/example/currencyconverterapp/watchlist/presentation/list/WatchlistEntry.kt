@@ -27,12 +27,14 @@ import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import com.example.currencyconverterapp.R
 import com.example.currencyconverterapp.core.data.util.defaultWatchlistItems
+import com.example.currencyconverterapp.core.presentation.util.WatchlistEntrySize
 import com.example.currencyconverterapp.ui.theme.CurrencyConverterAppTheme
 import com.example.currencyconverterapp.watchlist.data.model.WatchlistItem
 
 @Composable
 fun WatchlistEntry(
     watchlistItem: WatchlistItem,
+    watchlistEntrySize: WatchlistEntrySize,
     onWatchlistItemClicked: (String) -> Unit,
     onWatchlistItemDeletion: (String) -> Unit,
     modifier: Modifier = Modifier
@@ -63,6 +65,7 @@ fun WatchlistEntry(
                     .weight(1f)
             ) {
                 WatchlistEntryFlags(
+                    watchlistEntrySize = watchlistEntrySize,
                     context = context,
                     baseCurrency = watchlistItem.baseCurrency,
                     targetCurrency = watchlistItem.targetCurrency,
@@ -70,6 +73,7 @@ fun WatchlistEntry(
                 )
                 WatchlistEntryInfo(
                     watchlistItem = watchlistItem,
+                    watchlistEntrySize = watchlistEntrySize,
                     modifier = Modifier
                         .fillMaxHeight()
                 )
@@ -83,7 +87,7 @@ fun WatchlistEntry(
                 Image(
                     painter = painterResource(R.drawable.ic_watchlist_remove),
                     colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.secondary),
-                    contentDescription = stringResource(R.string.watchlist_add)
+                    contentDescription = stringResource(R.string.watchlist_remove)
                 )
             }
         }
@@ -97,6 +101,20 @@ fun WatchlistEntryPreview() {
     CurrencyConverterAppTheme {
         WatchlistEntry(
             watchlistItem = defaultWatchlistItems.first(),
+            watchlistEntrySize = WatchlistEntrySize.DEFAULT,
+            onWatchlistItemClicked = { },
+            onWatchlistItemDeletion = { }
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun WatchlistEntryBigPreview() {
+    CurrencyConverterAppTheme {
+        WatchlistEntry(
+            watchlistItem = defaultWatchlistItems.first(),
+            watchlistEntrySize = WatchlistEntrySize.BIG,
             onWatchlistItemClicked = { },
             onWatchlistItemDeletion = { }
         )

@@ -50,4 +50,5 @@
     <string name="time_period_type">Time Period Type</string>
     <string name="time_period">Time Period</string>
     <string name="change">Change</string>
+    <string name="watchlist_remove">Remove Item From Watchlist</string>
 </resources>

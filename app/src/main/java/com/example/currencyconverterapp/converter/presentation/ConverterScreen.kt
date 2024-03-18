@@ -18,6 +18,7 @@ import com.example.currencyconverterapp.R
 import com.example.currencyconverterapp.converter.presentation.bottom_sheet.AddCurrencyBottomSheet
 import com.example.currencyconverterapp.converter.presentation.util.ConverterScreenActions
 import com.example.currencyconverterapp.core.data.model.Currency
+import com.example.currencyconverterapp.core.presentation.util.ConversionResultsListItemSize
 import com.example.currencyconverterapp.core.presentation.util.FabSize
 import com.example.currencyconverterapp.core.presentation.util.FloatingActionButtonType
 import kotlinx.coroutines.launch
@@ -28,6 +29,7 @@ fun ConverterScreen(
     converterUiState: ConverterUiState,
     bottomSheetScaffoldState: BottomSheetScaffoldState,
     fabType: FloatingActionButtonType,
+    conversionResultsListItemSize: ConversionResultsListItemSize,
     availableCurrencies: List<Currency>,
     converterScreenActions: ConverterScreenActions,
     modifier: Modifier = Modifier
@@ -88,6 +90,7 @@ fun ConverterScreen(
             ) { paddingValues ->
                 ConverterScreenMainContent(
                     converterUiState = converterUiState,
+                    conversionResultsListItemSize = conversionResultsListItemSize,
                     availableCurrencies = availableCurrencies,
                     onExchangeRatesRefresh = onExchangeRatesRefresh,
                     onBaseCurrencySelection = onBaseCurrencySelection,

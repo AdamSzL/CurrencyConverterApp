@@ -58,12 +58,32 @@ fun getAdaptiveContentTypes(
         }
     }
 
+    val conversionResultsListItemSize = when (windowHeightSizeClass) {
+        WindowHeightSizeClass.Expanded -> {
+            ConversionResultsListItemSize.BIG
+        }
+        else -> {
+            ConversionResultsListItemSize.DEFAULT
+        }
+    }
+
+    val watchlistEntrySize = when (windowHeightSizeClass) {
+        WindowHeightSizeClass.Expanded -> {
+            WatchlistEntrySize.BIG
+        }
+        else -> {
+            WatchlistEntrySize.DEFAULT
+        }
+    }
+
     return AdaptiveContentTypes(
         navigationType = navigationType,
         fabType = fabType,
         topAppBarType = topAppBarType,
         chartsControllerType = chartsControllerType,
-        chartsScreenContentType = chartsScreenContentType
+        chartsScreenContentType = chartsScreenContentType,
+        conversionResultsListItemSize = conversionResultsListItemSize,
+        watchlistEntrySize = watchlistEntrySize,
     )
 }
 
@@ -72,7 +92,9 @@ data class AdaptiveContentTypes(
     val fabType: FloatingActionButtonType,
     val topAppBarType: TopAppBarType,
     val chartsControllerType: ChartControllerType,
-    val chartsScreenContentType: ChartsScreenContentType
+    val chartsScreenContentType: ChartsScreenContentType,
+    val conversionResultsListItemSize: ConversionResultsListItemSize,
+    val watchlistEntrySize: WatchlistEntrySize,
 )
 
 enum class CurrencyConverterNavigationType {
@@ -99,4 +121,14 @@ enum class ChartControllerType {
 enum class ChartsScreenContentType {
     TABS,
     FULL
+}
+
+enum class ConversionResultsListItemSize {
+    DEFAULT,
+    BIG
+}
+
+enum class WatchlistEntrySize {
+    DEFAULT,
+    BIG
 }

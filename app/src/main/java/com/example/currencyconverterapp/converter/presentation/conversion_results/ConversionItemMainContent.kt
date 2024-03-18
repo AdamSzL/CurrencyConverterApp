@@ -21,14 +21,18 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.example.currencyconverterapp.R
 import com.example.currencyconverterapp.converter.presentation.ExchangeRatesUiState
 import com.example.currencyconverterapp.converter.presentation.util.CurrencyUtils.getCurrencyFormat
 import com.example.currencyconverterapp.core.data.model.Currency
 import com.example.currencyconverterapp.core.data.model.ExchangeRate
+import com.example.currencyconverterapp.core.presentation.util.ConversionResultsListItemSize
 
 @Composable
 fun RowScope.ConversionItemMainContent(
+    conversionResultsListItemSize: ConversionResultsListItemSize,
     exchangeRatesUiState: ExchangeRatesUiState,
     baseCurrency: Currency,
     baseCurrencyValue: Double,
@@ -45,17 +49,22 @@ fun RowScope.ConversionItemMainContent(
         verticalAlignment = Alignment.CenterVertically,
         modifier = modifier.weight(1f)
     ) {
+        val (displayText, labelText) = if (conversionResultsListItemSize == ConversionResultsListItemSize.DEFAULT) {
+            Pair(MaterialTheme.typography.displaySmall, MaterialTheme.typography.titleSmall)
+        } else {
+            Pair(MaterialTheme.typography.displayMedium, MaterialTheme.typography.titleMedium)
+        }
         Column(
             modifier = Modifier.weight(1f)
         ) {
             Text(
                 text = targetCurrency.code,
-                style = MaterialTheme.typography.displaySmall,
+                style = displayText,
                 maxLines = 1,
             )
             Text(
                 text = targetCurrency.name,
-                style = MaterialTheme.typography.bodyLarge,
+                style = labelText,
                 overflow = TextOverflow.Ellipsis,
                 maxLines = 1,
             )
@@ -93,12 +102,12 @@ fun RowScope.ConversionItemMainContent(
             } else {
                 Text(
                     text = targetCurrencyFormat.format(baseCurrencyValue * exchangeRate.value),
-                    style = MaterialTheme.typography.displaySmall,
+                    style = displayText,
                 )
                 Text(
                     text = "${targetCurrencyFormat.format(1)} " +
                             "= ${baseCurrencyFormat.format(1 / exchangeRate.value)}",
-                    style = MaterialTheme.typography.bodyLarge,
+                    style = labelText,
                 )
             }
         }

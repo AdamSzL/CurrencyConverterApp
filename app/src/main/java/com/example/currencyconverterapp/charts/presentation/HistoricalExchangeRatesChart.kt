@@ -1,5 +1,6 @@
 package com.example.currencyconverterapp.charts.presentation
 
+import android.util.Log
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
@@ -59,9 +60,13 @@ fun HistoricalExchangeRatesChart(
 
     val bottomAxis = rememberBottomAxis(
         valueFormatter = { value, _ ->
-            val axisData = chartEntryModelProducer.getModel()!!.extraStore.get(axisExtraKey)
-            val labelDate = axisData[value.toInt() % axisData.size]
-            formatDateByTimePeriodType(labelDate, selectedTimePeriodType)
+            val axisData = chartEntryModelProducer.getModel()!!.extraStore.getOrNull(axisExtraKey)
+            if (axisData != null) {
+                val labelDate = axisData[value.toInt() % axisData.size]
+                formatDateByTimePeriodType(labelDate, selectedTimePeriodType)
+            } else {
+                value.toString()
+            }
         },
         labelRotationDegrees = -90f,
         title =
