@@ -1,6 +1,5 @@
 package com.example.currencyconverterapp.converter.presentation.base_controller
 
-import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -12,7 +11,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import com.example.currencyconverterapp.R
 import com.example.currencyconverterapp.converter.presentation.BaseCurrencyData
 import com.example.currencyconverterapp.converter.presentation.currencies_dropdown.CurrenciesDropdownMenu
@@ -23,7 +21,7 @@ import com.example.currencyconverterapp.core.data.util.defaultBaseCurrencyData
 fun BaseCurrencyController(
     baseCurrencyData: BaseCurrencyData,
     onBaseCurrencySelection: (Currency) -> Unit,
-    onBaseCurrencyValueChange: (Double) -> Unit,
+    onBaseCurrencyValueChange: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Row(

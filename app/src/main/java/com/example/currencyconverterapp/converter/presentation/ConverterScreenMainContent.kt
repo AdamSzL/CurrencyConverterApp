@@ -1,11 +1,8 @@
 package com.example.currencyconverterapp.converter.presentation
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import com.example.currencyconverterapp.converter.presentation.base_controller.BaseCurrencyController
 import com.example.currencyconverterapp.converter.presentation.conversion_results.ConversionResultsList
 import com.example.currencyconverterapp.core.data.model.Currency
@@ -15,11 +12,12 @@ import com.example.currencyconverterapp.core.presentation.util.ConversionResults
 @Composable
 fun ConverterScreenMainContent(
     converterUiState: ConverterUiState,
+    converterBaseCurrencyValue: String,
     conversionResultsListItemSize: ConversionResultsListItemSize,
     availableCurrencies: List<Currency>,
     onExchangeRatesRefresh: () -> Unit,
     onBaseCurrencySelection: (Currency) -> Unit,
-    onBaseCurrencyValueChange: (Double) -> Unit,
+    onBaseCurrencyValueChange: (String) -> Unit,
     onConversionEntryDeletion: (String) -> Unit,
     onConversionEntryDeletionSnackbarDisplay: () -> Unit,
     modifier: Modifier = Modifier
@@ -30,7 +28,7 @@ fun ConverterScreenMainContent(
         val baseCurrencyData = BaseCurrencyData(
             currencies = availableCurrencies,
             baseCurrency = converterUiState.baseCurrency,
-            baseCurrencyValue = converterUiState.baseCurrencyValue
+            baseCurrencyValue = converterBaseCurrencyValue,
         )
 
         BaseCurrencyController(

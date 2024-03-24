@@ -9,12 +9,13 @@ import com.example.currencyconverterapp.watchlist.presentation.item.WatchlistIte
 
 class WatchlistItemProps(
     val watchlistItemUiState: WatchlistItemUiState,
+    val watchlistItemTargetValue: String,
     @StringRes val confirmButtonText: Int,
     val onBaseCurrencySelection: (Currency) -> Unit,
     val onTargetCurrencySelection: (Currency) -> Unit,
     val onBaseAndTargetCurrenciesSwap: () -> Unit,
     val onExchangeRateRelationSelection: (ExchangeRateRelation) -> Unit,
-    val onTargetValueChange: (Double) -> Unit,
+    val onTargetValueChange: (String) -> Unit,
     val onConfirmButtonClicked: (WatchlistItem) -> Unit,
     val onCancelButtonClicked: () -> Unit,
     val onLatestExchangeRateUpdate: () -> Unit,
@@ -25,6 +26,7 @@ class WatchlistItemProps(
 fun constructWatchlistItemProps(
     watchlistItemViewModel: WatchlistItemViewModel,
     watchlistItemUiState: WatchlistItemUiState,
+    watchlistItemTargetValue: String,
     @StringRes confirmButtonText: Int,
     onConfirmButtonClicked: (WatchlistItem) -> Unit,
     onCancelButtonClicked: () -> Unit,
@@ -32,12 +34,13 @@ fun constructWatchlistItemProps(
 ): WatchlistItemProps {
     return WatchlistItemProps(
         watchlistItemUiState = watchlistItemUiState,
+        watchlistItemTargetValue = watchlistItemTargetValue,
         confirmButtonText = confirmButtonText,
         onBaseCurrencySelection = watchlistItemViewModel::selectBaseCurrency,
         onTargetCurrencySelection = watchlistItemViewModel::selectTargetCurrency,
         onBaseAndTargetCurrenciesSwap = watchlistItemViewModel::swapBaseAndTargetCurrencies,
         onExchangeRateRelationSelection = watchlistItemViewModel::selectExchangeRateRelation,
-        onTargetValueChange = watchlistItemViewModel::changeTargetValue,
+        onTargetValueChange = watchlistItemViewModel::updateTargetValue,
         onConfirmButtonClicked = onConfirmButtonClicked,
         onCancelButtonClicked = onCancelButtonClicked,
         onLatestExchangeRateUpdate = watchlistItemViewModel::restoreToLoadingStateAndFetchExchangeRate,

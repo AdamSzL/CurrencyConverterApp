@@ -20,7 +20,7 @@ interface ConverterRepository {
 
     suspend fun updateBaseCurrency(baseCurrency: Currency)
 
-    suspend fun updateCurrencyValue(value: Double)
+    suspend fun updateCurrencyValue(value: String)
 }
 
 class ConverterRepositoryImpl @Inject constructor(
@@ -63,7 +63,7 @@ class ConverterRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun updateCurrencyValue(value: Double) {
+    override suspend fun updateCurrencyValue(value: String) {
         converterDataStore.updateData {
             it.copy(
                 baseCurrencyValue = value

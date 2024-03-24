@@ -4,9 +4,7 @@ package com.example.currencyconverterapp.converter.presentation.conversion_resul
 
 import androidx.compose.animation.core.LinearOutSlowInEasing
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
@@ -72,7 +70,7 @@ fun ConversionResultsList(
                         conversionResultsListItemSize = conversionResultsListItemSize,
                         exchangeRatesUiState = exchangeRatesUiState,
                         baseCurrency = baseCurrencyData.baseCurrency,
-                        baseCurrencyValue = baseCurrencyData.baseCurrencyValue,
+                        baseCurrencyValue = baseCurrencyData.baseCurrencyValue.toDouble(),
                         targetCurrency = baseCurrencyData.currencies.find { it.code == exchangeRate.code }!!,
                         exchangeRate = exchangeRate,
                         onExchangeRatesRefresh = onExchangeRatesRefresh,

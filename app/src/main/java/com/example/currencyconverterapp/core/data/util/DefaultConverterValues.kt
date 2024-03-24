@@ -47,7 +47,7 @@ val defaultAvailableCurrencies: List<Currency> = listOf(
     ),
 ) + defaultBaseCurrency
 
-val defaultBaseCurrencyValue = 1.00
+val defaultBaseCurrencyValue = "1.00"
 
 val defaultTargetCurrency = Currency(
     symbol = "$",
@@ -63,13 +63,13 @@ val defaultWatchlistItems = listOf(
     WatchlistItem(
         baseCurrency = defaultBaseCurrency,
         targetCurrency = defaultTargetCurrency,
-        targetValue = 1.22,
+        targetValue = "1.22",
         exchangeRateRelation = ExchangeRateRelation.LESS_THAN,
     ),
     WatchlistItem(
         baseCurrency = defaultTargetCurrency,
         targetCurrency = defaultBaseCurrency,
-        targetValue = 0.85,
+        targetValue = "0.85",
         exchangeRateRelation = ExchangeRateRelation.GREATER_THAN_OR_EQUAL,
     )
 )

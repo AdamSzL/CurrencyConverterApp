@@ -1,7 +1,6 @@
 package com.example.currencyconverterapp.watchlist.presentation.list
 
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -26,7 +25,6 @@ fun WatchlistEntryList(
     LazyColumn(
         verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.watchlist_entry_list_item_gap)),
         modifier = modifier
-            .fillMaxSize()
             .padding(dimensionResource(R.dimen.watchlist_entry_list_margin))
     ) {
         items(watchlistItems) { watchlistItem ->

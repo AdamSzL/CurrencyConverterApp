@@ -1,29 +1,22 @@
 package com.example.currencyconverterapp.converter.presentation
 
-import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.BottomSheetScaffoldState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SheetState
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SnackbarResult
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import com.example.currencyconverterapp.R
 import com.example.currencyconverterapp.converter.presentation.bottom_sheet.AddCurrencyBottomSheet
 import com.example.currencyconverterapp.converter.presentation.util.ConverterScreenActions
@@ -32,13 +25,13 @@ import com.example.currencyconverterapp.core.presentation.util.ConversionResults
 import com.example.currencyconverterapp.core.presentation.util.ConverterAddCurrencyContainerType
 import com.example.currencyconverterapp.core.presentation.util.FabSize
 import com.example.currencyconverterapp.core.presentation.util.FloatingActionButtonType
-import com.example.currencyconverterapp.ui.theme.CurrencyConverterAppTheme
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ConverterScreen(
     converterUiState: ConverterUiState,
+    converterBaseCurrencyValue: String,
     bottomSheetScaffoldState: BottomSheetScaffoldState,
     isAddCurrencyPanelVisible: Boolean,
     fabType: FloatingActionButtonType,
@@ -70,6 +63,7 @@ fun ConverterScreen(
         val converterScreenMainContent: @Composable RowScope.() -> Unit = {
             ConverterScreenMainContent(
                 converterUiState = converterUiState,
+                converterBaseCurrencyValue = converterBaseCurrencyValue,
                 conversionResultsListItemSize = conversionResultsListItemSize,
                 availableCurrencies = availableCurrencies,
                 onExchangeRatesRefresh = onExchangeRatesRefresh,
@@ -158,5 +152,5 @@ fun ConverterScreen(
 data class BaseCurrencyData(
     val currencies: List<Currency>,
     val baseCurrency: Currency,
-    val baseCurrencyValue: Double
+    val baseCurrencyValue: String
 )

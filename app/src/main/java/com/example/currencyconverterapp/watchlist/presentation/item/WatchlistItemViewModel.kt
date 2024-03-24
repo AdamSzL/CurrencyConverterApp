@@ -1,10 +1,14 @@
 package com.example.currencyconverterapp.watchlist.presentation.item
 
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.currencyconverterapp.core.data.model.Currency
 import com.example.currencyconverterapp.watchlist.data.model.ExchangeRateRelation
+import com.example.currencyconverterapp.watchlist.data.model.WatchlistData
 import com.example.currencyconverterapp.watchlist.data.model.WatchlistItem
 import com.example.currencyconverterapp.watchlist.data.repository.LatestExchangeRatesRepository
 import com.example.currencyconverterapp.watchlist.data.repository.WatchlistDataRepository
@@ -32,23 +36,15 @@ class WatchlistItemViewModel @Inject constructor(
     private val _watchlistItemUiState = MutableStateFlow(WatchlistItemUiState())
     val watchlistItemUiState: StateFlow<WatchlistItemUiState> = _watchlistItemUiState
 
+    var targetValue by mutableStateOf("1.00")
+        private set
+
     init {
         val watchlistItemId = state.get<String>("watchlist_item_id")
         viewModelScope.launch {
             watchlistDataRepository.watchlistData.first { watchlistData ->
                 if (watchlistItemId != null) {
-                    val watchlistItem = watchlistData.watchlistItems.first { it.id == watchlistItemId }
-                    _watchlistItemUiState.update {
-                        it.copy(
-                            itemId = watchlistItemId,
-                            baseCurrency = watchlistItem.baseCurrency,
-                            targetCurrency = watchlistItem.targetCurrency,
-                            exchangeRateRelation = watchlistItem.exchangeRateRelation,
-                            targetValue = watchlistItem.targetValue,
-                            latestExchangeRateUiState = LatestExchangeRateUiState.Loading,
-                            isNotificationsPermissionPermanentlyRejected = watchlistData.isNotificationsPermissionPermanentlyRejected,
-                        )
-                    }
+                    getItemAndUpdateUiState(watchlistData, watchlistItemId)
                 } else {
                     _watchlistItemUiState.update {
                         it.copy(
@@ -56,6 +52,39 @@ class WatchlistItemViewModel @Inject constructor(
                         )
                     }
                 }
+                fetchLatestExchangeRate()
+                true
+            }
+        }
+    }
+
+    private fun getItemAndUpdateUiState(watchlistData: WatchlistData, itemId: String) {
+        val watchlistItem = watchlistData.watchlistItems.first { it.id == itemId }
+        _watchlistItemUiState.update {
+            it.copy(
+                itemId = itemId,
+                baseCurrency = watchlistItem.baseCurrency,
+                targetCurrency = watchlistItem.targetCurrency,
+                exchangeRateRelation = watchlistItem.exchangeRateRelation,
+                latestExchangeRateUiState = LatestExchangeRateUiState.Loading,
+                isNotificationsPermissionPermanentlyRejected = watchlistData.isNotificationsPermissionPermanentlyRejected,
+            )
+        }
+        targetValue = watchlistItem.targetValue
+    }
+
+    fun resetBackToAddition() {
+        _watchlistItemUiState.update {
+            it.copy(
+                itemId = null
+            )
+        }
+    }
+
+    fun updateSelectedItem(itemId: String) {
+        viewModelScope.launch {
+            watchlistDataRepository.watchlistData.first { watchlistData ->
+                getItemAndUpdateUiState(watchlistData, itemId)
                 fetchLatestExchangeRate()
                 true
             }
@@ -88,12 +117,8 @@ class WatchlistItemViewModel @Inject constructor(
         }
     }
 
-    fun changeTargetValue(targetValue: Double) {
-        _watchlistItemUiState.update {
-            it.copy(
-                targetValue = targetValue,
-            )
-        }
+    fun updateTargetValue(newTargetValue: String) {
+        targetValue = newTargetValue
     }
 
     fun swapBaseAndTargetCurrencies() {

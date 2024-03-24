@@ -8,7 +8,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class ConverterCachedData(
     val baseCurrency: Currency = defaultBaseCurrency,
-    val baseCurrencyValue: Double = 1.00,
+    val baseCurrencyValue: String = "1.00",
     val exchangeRates: List<ExchangeRate> = listOf(
         ExchangeRate(
             code = "USD",

@@ -6,7 +6,7 @@ import com.example.currencyconverterapp.core.data.model.Currency
 class ConverterScreenActions(
     val onExchangeRatesRefresh: () -> Unit,
     val onBaseCurrencySelection: (Currency) -> Unit,
-    val onBaseCurrencyValueChange: (Double) -> Unit,
+    val onBaseCurrencyValueChange: (String) -> Unit,
     val onTargetCurrencySelection: (Currency) -> Unit,
     val onTargetCurrencyAddition: (Currency, Currency) -> Unit,
     val onConversionEntryDeletion: (String) -> Unit,
@@ -21,7 +21,7 @@ fun constructConverterScreenActions(
     return ConverterScreenActions(
         onExchangeRatesRefresh = onExchangeRatesRefresh,
         onBaseCurrencySelection = converterViewModel::selectBaseCurrency,
-        onBaseCurrencyValueChange = converterViewModel::setBaseCurrencyValue,
+        onBaseCurrencyValueChange = converterViewModel::updateCurrencyValue,
         onTargetCurrencySelection = converterViewModel::selectTargetCurrency,
         onTargetCurrencyAddition = converterViewModel::addTargetCurrency,
         onConversionEntryDeletion = converterViewModel::deleteConversionEntry,

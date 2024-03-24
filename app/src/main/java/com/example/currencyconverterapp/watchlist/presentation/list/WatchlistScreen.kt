@@ -1,5 +1,6 @@
 package com.example.currencyconverterapp.watchlist.presentation.list
 
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
@@ -13,7 +14,7 @@ import com.example.currencyconverterapp.core.presentation.util.WatchlistEntrySiz
 import com.example.currencyconverterapp.watchlist.data.model.WatchlistItem
 
 @Composable
-fun WatchlistScreen(
+fun RowScope.WatchlistScreen(
     watchlistItems: List<WatchlistItem>,
     watchlistEntrySize: WatchlistEntrySize,
     fabType: FloatingActionButtonType,
@@ -32,6 +33,7 @@ fun WatchlistScreen(
             }
         },
         modifier = modifier
+            .weight(1f)
     ) { paddingValues ->
         WatchlistEntryList(
             watchlistItems = watchlistItems,
@@ -46,7 +48,7 @@ fun WatchlistScreen(
 @Preview
 @PreviewScreenSizes
 @Composable
-fun WatchlistScreenPreview() {
+fun RowScope.WatchlistScreenPreview() {
     WatchlistScreen(
         watchlistItems = defaultWatchlistItems,
         watchlistEntrySize = WatchlistEntrySize.DEFAULT,

@@ -9,7 +9,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.currencyconverterapp.R
 import com.example.currencyconverterapp.converter.presentation.util.CurrencyUtils
@@ -53,7 +52,7 @@ fun WatchlistEntryInfo(
                     R.string.notification_when,
                     baseCurrencyFormat.format(1),
                     exchangeRateRelation.label.lowercase(),
-                    targetCurrencyFormat.format(targetValue)
+                    targetCurrencyFormat.format(targetValue.toDouble())
                 ),
                 style = titleText,
             )

@@ -58,8 +58,9 @@ fun getAdaptiveContentTypes(
         }
     }
 
-    val conversionResultsListItemSize = when (windowHeightSizeClass) {
-        WindowHeightSizeClass.Expanded -> {
+    val conversionResultsListItemSize = when {
+        windowHeightSizeClass == WindowHeightSizeClass.Expanded &&
+                windowWidthSizeClass != WindowWidthSizeClass.Compact -> {
             ConversionResultsListItemSize.BIG
         }
         else -> {
@@ -67,8 +68,9 @@ fun getAdaptiveContentTypes(
         }
     }
 
-    val watchlistEntrySize = when (windowHeightSizeClass) {
-        WindowHeightSizeClass.Expanded -> {
+    val watchlistEntrySize = when {
+        windowHeightSizeClass == WindowHeightSizeClass.Expanded &&
+                windowWidthSizeClass != WindowWidthSizeClass.Compact -> {
             WatchlistEntrySize.BIG
         }
         else -> {
@@ -85,6 +87,15 @@ fun getAdaptiveContentTypes(
         }
     }
 
+    val watchlistScreenContentType = when (windowWidthSizeClass) {
+        WindowWidthSizeClass.Expanded -> {
+            WatchlistScreenContentType.TWO_PANELS
+        }
+        else -> {
+            WatchlistScreenContentType.ONE_PANEL
+        }
+    }
+
     return AdaptiveContentTypes(
         navigationType = navigationType,
         fabType = fabType,
@@ -94,6 +105,7 @@ fun getAdaptiveContentTypes(
         conversionResultsListItemSize = conversionResultsListItemSize,
         watchlistEntrySize = watchlistEntrySize,
         converterAddCurrencyContainerType = converterAddCurrencyContainerType,
+        watchlistScreenContentType = watchlistScreenContentType,
     )
 }
 
@@ -105,7 +117,8 @@ data class AdaptiveContentTypes(
     val chartsScreenContentType: ChartsScreenContentType,
     val conversionResultsListItemSize: ConversionResultsListItemSize,
     val watchlistEntrySize: WatchlistEntrySize,
-    val converterAddCurrencyContainerType: ConverterAddCurrencyContainerType
+    val converterAddCurrencyContainerType: ConverterAddCurrencyContainerType,
+    val watchlistScreenContentType: WatchlistScreenContentType,
 )
 
 enum class CurrencyConverterNavigationType {
@@ -147,4 +160,9 @@ enum class WatchlistEntrySize {
 enum class ConverterAddCurrencyContainerType {
     SIDE_PANEL,
     BOTTOM_SHEET
+}
+
+enum class WatchlistScreenContentType {
+    TWO_PANELS,
+    ONE_PANEL
 }

@@ -1,6 +1,9 @@
 package com.example.currencyconverterapp.converter.presentation
 
 import android.util.Log
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.currencyconverterapp.converter.data.repository.ConverterRepository
@@ -22,18 +25,22 @@ class ConverterViewModel @Inject constructor(
     private val _converterUiState = MutableStateFlow(ConverterUiState())
     val converterUiState: StateFlow<ConverterUiState> = _converterUiState
 
+    var currencyValue by mutableStateOf("1.00")
+        private set
+
     init {
         viewModelScope.launch {
             converterRepository.getLatestConverterDataStream().collect { converterData ->
+                Log.d("XXX", converterData.toString())
                 val shouldRefreshLatestExchangeRates = converterData.exchangeRates.any { it.value == null }
                 _converterUiState.update {
                     it.copy(
                         baseCurrency = converterData.baseCurrency,
-                        baseCurrencyValue = converterData.baseCurrencyValue,
                         exchangeRates = converterData.exchangeRates,
                         exchangeRatesUiState = ExchangeRatesUiState.Success,
                     )
                 }
+                currencyValue = converterData.baseCurrencyValue
                 if (shouldRefreshLatestExchangeRates) {
                     refreshLatestExchangeRatesAndHandleError(
                         baseCurrency = converterData.baseCurrency,
@@ -62,6 +69,13 @@ class ConverterViewModel @Inject constructor(
                     )
                 }
             }
+        }
+    }
+
+    fun updateCurrencyValue(newCurrencyValue: String) {
+        currencyValue = newCurrencyValue
+        viewModelScope.launch {
+            converterRepository.updateCurrencyValue(newCurrencyValue)
         }
     }
 
@@ -101,12 +115,6 @@ class ConverterViewModel @Inject constructor(
             baseCurrency = currency,
             exchangeRates = updatedExchangeRates,
         )
-    }
-
-    fun setBaseCurrencyValue(value: Double) {
-        viewModelScope.launch {
-            converterRepository.updateCurrencyValue(value)
-        }
     }
 
     fun selectTargetCurrency(currency: Currency) {

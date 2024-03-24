@@ -1,11 +1,8 @@
 package com.example.currencyconverterapp.core.presentation.navigation
 
+import androidx.compose.foundation.layout.Row
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.SheetValue
-import androidx.compose.material3.rememberBottomSheetScaffoldState
-import androidx.compose.material3.rememberStandardBottomSheetState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -19,7 +16,6 @@ import com.example.currencyconverterapp.R
 import com.example.currencyconverterapp.charts.presentation.ChartsScreen
 import com.example.currencyconverterapp.charts.presentation.ChartsViewModel
 import com.example.currencyconverterapp.charts.presentation.util.constructChartsScreenActions
-import com.example.currencyconverterapp.converter.presentation.ConverterScreen
 import com.example.currencyconverterapp.converter.presentation.ConverterScreenWrapper
 import com.example.currencyconverterapp.converter.presentation.ConverterViewModel
 import com.example.currencyconverterapp.converter.presentation.util.constructConverterScreenActions
@@ -27,12 +23,12 @@ import com.example.currencyconverterapp.core.presentation.CurrenciesUiState
 import com.example.currencyconverterapp.core.presentation.components.ScreenAdaptiveNavigationWrapper
 import com.example.currencyconverterapp.core.presentation.util.AdaptiveContentTypes
 import com.example.currencyconverterapp.core.presentation.util.CurrencyConverterNavigationType
+import com.example.currencyconverterapp.core.presentation.util.WatchlistScreenContentType
 import com.example.currencyconverterapp.watchlist.presentation.item.WatchlistItemScreen
 import com.example.currencyconverterapp.watchlist.presentation.item.WatchlistItemViewModel
-import com.example.currencyconverterapp.watchlist.presentation.list.WatchlistScreen
+import com.example.currencyconverterapp.watchlist.presentation.list.WatchlistScreenWrapper
 import com.example.currencyconverterapp.watchlist.presentation.list.WatchlistViewModel
 import com.example.currencyconverterapp.watchlist.presentation.util.constructWatchlistItemProps
-import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -55,6 +51,7 @@ fun CurrencyConverterNavigation(
         conversionResultsListItemSize,
         watchlistEntrySize,
         converterAddCurrencyContainerType,
+        watchlistScreenContentType,
     ) = adaptiveContentTypes
 
     val screenAdaptiveNavigationWrapperProps = ScreenAdaptiveNavigationWrapperProps(
@@ -73,8 +70,10 @@ fun CurrencyConverterNavigation(
         composable(route = CurrencyConverterScreen.Converter.name) {
             val converterViewModel: ConverterViewModel = hiltViewModel()
             val converterUiState = converterViewModel.converterUiState.collectAsStateWithLifecycle().value
+            val converterBaseCurrencyValue = converterViewModel.currencyValue
             ConverterScreenWrapper(
                 converterUiState = converterUiState,
+                converterBaseCurrencyValue = converterBaseCurrencyValue,
                 currenciesUiState = currenciesUiState,
                 fabType = fabType,
                 screenAdaptiveNavigationWrapperProps = screenAdaptiveNavigationWrapperProps,
@@ -116,25 +115,65 @@ fun CurrencyConverterNavigation(
             composable(route = WatchlistSubScreen.WatchlistItems.name) {
                 val watchlistViewModel: WatchlistViewModel = hiltViewModel()
                 val watchlistItems = watchlistViewModel.watchlistItems.collectAsStateWithLifecycle().value
-                ScreenAdaptiveNavigationWrapper(
-                    screenAdaptiveNavigationWrapperProps = screenAdaptiveNavigationWrapperProps,
-                    fabAction = {
-                        navController.navigate(WatchlistSubScreen.WatchlistAddItem.name)
-                    }
-                ) {
-                    WatchlistScreen(
-                        watchlistItems = watchlistItems,
-                        watchlistEntrySize = watchlistEntrySize,
-                        fabType = fabType,
-                        onWatchlistItemClicked = { watchlistItemId ->
-                            navController.navigate("${WatchlistSubScreen.WatchlistEditItem.name}/${watchlistItemId}")
+                var (currencies, watchlistItemProps, selectedItemId, onWatchlistItemUpdate, onBackToAdditionReset) = WatchlistAdaptiveProps()
+                if (watchlistScreenContentType == WatchlistScreenContentType.TWO_PANELS) {
+                    val watchlistItemViewModel: WatchlistItemViewModel = hiltViewModel()
+                    val watchlistItemUiState
+                            = watchlistItemViewModel.watchlistItemUiState.collectAsStateWithLifecycle().value
+                    selectedItemId = watchlistItemUiState.itemId
+                    currencies = (currenciesUiState as CurrenciesUiState.Success).currencies
+                    onWatchlistItemUpdate = watchlistItemViewModel::updateSelectedItem
+                    onBackToAdditionReset = watchlistItemViewModel::resetBackToAddition
+                    watchlistItemProps = constructWatchlistItemProps(
+                        watchlistItemViewModel = watchlistItemViewModel,
+                        watchlistItemTargetValue = watchlistItemViewModel.targetValue,
+                        watchlistItemUiState = watchlistItemUiState,
+                        confirmButtonText = if (selectedItemId != null) R.string.update else R.string.add,
+                        onConfirmButtonClicked = { watchlistItem ->
+                            if (selectedItemId != null) {
+                                watchlistItemViewModel.editWatchlistItem(watchlistItem)
+                            } else {
+                                watchlistItemViewModel.addWatchlistItem(watchlistItem)
+                            }
                         },
-                        onWatchlistItemDeletion = watchlistViewModel::removeWatchlistItem,
-                        onAddButtonClicked = {
-                            navController.navigate(WatchlistSubScreen.WatchlistAddItem.name)
-                        },
+                        onCancelButtonClicked = {  },
+                        onLaunchAppSettingsClick = onLaunchAppSettingsClick,
                     )
                 }
+                WatchlistScreenWrapper(
+                    watchlistItems = watchlistItems,
+                    watchlistEntrySize = watchlistEntrySize,
+                    watchlistScreenContentType = watchlistScreenContentType,
+                    currencies = currencies,
+                    watchlistItemProps = watchlistItemProps,
+                    fabType = fabType,
+                    screenAdaptiveNavigationWrapperProps = screenAdaptiveNavigationWrapperProps,
+                    fabAction = {
+                        if (watchlistScreenContentType == WatchlistScreenContentType.ONE_PANEL) {
+                            navController.navigate(WatchlistSubScreen.WatchlistAddItem.name)
+                        } else {
+                            onBackToAdditionReset!!()
+                        }
+                    },
+                    onWatchlistItemClicked = { watchlistItemId ->
+                        if (watchlistScreenContentType == WatchlistScreenContentType.ONE_PANEL) {
+                            navController.navigate("${WatchlistSubScreen.WatchlistEditItem.name}/${watchlistItemId}")
+                        } else {
+                            (onWatchlistItemUpdate!!)(watchlistItemId)
+                        }
+                    },
+                    onWatchlistItemDeletion = { watchlistItemId ->
+                        if (watchlistScreenContentType == WatchlistScreenContentType.TWO_PANELS
+                            && selectedItemId == watchlistItemId
+                        ) {
+                            onBackToAdditionReset!!()
+                        }
+                        watchlistViewModel.removeWatchlistItem(watchlistItemId)
+                    },
+                    onAddButtonClicked = {
+                        navController.navigate(WatchlistSubScreen.WatchlistAddItem.name)
+                    }
+                )
             }
             composable(route = WatchlistSubScreen.WatchlistAddItem.name) {
                 val watchlistItemViewModel: WatchlistItemViewModel = hiltViewModel()
@@ -143,20 +182,24 @@ fun CurrencyConverterNavigation(
                 ScreenAdaptiveNavigationWrapper(
                     screenAdaptiveNavigationWrapperProps = screenAdaptiveNavigationWrapperProps
                 ) {
-                    WatchlistItemScreen(
-                        currencies = (currenciesUiState as CurrenciesUiState.Success).currencies,
-                        watchlistItemProps = constructWatchlistItemProps(
-                            watchlistItemViewModel = watchlistItemViewModel,
-                            watchlistItemUiState = watchlistItemUiState,
-                            confirmButtonText = R.string.add,
-                            onConfirmButtonClicked = { watchlistItem ->
-                                watchlistItemViewModel.addWatchlistItem(watchlistItem)
-                                navController.navigateUp()
-                            },
-                            onCancelButtonClicked = { navController.navigateUp() },
-                            onLaunchAppSettingsClick = onLaunchAppSettingsClick,
+                    Row {
+                        WatchlistItemScreen(
+                            currencies = (currenciesUiState as CurrenciesUiState.Success).currencies,
+                            watchlistItemProps = constructWatchlistItemProps(
+                                watchlistItemViewModel = watchlistItemViewModel,
+                                watchlistItemUiState = watchlistItemUiState,
+                                watchlistItemTargetValue = watchlistItemViewModel.targetValue,
+                                confirmButtonText = R.string.add,
+                                onConfirmButtonClicked = { watchlistItem ->
+                                    watchlistItemViewModel.addWatchlistItem(watchlistItem)
+                                    navController.navigateUp()
+                                },
+                                onCancelButtonClicked = { navController.navigateUp() },
+                                onLaunchAppSettingsClick = onLaunchAppSettingsClick,
+                            ),
+                            shouldDisplayCancelButton = true,
                         )
-                    )
+                    }
                 }
             }
             composable(
@@ -173,20 +216,24 @@ fun CurrencyConverterNavigation(
                 ScreenAdaptiveNavigationWrapper(
                     screenAdaptiveNavigationWrapperProps = screenAdaptiveNavigationWrapperProps
                 ) {
-                    WatchlistItemScreen(
-                        currencies = (currenciesUiState as CurrenciesUiState.Success).currencies,
-                        watchlistItemProps = constructWatchlistItemProps(
-                            watchlistItemViewModel = watchlistItemViewModel,
-                            watchlistItemUiState = watchlistItemUiState,
-                            confirmButtonText = R.string.update,
-                            onConfirmButtonClicked = { watchlistItem ->
-                                watchlistItemViewModel.editWatchlistItem(watchlistItem)
-                                navController.navigateUp()
-                            },
-                            onCancelButtonClicked = { navController.navigateUp() },
-                            onLaunchAppSettingsClick = onLaunchAppSettingsClick,
+                    Row {
+                        WatchlistItemScreen(
+                            currencies = (currenciesUiState as CurrenciesUiState.Success).currencies,
+                            watchlistItemProps = constructWatchlistItemProps(
+                                watchlistItemViewModel = watchlistItemViewModel,
+                                watchlistItemUiState = watchlistItemUiState,
+                                watchlistItemTargetValue = watchlistItemViewModel.targetValue,
+                                confirmButtonText = R.string.update,
+                                onConfirmButtonClicked = { watchlistItem ->
+                                    watchlistItemViewModel.editWatchlistItem(watchlistItem)
+                                    navController.navigateUp()
+                                },
+                                onCancelButtonClicked = { navController.navigateUp() },
+                                onLaunchAppSettingsClick = onLaunchAppSettingsClick,
+                            ),
+                            shouldDisplayCancelButton = true,
                         )
-                    )
+                    }
                 }
             }
         }

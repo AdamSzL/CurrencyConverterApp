@@ -82,7 +82,7 @@ fun ConversionResultsListItemPreview(
             exchangeRatesUiState = exchangeRatesUiState,
             baseCurrency = defaultBaseCurrency,
             targetCurrency = defaultAvailableCurrencies.find { it.code == "GBP" }!!,
-            baseCurrencyValue = defaultBaseCurrencyValue,
+            baseCurrencyValue = defaultBaseCurrencyValue.toDouble(),
             exchangeRate = if (isLoading) {
                 defaultExchangeRates.first().copy(value = null)
             } else {

@@ -9,6 +9,6 @@ data class WatchlistItem(
     val id: String = UUID.randomUUID().toString(),
     val baseCurrency: Currency,
     val targetCurrency: Currency,
-    val targetValue: Double,
+    val targetValue: String,
     val exchangeRateRelation: ExchangeRateRelation,
 )

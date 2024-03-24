@@ -7,6 +7,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -14,9 +16,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import com.example.currencyconverterapp.R
 import com.example.currencyconverterapp.converter.presentation.base_controller.CurrencyValueTextField
 import com.example.currencyconverterapp.core.data.model.Currency
+import com.example.currencyconverterapp.core.data.util.defaultAvailableCurrencies
+import com.example.currencyconverterapp.ui.theme.CurrencyConverterAppTheme
 import com.example.currencyconverterapp.watchlist.presentation.item.latest_exchange_rate.LatestExchangeRatePanelStateHandler
 import com.example.currencyconverterapp.watchlist.presentation.notifications.NotificationsPermissionState
 import com.example.currencyconverterapp.watchlist.presentation.util.NotificationUtils.getNotificationsPermissionState
@@ -26,6 +31,7 @@ import com.example.currencyconverterapp.watchlist.presentation.util.WatchlistIte
 fun WatchlistItemDetails(
     currencies: List<Currency>,
     watchlistItemProps: WatchlistItemProps,
+    shouldDisplayCancelButton: Boolean,
     onRationaleDisplay: () -> Unit,
     onNotificationsPermissionSettingsDialogDisplay: () -> Unit,
     onNotificationsPermissionRequest: () -> Unit,
@@ -38,14 +44,15 @@ fun WatchlistItemDetails(
     ) {
         with(watchlistItemProps) {
             Column(
-                modifier = modifier
+                modifier = Modifier
                     .weight(1f)
                     .padding(dimensionResource(R.dimen.watchlist_add_main_margin))
+                    .verticalScroll(rememberScrollState())
             ) {
 
                 WatchlistItemDetailsBaseTargetCurrenciesPanel(
                     currencies = currencies,
-                    watchlistItemProps = watchlistItemProps
+                    watchlistItemProps = watchlistItemProps,
                 )
 
                 Spacer(modifier = Modifier.height(dimensionResource(R.dimen.watchlist_add_item_big_gap)))
@@ -68,12 +75,14 @@ fun WatchlistItemDetails(
 
                     CurrencyValueTextField(
                         currency = watchlistItemUiState.targetCurrency,
-                        currencyValue = watchlistItemUiState.targetValue,
+                        currencyValue = watchlistItemTargetValue,
                         onValueChange = onTargetValueChange,
                         shouldShowLabel = false,
                         modifier = Modifier.weight(1f)
                     )
                 }
+
+                Spacer(modifier = Modifier.height(dimensionResource(R.dimen.watchlist_item_small_gap)))
 
                 LatestExchangeRatePanelStateHandler(
                     baseCurrency = watchlistItemUiState.baseCurrency,
@@ -84,13 +93,14 @@ fun WatchlistItemDetails(
             }
 
             WatchlistItemScreenControls(
+                shouldDisplayCancelButton = shouldDisplayCancelButton,
                 confirmButtonText = confirmButtonText,
                 onCancelButtonClicked = onCancelButtonClicked,
                 onConfirmButtonClicked = {
                     val newNotificationsPermissionState = getNotificationsPermissionState(context)
                     when (newNotificationsPermissionState) {
                         NotificationsPermissionState.PERMISSION_GRANTED -> {
-                            onConfirmButtonClicked(getWatchlistItemFromUiState(watchlistItemUiState))
+                            onConfirmButtonClicked(getWatchlistItemFromUiState(watchlistItemUiState, watchlistItemTargetValue))
                         }
                         NotificationsPermissionState.ASK_FOR_PERMISSION -> {
                             if (watchlistItemProps.watchlistItemUiState.isNotificationsPermissionPermanentlyRejected) {
@@ -110,5 +120,34 @@ fun WatchlistItemDetails(
                 },
             )
         }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun WatchlistItemDetailsPreview() {
+    CurrencyConverterAppTheme {
+        WatchlistItemDetails(
+            currencies = defaultAvailableCurrencies,
+            watchlistItemProps = WatchlistItemProps(
+                watchlistItemUiState = WatchlistItemUiState(),
+                watchlistItemTargetValue = "1.00",
+                confirmButtonText = R.string.update,
+                onBaseAndTargetCurrenciesSwap = { },
+                onTargetCurrencySelection = { },
+                onBaseCurrencySelection = { },
+                onLaunchAppSettingsClick = { },
+                onNotificationsPermissionRejectionStateUpdate = { },
+                onCancelButtonClicked = { },
+                onConfirmButtonClicked = { },
+                onLatestExchangeRateUpdate = { },
+                onTargetValueChange = { },
+                onExchangeRateRelationSelection = { }
+            ),
+            shouldDisplayCancelButton = true,
+            onRationaleDisplay = { },
+            onNotificationsPermissionSettingsDialogDisplay = { },
+            onNotificationsPermissionRequest = { }
+        )
     }
 }

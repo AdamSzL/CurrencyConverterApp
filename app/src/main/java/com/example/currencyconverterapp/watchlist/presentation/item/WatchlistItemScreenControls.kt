@@ -17,6 +17,7 @@ import com.example.currencyconverterapp.R
 
 @Composable
 fun WatchlistItemScreenControls(
+    shouldDisplayCancelButton: Boolean,
     @StringRes confirmButtonText: Int,
     onConfirmButtonClicked: () -> Unit,
     onCancelButtonClicked: () -> Unit,
@@ -28,11 +29,13 @@ fun WatchlistItemScreenControls(
             .fillMaxWidth()
             .padding(dimensionResource(R.dimen.watchlist_add_main_margin))
     ) {
-        OutlinedButton(
-            onClick = onCancelButtonClicked,
-            modifier = Modifier.weight(1f)
-        ) {
-            Text(text = stringResource(R.string.cancel))
+        if (shouldDisplayCancelButton) {
+            OutlinedButton(
+                onClick = onCancelButtonClicked,
+                modifier = Modifier.weight(1f)
+            ) {
+                Text(text = stringResource(R.string.cancel))
+            }
         }
         Button(
             onClick = onConfirmButtonClicked,
@@ -47,6 +50,7 @@ fun WatchlistItemScreenControls(
 @Composable
 private fun WatchlistItemScreenControlsAddPreview() {
     WatchlistItemScreenControls(
+        shouldDisplayCancelButton = true,
         confirmButtonText = R.string.add,
         onConfirmButtonClicked = { },
         onCancelButtonClicked = { },
@@ -57,6 +61,18 @@ private fun WatchlistItemScreenControlsAddPreview() {
 @Composable
 private fun WatchlistItemScreenControlsUpdatePreview() {
     WatchlistItemScreenControls(
+        shouldDisplayCancelButton = true,
+        confirmButtonText = R.string.update,
+        onConfirmButtonClicked = { },
+        onCancelButtonClicked = { },
+    )
+}
+
+@Preview
+@Composable
+private fun WatchlistItemScreenControlsWithoutCancelPreview() {
+    WatchlistItemScreenControls(
+        shouldDisplayCancelButton = false,
         confirmButtonText = R.string.update,
         onConfirmButtonClicked = { },
         onCancelButtonClicked = { },

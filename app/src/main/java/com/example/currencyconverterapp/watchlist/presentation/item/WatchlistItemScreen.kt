@@ -4,6 +4,7 @@ import android.Manifest
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.AnimatedContent
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -28,9 +29,10 @@ import com.example.currencyconverterapp.watchlist.presentation.util.WatchlistIte
 import java.util.UUID
 
 @Composable
-fun WatchlistItemScreen(
+fun RowScope.WatchlistItemScreen(
     currencies: List<Currency>,
     watchlistItemProps: WatchlistItemProps,
+    shouldDisplayCancelButton: Boolean,
     modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
@@ -45,8 +47,10 @@ fun WatchlistItemScreen(
     var shouldDisplayPermissionSettingsDialog by remember {
         mutableStateOf(false)
     }
-    val watchlistItemState = remember(shouldDisplayPermissionSettingsDialog, shouldShowRationale) {
-        if (shouldDisplayPermissionSettingsDialog) {
+    val watchlistItemState = remember(notificationsPermissionState, shouldDisplayPermissionSettingsDialog, shouldShowRationale) {
+        if (notificationsPermissionState == NotificationsPermissionState.PERMISSION_GRANTED) {
+            WatchlistItemState.SHOW_ITEM_DETAILS
+        } else if (shouldDisplayPermissionSettingsDialog) {
             WatchlistItemState.SHOW_DIALOG
         } else if (shouldShowRationale) {
             WatchlistItemState.SHOW_RATIONALE
@@ -63,7 +67,10 @@ fun WatchlistItemScreen(
                 watchlistItemProps.onNotificationsPermissionRejectionStateUpdate(false)
                 watchlistItemProps
                     .onConfirmButtonClicked(
-                        getWatchlistItemFromUiState(watchlistItemProps.watchlistItemUiState)
+                        getWatchlistItemFromUiState(
+                            watchlistItemProps.watchlistItemUiState,
+                            watchlistItemProps.watchlistItemTargetValue
+                        )
                     )
             } else {
                 if (notificationsPermissionState == NotificationsPermissionState.ASK_FOR_PERMISSION) {
@@ -81,6 +88,7 @@ fun WatchlistItemScreen(
     AnimatedContent(
         targetState = watchlistItemState,
         modifier = modifier
+            .weight(1f)
     ) { targetState ->
         when (targetState) {
             WatchlistItemState.SHOW_DIALOG -> {
@@ -104,6 +112,7 @@ fun WatchlistItemScreen(
                 WatchlistItemDetails(
                     currencies = currencies,
                     watchlistItemProps = watchlistItemProps,
+                    shouldDisplayCancelButton = shouldDisplayCancelButton,
                     onRationaleDisplay = {
                         shouldShowRationale = true
                     },
@@ -118,13 +127,14 @@ fun WatchlistItemScreen(
 }
 
 fun getWatchlistItemFromUiState(
-    watchlistItemUiState: WatchlistItemUiState
+    watchlistItemUiState: WatchlistItemUiState,
+    watchlistItemTargetValue: String,
 ): WatchlistItem {
     return WatchlistItem(
         id = watchlistItemUiState.itemId ?: UUID.randomUUID().toString(),
         baseCurrency = watchlistItemUiState.baseCurrency,
         targetCurrency = watchlistItemUiState.targetCurrency,
-        targetValue = watchlistItemUiState.targetValue,
+        targetValue = watchlistItemTargetValue,
         exchangeRateRelation = watchlistItemUiState.exchangeRateRelation,
     )
 }
@@ -132,7 +142,7 @@ fun getWatchlistItemFromUiState(
 @Preview
 @PreviewScreenSizes
 @Composable
-fun WatchlistAddItemScreenPreview() {
+fun RowScope.WatchlistAddItemScreenPreview() {
     CurrencyConverterAppTheme {
         WatchlistItemScreen(
             currencies = defaultAvailableCurrencies,
@@ -143,6 +153,7 @@ fun WatchlistAddItemScreenPreview() {
                         "2024-02-22T16:51:52Z"
                     )
                 ),
+                watchlistItemTargetValue = "1.00",
                 confirmButtonText = R.string.add,
                 onBaseCurrencySelection = { },
                 onTargetCurrencySelection = { },
@@ -154,7 +165,8 @@ fun WatchlistAddItemScreenPreview() {
                 onLatestExchangeRateUpdate = { },
                 onNotificationsPermissionRejectionStateUpdate = { },
                 onLaunchAppSettingsClick = { }
-            )
+            ),
+            shouldDisplayCancelButton = true,
         )
     }
 }
