@@ -14,10 +14,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import com.example.currencyconverterapp.R
+import com.example.currencyconverterapp.core.presentation.util.WatchlistItemScreenContentType
 
 @Composable
 fun EntryItemRow(
     @StringRes entryLabel: Int,
+    watchlistItemScreenContentType: WatchlistItemScreenContentType,
     modifier: Modifier = Modifier,
     content: @Composable () -> Unit
 ) {
@@ -28,7 +30,11 @@ fun EntryItemRow(
     ) {
         Text(
             text = stringResource(entryLabel),
-            style = MaterialTheme.typography.displaySmall
+            style = if (watchlistItemScreenContentType == WatchlistItemScreenContentType.SMALL_FONT) {
+                MaterialTheme.typography.displaySmall
+            } else {
+                MaterialTheme.typography.displayMedium
+            }
         )
         content()
     }

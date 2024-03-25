@@ -17,6 +17,7 @@ import com.example.currencyconverterapp.R
 import com.example.currencyconverterapp.core.data.model.Currency
 import com.example.currencyconverterapp.core.data.util.defaultBaseCurrency
 import com.example.currencyconverterapp.core.data.util.defaultTargetCurrency
+import com.example.currencyconverterapp.core.presentation.util.WatchlistItemScreenContentType
 import com.example.currencyconverterapp.ui.theme.CurrencyConverterAppTheme
 import com.example.currencyconverterapp.ui.theme.Montserrat
 
@@ -25,6 +26,7 @@ fun LatestExchangeRatePanelStateHandler(
     baseCurrency: Currency,
     targetCurrency: Currency,
     latestExchangeRateUiState: LatestExchangeRateUiState,
+    watchlistItemScreenContentType: WatchlistItemScreenContentType,
     onLatestExchangeRateUpdate: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -48,7 +50,11 @@ fun LatestExchangeRatePanelStateHandler(
                 ) {
                     Text(
                         text = stringResource(R.string.failed_to_load_latest_exchange_rate),
-                        style = MaterialTheme.typography.labelMedium.copy(fontFamily = Montserrat),
+                        style = if (watchlistItemScreenContentType == WatchlistItemScreenContentType.SMALL_FONT) {
+                            MaterialTheme.typography.labelMedium.copy(fontFamily = Montserrat)
+                        } else {
+                            MaterialTheme.typography.labelLarge.copy(fontFamily = Montserrat)
+                        },
                     )
                     Button(
                         onClick = onLatestExchangeRateUpdate,
@@ -65,6 +71,7 @@ fun LatestExchangeRatePanelStateHandler(
                     targetCurrency = targetCurrency,
                     latestExchangeRate = latestExchangeRateUiState.exchangeRate,
                     lastUpdatedAt = latestExchangeRateUiState.lastUpdatedAt,
+                    watchlistItemScreenContentType = watchlistItemScreenContentType,
                 )
             }
         }
@@ -82,6 +89,24 @@ fun LatestExchangeRatePanelSuccessStatePreview() {
                 1.15,
                 "2024-02-22T16:51:50Z"
             ),
+            watchlistItemScreenContentType = WatchlistItemScreenContentType.SMALL_FONT,
+            onLatestExchangeRateUpdate = { }
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun LatestExchangeRatePanelSuccessStateBigFontPreview() {
+    CurrencyConverterAppTheme {
+        LatestExchangeRatePanelStateHandler(
+            baseCurrency = defaultBaseCurrency,
+            targetCurrency = defaultTargetCurrency,
+            latestExchangeRateUiState = LatestExchangeRateUiState.Success(
+                1.15,
+                "2024-02-22T16:51:50Z"
+            ),
+            watchlistItemScreenContentType = WatchlistItemScreenContentType.BIG_FONT,
             onLatestExchangeRateUpdate = { }
         )
     }
@@ -95,6 +120,7 @@ fun LatestExchangeRatePanelErrorStatePreview() {
             baseCurrency = defaultBaseCurrency,
             targetCurrency = defaultTargetCurrency,
             latestExchangeRateUiState = LatestExchangeRateUiState.Error,
+            watchlistItemScreenContentType = WatchlistItemScreenContentType.SMALL_FONT,
             onLatestExchangeRateUpdate = { }
         )
     }
@@ -108,6 +134,7 @@ fun LatestExchangeRatePanelLoadingStatePreview() {
             baseCurrency = defaultBaseCurrency,
             targetCurrency = defaultTargetCurrency,
             latestExchangeRateUiState = LatestExchangeRateUiState.Loading,
+            watchlistItemScreenContentType = WatchlistItemScreenContentType.SMALL_FONT,
             onLatestExchangeRateUpdate = { }
         )
     }

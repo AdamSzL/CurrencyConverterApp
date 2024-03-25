@@ -1,6 +1,5 @@
 package com.example.currencyconverterapp.converter.presentation
 
-import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -31,7 +30,6 @@ class ConverterViewModel @Inject constructor(
     init {
         viewModelScope.launch {
             converterRepository.getLatestConverterDataStream().collect { converterData ->
-                Log.d("XXX", converterData.toString())
                 val shouldRefreshLatestExchangeRates = converterData.exchangeRates.any { it.value == null }
                 _converterUiState.update {
                     it.copy(
@@ -111,10 +109,16 @@ class ConverterViewModel @Inject constructor(
                 exchangeRate.copy(value = null)
             }
         resetExchangeRates(updatedExchangeRates)
-        refreshLatestExchangeRatesAndHandleError(
-            baseCurrency = currency,
-            exchangeRates = updatedExchangeRates,
-        )
+        if (updatedExchangeRates.isNotEmpty()) {
+            refreshLatestExchangeRatesAndHandleError(
+                baseCurrency = currency,
+                exchangeRates = updatedExchangeRates,
+            )
+        } else {
+            _converterUiState.update {
+                it.copy(baseCurrency = currency)
+            }
+        }
     }
 
     fun selectTargetCurrency(currency: Currency) {

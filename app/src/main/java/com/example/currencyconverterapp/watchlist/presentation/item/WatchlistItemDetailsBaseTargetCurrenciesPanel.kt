@@ -15,6 +15,7 @@ import com.example.currencyconverterapp.converter.presentation.currencies_dropdo
 import com.example.currencyconverterapp.core.data.model.Currency
 import com.example.currencyconverterapp.core.data.util.defaultAvailableCurrencies
 import com.example.currencyconverterapp.core.presentation.components.SwapButton
+import com.example.currencyconverterapp.core.presentation.util.WatchlistItemScreenContentType
 import com.example.currencyconverterapp.ui.theme.CurrencyConverterAppTheme
 import com.example.currencyconverterapp.watchlist.presentation.util.WatchlistItemProps
 
@@ -22,11 +23,13 @@ import com.example.currencyconverterapp.watchlist.presentation.util.WatchlistIte
 fun ColumnScope.WatchlistItemDetailsBaseTargetCurrenciesPanel(
     currencies: List<Currency>,
     watchlistItemProps: WatchlistItemProps,
+    watchlistItemScreenContentType: WatchlistItemScreenContentType,
     modifier: Modifier = Modifier
 ) {
     with(watchlistItemProps) {
         EntryItemRow(
             entryLabel = R.string.base_currency,
+            watchlistItemScreenContentType = watchlistItemScreenContentType,
             modifier = modifier
         ) {
 
@@ -44,7 +47,13 @@ fun ColumnScope.WatchlistItemDetailsBaseTargetCurrenciesPanel(
             contentDescription = R.string.swap_currencies,
             onClick = onBaseAndTargetCurrenciesSwap,
             modifier = modifier
-                .align(Alignment.CenterHorizontally),
+                .align(
+                    if (watchlistItemScreenContentType == WatchlistItemScreenContentType.SMALL_FONT) {
+                        Alignment.CenterHorizontally
+                    } else {
+                        Alignment.End
+                    }
+                ),
             rotation = 90.0f,
         )
 
@@ -52,6 +61,7 @@ fun ColumnScope.WatchlistItemDetailsBaseTargetCurrenciesPanel(
 
         EntryItemRow(
             entryLabel = R.string.target_currency,
+            watchlistItemScreenContentType = watchlistItemScreenContentType,
             modifier = modifier
         ) {
 
@@ -89,6 +99,35 @@ private fun WatchlistDetailsBaseTargetCurrenciesPanelPreview() {
                     onTargetValueChange = { },
                     onExchangeRateRelationSelection = { }
                 ),
+                watchlistItemScreenContentType = WatchlistItemScreenContentType.SMALL_FONT
+            )
+        }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun WatchlistDetailsBaseTargetCurrenciesPanelBigFontPreview() {
+    CurrencyConverterAppTheme {
+        Column {
+            WatchlistItemDetailsBaseTargetCurrenciesPanel(
+                currencies = defaultAvailableCurrencies,
+                watchlistItemProps = WatchlistItemProps(
+                    watchlistItemUiState = WatchlistItemUiState(),
+                    watchlistItemTargetValue = "1.00",
+                    confirmButtonText = R.string.update,
+                    onBaseAndTargetCurrenciesSwap = { },
+                    onTargetCurrencySelection = { },
+                    onBaseCurrencySelection = { },
+                    onLaunchAppSettingsClick = { },
+                    onNotificationsPermissionRejectionStateUpdate = { },
+                    onCancelButtonClicked = { },
+                    onConfirmButtonClicked = { },
+                    onLatestExchangeRateUpdate = { },
+                    onTargetValueChange = { },
+                    onExchangeRateRelationSelection = { }
+                ),
+                watchlistItemScreenContentType = WatchlistItemScreenContentType.BIG_FONT
             )
         }
     }

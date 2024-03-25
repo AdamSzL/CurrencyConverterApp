@@ -9,14 +9,5 @@ import kotlinx.serialization.Serializable
 data class ConverterCachedData(
     val baseCurrency: Currency = defaultBaseCurrency,
     val baseCurrencyValue: String = "1.00",
-    val exchangeRates: List<ExchangeRate> = listOf(
-        ExchangeRate(
-            code = "USD",
-            value = null,
-        ),
-        ExchangeRate(
-            code = "PLN",
-            value = null,
-        )
-    )
+    val exchangeRates: List<ExchangeRate> = listOf()
 )

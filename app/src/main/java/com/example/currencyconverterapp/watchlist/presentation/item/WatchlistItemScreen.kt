@@ -17,6 +17,7 @@ import androidx.compose.ui.tooling.preview.PreviewScreenSizes
 import com.example.currencyconverterapp.R
 import com.example.currencyconverterapp.core.data.model.Currency
 import com.example.currencyconverterapp.core.data.util.defaultAvailableCurrencies
+import com.example.currencyconverterapp.core.presentation.util.WatchlistItemScreenContentType
 import com.example.currencyconverterapp.ui.theme.CurrencyConverterAppTheme
 import com.example.currencyconverterapp.watchlist.data.model.WatchlistItem
 import com.example.currencyconverterapp.watchlist.presentation.item.latest_exchange_rate.LatestExchangeRateUiState
@@ -33,6 +34,7 @@ fun RowScope.WatchlistItemScreen(
     currencies: List<Currency>,
     watchlistItemProps: WatchlistItemProps,
     shouldDisplayCancelButton: Boolean,
+    watchlistItemScreenContentType: WatchlistItemScreenContentType,
     modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
@@ -113,6 +115,7 @@ fun RowScope.WatchlistItemScreen(
                     currencies = currencies,
                     watchlistItemProps = watchlistItemProps,
                     shouldDisplayCancelButton = shouldDisplayCancelButton,
+                    watchlistItemScreenContentType = watchlistItemScreenContentType,
                     onRationaleDisplay = {
                         shouldShowRationale = true
                     },
@@ -167,6 +170,7 @@ fun RowScope.WatchlistAddItemScreenPreview() {
                 onLaunchAppSettingsClick = { }
             ),
             shouldDisplayCancelButton = true,
+            watchlistItemScreenContentType = WatchlistItemScreenContentType.SMALL_FONT
         )
     }
 }

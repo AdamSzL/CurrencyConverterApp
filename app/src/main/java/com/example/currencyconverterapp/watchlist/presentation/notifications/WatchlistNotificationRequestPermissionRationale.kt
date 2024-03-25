@@ -9,10 +9,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewLightDark
-import androidx.compose.ui.unit.dp
 import com.example.currencyconverterapp.R
 import com.example.currencyconverterapp.ui.theme.CurrencyConverterAppTheme
 
@@ -36,7 +36,7 @@ fun WatchlistNotificationRequestPermissionRationale(
                 painter = painterResource(R.drawable.ic_watchlist),
                 colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.secondary),
                 contentDescription = null,
-                modifier = Modifier.size(192.dp)
+                modifier = Modifier.size(dimensionResource(R.dimen.watchlist_icon_big))
             )
         }
 

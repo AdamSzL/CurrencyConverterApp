@@ -19,6 +19,7 @@ import com.example.currencyconverterapp.R
 import com.example.currencyconverterapp.charts.presentation.util.DateTimeUtils.getAndFormatTimeDifference
 import com.example.currencyconverterapp.charts.presentation.util.NumberUtils.printDecimalWithoutScientificNotation
 import com.example.currencyconverterapp.core.data.model.Currency
+import com.example.currencyconverterapp.core.presentation.util.WatchlistItemScreenContentType
 import com.example.currencyconverterapp.ui.theme.Montserrat
 import com.example.currencyconverterapp.watchlist.presentation.item.WatchlistItemCurrencyFlags
 import kotlinx.coroutines.delay
@@ -29,6 +30,7 @@ fun BoxScope.LatestExchangeRatePanel(
     targetCurrency: Currency,
     latestExchangeRate: Double,
     lastUpdatedAt: String,
+    watchlistItemScreenContentType: WatchlistItemScreenContentType,
     modifier: Modifier = Modifier,
 ) {
     var timeDifference by remember(lastUpdatedAt) { mutableStateOf(getAndFormatTimeDifference(lastUpdatedAt)) }
@@ -50,16 +52,25 @@ fun BoxScope.LatestExchangeRatePanel(
             context = context,
             baseCurrency = baseCurrency,
             targetCurrency = targetCurrency,
+            watchlistItemScreenContentType = watchlistItemScreenContentType,
         )
 
         Text(
             text = "1 ${baseCurrency.code} = ${printDecimalWithoutScientificNotation(latestExchangeRate)} ${targetCurrency.code}",
-            style = MaterialTheme.typography.displaySmall,
+            style = if (watchlistItemScreenContentType == WatchlistItemScreenContentType.SMALL_FONT) {
+                MaterialTheme.typography.displaySmall
+            } else {
+                MaterialTheme.typography.displayMedium
+            },
         )
 
         Text(
             text = "Updated $timeDifference",
-            style = MaterialTheme.typography.labelSmall.copy(fontFamily = Montserrat),
+            style = if (watchlistItemScreenContentType == WatchlistItemScreenContentType.SMALL_FONT) {
+                MaterialTheme.typography.labelSmall.copy(fontFamily = Montserrat)
+            } else {
+                   MaterialTheme.typography.labelMedium.copy(fontFamily = Montserrat)
+            },
         )
     }
 }

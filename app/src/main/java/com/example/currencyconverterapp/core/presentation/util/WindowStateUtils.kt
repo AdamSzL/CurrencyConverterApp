@@ -96,6 +96,16 @@ fun getAdaptiveContentTypes(
         }
     }
 
+    val watchlistItemScreenContentType = when {
+        windowHeightSizeClass == WindowHeightSizeClass.Expanded &&
+                windowWidthSizeClass != WindowWidthSizeClass.Compact -> {
+            WatchlistItemScreenContentType.BIG_FONT
+        }
+        else -> {
+            WatchlistItemScreenContentType.SMALL_FONT
+        }
+    }
+
     return AdaptiveContentTypes(
         navigationType = navigationType,
         fabType = fabType,
@@ -106,6 +116,7 @@ fun getAdaptiveContentTypes(
         watchlistEntrySize = watchlistEntrySize,
         converterAddCurrencyContainerType = converterAddCurrencyContainerType,
         watchlistScreenContentType = watchlistScreenContentType,
+        watchlistItemScreenContentType = watchlistItemScreenContentType,
     )
 }
 
@@ -119,6 +130,7 @@ data class AdaptiveContentTypes(
     val watchlistEntrySize: WatchlistEntrySize,
     val converterAddCurrencyContainerType: ConverterAddCurrencyContainerType,
     val watchlistScreenContentType: WatchlistScreenContentType,
+    val watchlistItemScreenContentType: WatchlistItemScreenContentType,
 )
 
 enum class CurrencyConverterNavigationType {
@@ -165,4 +177,9 @@ enum class ConverterAddCurrencyContainerType {
 enum class WatchlistScreenContentType {
     TWO_PANELS,
     ONE_PANEL
+}
+
+enum class WatchlistItemScreenContentType {
+    SMALL_FONT,
+    BIG_FONT
 }

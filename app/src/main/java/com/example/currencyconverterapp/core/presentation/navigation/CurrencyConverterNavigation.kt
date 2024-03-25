@@ -52,6 +52,7 @@ fun CurrencyConverterNavigation(
         watchlistEntrySize,
         converterAddCurrencyContainerType,
         watchlistScreenContentType,
+        watchlistItemScreenContentType
     ) = adaptiveContentTypes
 
     val screenAdaptiveNavigationWrapperProps = ScreenAdaptiveNavigationWrapperProps(
@@ -144,6 +145,7 @@ fun CurrencyConverterNavigation(
                     watchlistItems = watchlistItems,
                     watchlistEntrySize = watchlistEntrySize,
                     watchlistScreenContentType = watchlistScreenContentType,
+                    watchlistItemScreenContentType = watchlistItemScreenContentType,
                     currencies = currencies,
                     watchlistItemProps = watchlistItemProps,
                     fabType = fabType,
@@ -197,6 +199,7 @@ fun CurrencyConverterNavigation(
                                 onCancelButtonClicked = { navController.navigateUp() },
                                 onLaunchAppSettingsClick = onLaunchAppSettingsClick,
                             ),
+                            watchlistItemScreenContentType = watchlistItemScreenContentType,
                             shouldDisplayCancelButton = true,
                         )
                     }
@@ -231,6 +234,7 @@ fun CurrencyConverterNavigation(
                                 onCancelButtonClicked = { navController.navigateUp() },
                                 onLaunchAppSettingsClick = onLaunchAppSettingsClick,
                             ),
+                            watchlistItemScreenContentType = watchlistItemScreenContentType,
                             shouldDisplayCancelButton = true,
                         )
                     }

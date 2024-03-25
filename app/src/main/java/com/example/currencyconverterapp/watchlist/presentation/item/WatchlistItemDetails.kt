@@ -21,6 +21,7 @@ import com.example.currencyconverterapp.R
 import com.example.currencyconverterapp.converter.presentation.base_controller.CurrencyValueTextField
 import com.example.currencyconverterapp.core.data.model.Currency
 import com.example.currencyconverterapp.core.data.util.defaultAvailableCurrencies
+import com.example.currencyconverterapp.core.presentation.util.WatchlistItemScreenContentType
 import com.example.currencyconverterapp.ui.theme.CurrencyConverterAppTheme
 import com.example.currencyconverterapp.watchlist.presentation.item.latest_exchange_rate.LatestExchangeRatePanelStateHandler
 import com.example.currencyconverterapp.watchlist.presentation.notifications.NotificationsPermissionState
@@ -32,6 +33,7 @@ fun WatchlistItemDetails(
     currencies: List<Currency>,
     watchlistItemProps: WatchlistItemProps,
     shouldDisplayCancelButton: Boolean,
+    watchlistItemScreenContentType: WatchlistItemScreenContentType,
     onRationaleDisplay: () -> Unit,
     onNotificationsPermissionSettingsDialogDisplay: () -> Unit,
     onNotificationsPermissionRequest: () -> Unit,
@@ -53,13 +55,18 @@ fun WatchlistItemDetails(
                 WatchlistItemDetailsBaseTargetCurrenciesPanel(
                     currencies = currencies,
                     watchlistItemProps = watchlistItemProps,
+                    watchlistItemScreenContentType = watchlistItemScreenContentType,
                 )
 
                 Spacer(modifier = Modifier.height(dimensionResource(R.dimen.watchlist_add_item_big_gap)))
 
                 Text(
                     text = stringResource(R.string.notify_me, watchlistItemUiState.baseCurrency.code),
-                    style = MaterialTheme.typography.displaySmall,
+                    style = if (watchlistItemScreenContentType == WatchlistItemScreenContentType.SMALL_FONT) {
+                        MaterialTheme.typography.displaySmall
+                    } else {
+                        MaterialTheme.typography.displayMedium
+                    },
                 )
 
                 Spacer(modifier = Modifier.height(dimensionResource(R.dimen.watchlist_add_main_margin)))
@@ -88,6 +95,7 @@ fun WatchlistItemDetails(
                     baseCurrency = watchlistItemUiState.baseCurrency,
                     targetCurrency = watchlistItemUiState.targetCurrency,
                     latestExchangeRateUiState = watchlistItemUiState.latestExchangeRateUiState,
+                    watchlistItemScreenContentType = watchlistItemScreenContentType,
                     onLatestExchangeRateUpdate = onLatestExchangeRateUpdate,
                 )
             }
@@ -145,6 +153,7 @@ private fun WatchlistItemDetailsPreview() {
                 onExchangeRateRelationSelection = { }
             ),
             shouldDisplayCancelButton = true,
+            watchlistItemScreenContentType = WatchlistItemScreenContentType.SMALL_FONT,
             onRationaleDisplay = { },
             onNotificationsPermissionSettingsDialogDisplay = { },
             onNotificationsPermissionRequest = { }

@@ -22,6 +22,7 @@ import com.example.currencyconverterapp.converter.presentation.util.BaseControll
 import com.example.currencyconverterapp.core.data.model.Currency
 import com.example.currencyconverterapp.core.data.util.defaultBaseCurrency
 import com.example.currencyconverterapp.core.data.util.defaultTargetCurrency
+import com.example.currencyconverterapp.core.presentation.util.WatchlistItemScreenContentType
 import com.example.currencyconverterapp.ui.theme.CurrencyConverterAppTheme
 
 @Composable
@@ -29,8 +30,14 @@ fun WatchlistItemCurrencyFlags(
     context: Context,
     baseCurrency: Currency,
     targetCurrency: Currency,
+    watchlistItemScreenContentType: WatchlistItemScreenContentType,
     modifier: Modifier = Modifier
 ) {
+    val flagSize = if (watchlistItemScreenContentType == WatchlistItemScreenContentType.SMALL_FONT) {
+        R.dimen.flag_size
+    } else {
+        R.dimen.big_flag_size
+    }
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = modifier,
@@ -39,7 +46,7 @@ fun WatchlistItemCurrencyFlags(
             painter = painterResource(BaseControllerUtils.getFlagResourceByCurrencyCode(context, baseCurrency.code.lowercase())),
             contentDescription = stringResource(R.string.base_currency),
             modifier = Modifier
-                .size(dimensionResource(R.dimen.flag_size))
+                .size(dimensionResource(flagSize))
         )
         Spacer(modifier = Modifier.width(dimensionResource(R.dimen.exchange_rate_panel_small_gap)))
         Icon(
@@ -51,7 +58,7 @@ fun WatchlistItemCurrencyFlags(
             painter = painterResource(BaseControllerUtils.getFlagResourceByCurrencyCode(context, targetCurrency.code.lowercase())),
             contentDescription = stringResource(R.string.target_currency),
             modifier = Modifier
-                .size(dimensionResource(R.dimen.flag_size))
+                .size(dimensionResource(flagSize))
         )
     }
 }
@@ -66,6 +73,21 @@ fun WatchlistItemCurrencyFlagsPreview(
             context = LocalContext.current,
             baseCurrency = defaultBaseCurrency,
             targetCurrency = defaultTargetCurrency,
+            watchlistItemScreenContentType = WatchlistItemScreenContentType.SMALL_FONT
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun WatchlistItemCurrencyFlagsBigFontPreview(
+) {
+    CurrencyConverterAppTheme {
+        WatchlistItemCurrencyFlags(
+            context = LocalContext.current,
+            baseCurrency = defaultBaseCurrency,
+            targetCurrency = defaultTargetCurrency,
+            watchlistItemScreenContentType = WatchlistItemScreenContentType.BIG_FONT
         )
     }
 }

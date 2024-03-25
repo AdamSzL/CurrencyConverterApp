@@ -19,6 +19,7 @@ import com.example.currencyconverterapp.core.presentation.navigation.ScreenAdapt
 import com.example.currencyconverterapp.core.presentation.util.CurrencyConverterNavigationType
 import com.example.currencyconverterapp.core.presentation.util.FloatingActionButtonType
 import com.example.currencyconverterapp.core.presentation.util.WatchlistEntrySize
+import com.example.currencyconverterapp.core.presentation.util.WatchlistItemScreenContentType
 import com.example.currencyconverterapp.core.presentation.util.WatchlistScreenContentType
 import com.example.currencyconverterapp.ui.theme.CurrencyConverterAppTheme
 import com.example.currencyconverterapp.watchlist.data.model.WatchlistItem
@@ -32,6 +33,7 @@ fun WatchlistScreenWrapper(
     watchlistItems: List<WatchlistItem>,
     watchlistEntrySize: WatchlistEntrySize,
     watchlistScreenContentType: WatchlistScreenContentType,
+    watchlistItemScreenContentType: WatchlistItemScreenContentType,
     currencies: List<Currency>?,
     watchlistItemProps: WatchlistItemProps?,
     fabType: FloatingActionButtonType,
@@ -61,6 +63,7 @@ fun WatchlistScreenWrapper(
                     currencies = currencies!!,
                     watchlistItemProps = watchlistItemProps!!,
                     shouldDisplayCancelButton = false,
+                    watchlistItemScreenContentType = watchlistItemScreenContentType,
                     modifier = Modifier
                         .clip(
                             RoundedCornerShape(
@@ -104,6 +107,7 @@ fun WatchlistScreenWrapperOnePanelPreview() {
                 onNotificationsPermissionRejectionStateUpdate = { },
                 onLaunchAppSettingsClick = { }
             ),
+            watchlistItemScreenContentType = WatchlistItemScreenContentType.SMALL_FONT,
             fabType = FloatingActionButtonType.BOTTOM_RIGHT,
             screenAdaptiveNavigationWrapperProps = ScreenAdaptiveNavigationWrapperProps(
                 navigationType = CurrencyConverterNavigationType.BOTTOM_NAVIGATION,
@@ -151,6 +155,7 @@ fun WatchlistScreenWrapperTwoPanelsPreview() {
                 onNotificationsPermissionRejectionStateUpdate = { },
                 onLaunchAppSettingsClick = { }
             ),
+            watchlistItemScreenContentType = WatchlistItemScreenContentType.SMALL_FONT,
             fabType = FloatingActionButtonType.BOTTOM_RIGHT,
             screenAdaptiveNavigationWrapperProps = ScreenAdaptiveNavigationWrapperProps(
                 navigationType = CurrencyConverterNavigationType.BOTTOM_NAVIGATION,

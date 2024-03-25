@@ -27,6 +27,7 @@ import com.example.currencyconverterapp.core.data.model.ExchangeRate
 import com.example.currencyconverterapp.core.data.util.defaultBaseCurrencyData
 import com.example.currencyconverterapp.core.data.util.defaultExchangeRates
 import com.example.currencyconverterapp.core.presentation.util.ConversionResultsListItemSize
+import kotlinx.coroutines.delay
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -42,6 +43,7 @@ fun ConversionResultsList(
     val state = rememberPullToRefreshState()
     if (state.isRefreshing) {
         LaunchedEffect(true) {
+            delay(500)
             onExchangeRatesRefresh()
             state.endRefresh()
         }
@@ -53,10 +55,12 @@ fun ConversionResultsList(
     Box(
         modifier = modifier
             .nestedScroll(state.nestedScrollConnection)
-            .fillMaxSize()
             .padding(dimensionResource(R.dimen.converter_horizontal_margin))
     ) {
-        LazyColumn {
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxSize()
+        ) {
             itemsIndexed(
                 exchangeRates,
                 key = { _, item -> item.id }

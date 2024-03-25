@@ -51,4 +51,6 @@
     <string name="time_period">Time Period</string>
     <string name="change">Change</string>
     <string name="watchlist_remove">Remove Item From Watchlist</string>
+    <string name="watchlist_empty">Your watchlist is empty. Add an item to get started.</string>
+    <string name="converter_empty">No currencies added. Add a currency to get started.</string>
 </resources>

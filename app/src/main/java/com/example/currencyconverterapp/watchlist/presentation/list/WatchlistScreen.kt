@@ -1,5 +1,6 @@
 package com.example.currencyconverterapp.watchlist.presentation.list
 
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
@@ -7,7 +8,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewScreenSizes
+import com.example.currencyconverterapp.R
 import com.example.currencyconverterapp.core.data.util.defaultWatchlistItems
+import com.example.currencyconverterapp.core.presentation.components.EmptyListInfo
 import com.example.currencyconverterapp.core.presentation.util.FabSize
 import com.example.currencyconverterapp.core.presentation.util.FloatingActionButtonType
 import com.example.currencyconverterapp.core.presentation.util.WatchlistEntrySize
@@ -35,13 +38,25 @@ fun RowScope.WatchlistScreen(
         modifier = modifier
             .weight(1f)
     ) { paddingValues ->
-        WatchlistEntryList(
-            watchlistItems = watchlistItems,
-            watchlistEntrySize = watchlistEntrySize,
-            onWatchlistItemClicked = onWatchlistItemClicked,
-            onWatchlistItemDeletion = onWatchlistItemDeletion,
-            modifier = Modifier.padding(paddingValues)
-        )
+        AnimatedContent(
+            targetState = watchlistItems.isNotEmpty()
+        ) { areWatchlistItemsNotEmpty ->
+            if (areWatchlistItemsNotEmpty) {
+                WatchlistEntryList(
+                    watchlistItems = watchlistItems,
+                    watchlistEntrySize = watchlistEntrySize,
+                    onWatchlistItemClicked = onWatchlistItemClicked,
+                    onWatchlistItemDeletion = onWatchlistItemDeletion,
+                    modifier = Modifier.padding(paddingValues)
+                )
+            } else {
+                EmptyListInfo(
+                    icon = R.drawable.ic_watchlist,
+                    iconDescription = null,
+                    text = R.string.watchlist_empty
+                )
+            }
+        }
     }
 }
 
