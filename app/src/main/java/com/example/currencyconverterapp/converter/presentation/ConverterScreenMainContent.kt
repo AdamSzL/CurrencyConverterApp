@@ -29,7 +29,7 @@ fun ConverterScreenMainContent(
     modifier: Modifier = Modifier
 ) {
     Column(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxSize()
     ) {
         val baseCurrencyData = BaseCurrencyData(

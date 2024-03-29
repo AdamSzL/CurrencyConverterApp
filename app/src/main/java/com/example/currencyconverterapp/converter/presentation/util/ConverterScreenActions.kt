@@ -11,7 +11,7 @@ class ConverterScreenActions(
     val onTargetCurrencyAddition: (Currency, Currency) -> Unit,
     val onConversionEntryDeletion: (String) -> Unit,
     val onConversionEntryDeletionUndo: () -> Unit,
-    val onErrorMessageDisplayed: () -> Unit,
+    val onSnackbarDisplay: (String) -> Unit,
 )
 
 fun constructConverterScreenActions(
@@ -26,6 +26,6 @@ fun constructConverterScreenActions(
         onTargetCurrencyAddition = converterViewModel::addTargetCurrency,
         onConversionEntryDeletion = converterViewModel::deleteConversionEntry,
         onConversionEntryDeletionUndo = converterViewModel::undoConversionEntryDeletion,
-        onErrorMessageDisplayed = converterViewModel::errorMessageDisplayed,
+        onSnackbarDisplay = converterViewModel::showSnackbar
     )
 }

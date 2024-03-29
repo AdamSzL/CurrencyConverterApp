@@ -1,5 +1,6 @@
 package com.example.currencyconverterapp.converter.presentation.conversion_results
 
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -74,7 +75,6 @@ fun RowScope.ConversionItemMainContent(
             horizontalAlignment = Alignment.End,
             verticalArrangement = Arrangement.Center,
         ) {
-
             if (exchangeRate.value == null) {
                 Box(
                     modifier = Modifier.size(dimensionResource(R.dimen.loading_icon_size))

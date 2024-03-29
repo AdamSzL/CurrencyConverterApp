@@ -10,5 +10,5 @@ data class ConverterUiState(
     val deletedExchangeRate: ExchangeRate? = null,
     val exchangeRates: List<ExchangeRate> = emptyList(),
     val exchangeRatesUiState: ExchangeRatesUiState = ExchangeRatesUiState.Loading,
-    val shouldShowErrorMessage: Boolean = true,
+    val snackbarMessage: String = ""
 )

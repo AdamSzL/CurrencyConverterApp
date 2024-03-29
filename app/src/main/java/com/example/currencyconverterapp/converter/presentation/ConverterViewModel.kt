@@ -54,19 +54,34 @@ class ConverterViewModel @Inject constructor(
         exchangeRates: List<ExchangeRate>
     ) {
         viewModelScope.launch {
-            try {
+            val snackbarMessage: String = try {
                 converterRepository.refreshLatestExchangeRates(
                     baseCurrency = baseCurrency,
                     exchangeRates = exchangeRates
                 )
+                EXCHANGE_RATES_UPDATED_MESSAGE
             } catch (e: IOException) {
-                delay(200)
+                delay(REQUEST_ERROR_DELAY)
                 _converterUiState.update {
                     it.copy(
                         exchangeRatesUiState = ExchangeRatesUiState.Error
                     )
                 }
+                EXCHANGE_RATES_ERROR_FETCHING
             }
+            _converterUiState.update {
+                it.copy(
+                    snackbarMessage = snackbarMessage
+                )
+            }
+        }
+    }
+
+    fun showSnackbar(message: String) {
+        _converterUiState.update {
+            it.copy(
+                snackbarMessage = message
+            )
         }
     }
 
@@ -81,14 +96,6 @@ class ConverterViewModel @Inject constructor(
         _converterUiState.update {
             it.copy(
                 exchangeRatesUiState = ExchangeRatesUiState.Success,
-            )
-        }
-    }
-
-    fun errorMessageDisplayed() {
-        _converterUiState.update {
-            it.copy(
-                shouldShowErrorMessage = false
             )
         }
     }
@@ -188,5 +195,13 @@ class ConverterViewModel @Inject constructor(
         viewModelScope.launch {
             converterRepository.updateExchangeRates(exchangeRates)
         }
+    }
+
+    companion object {
+
+        private const val REQUEST_ERROR_DELAY = 200L
+        private const val EXCHANGE_RATES_UPDATED_MESSAGE = "Exchange rates have been successfully updated"
+        private const val EXCHANGE_RATES_ERROR_FETCHING = "Error while fetching latest exchange rates"
+
     }
 }

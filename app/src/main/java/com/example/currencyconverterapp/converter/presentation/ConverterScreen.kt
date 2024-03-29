@@ -25,6 +25,7 @@ import com.example.currencyconverterapp.core.presentation.util.ConversionResults
 import com.example.currencyconverterapp.core.presentation.util.ConverterAddCurrencyContainerType
 import com.example.currencyconverterapp.core.presentation.util.FabSize
 import com.example.currencyconverterapp.core.presentation.util.FloatingActionButtonType
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -45,17 +46,26 @@ fun ConverterScreen(
     val snackbarHostState = remember { SnackbarHostState() }
     val snackbarMessage = stringResource(R.string.currency_deleted_message)
     val snackbarActionMessage = stringResource(R.string.undo)
-    val snackbarErrorMessage = stringResource(R.string.error_loading_exchange_rates)
 
     val scope = rememberCoroutineScope()
 
-    if (converterUiState.exchangeRatesUiState == ExchangeRatesUiState.Error && converterUiState.shouldShowErrorMessage) {
-        LaunchedEffect(Unit) {
-            scope.launch {
+    if (converterUiState.snackbarMessage != "") {
+        LaunchedEffect(converterUiState.snackbarMessage) {
+            if (converterUiState.snackbarMessage == snackbarMessage) {
                 snackbarHostState.currentSnackbarData?.dismiss()
-                snackbarHostState.showSnackbar(snackbarErrorMessage)
-                converterScreenActions.onErrorMessageDisplayed()
+                val result = snackbarHostState
+                    .showSnackbar(
+                        message = snackbarMessage,
+                        actionLabel = snackbarActionMessage,
+                        duration = SnackbarDuration.Short,
+                    )
+                if (result == SnackbarResult.ActionPerformed) {
+                    converterScreenActions.onConversionEntryDeletionUndo()
+                }
+            } else {
+                snackbarHostState.showSnackbar(converterUiState.snackbarMessage)
             }
+            converterScreenActions.onSnackbarDisplay("")
         }
     }
 
@@ -71,18 +81,7 @@ fun ConverterScreen(
                 onBaseCurrencyValueChange = onBaseCurrencyValueChange,
                 onConversionEntryDeletion = onConversionEntryDeletion,
                 onConversionEntryDeletionSnackbarDisplay = {
-                    scope.launch {
-                        snackbarHostState.currentSnackbarData?.dismiss()
-                        val result = snackbarHostState
-                            .showSnackbar(
-                                message = snackbarMessage,
-                                actionLabel = snackbarActionMessage,
-                                duration = SnackbarDuration.Short,
-                            )
-                        if (result == SnackbarResult.ActionPerformed) {
-                            onConversionEntryDeletionUndo()
-                        }
-                    }
+                    onSnackbarDisplay(snackbarMessage)
                 },
                 modifier = Modifier.weight(1f)
             )
