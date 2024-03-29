@@ -20,17 +20,30 @@ fun ChartsRoute(
 ) {
     val chartsViewModel: ChartsViewModel = hiltViewModel()
     val chartsUiState = chartsViewModel.chartsUiState.collectAsStateWithLifecycle().value
-    ScreenAdaptiveNavigationWrapper(
-        screenAdaptiveNavigationWrapperProps = screenAdaptiveNavigationWrapperProps,
-    ) {
-        ChartsScreen(
-            chartsUiState = chartsUiState,
-            contentType = chartsScreenContentType,
-            controllerType = chartControllerType,
-            chartEntryModelProducer = chartsViewModel.chartEntryModelProducer,
-            axisExtraKey = chartsViewModel.axisExtraKey,
-            currencies = (currenciesUiState as CurrenciesUiState.Success).currencies,
-            chartsScreenActions = constructChartsScreenActions(chartsViewModel)
-        )
+    with (screenAdaptiveNavigationWrapperProps) {
+        ScreenAdaptiveNavigationWrapper(
+            screenAdaptiveNavigationWrapperProps =
+            ScreenAdaptiveNavigationWrapperProps(
+                currentCurrencyConverterScreen = currentCurrencyConverterScreen,
+                dataHandlerUiState = dataHandlerUiState,
+                navigateTo = navigateTo,
+                navigationType = navigationType,
+                onRetryAction = {
+                    onRetryAction()
+                    chartsViewModel.restoreToLoadingState()
+                    chartsViewModel.getHistoricalExchangeRates()
+                }
+            )
+        ) {
+            ChartsScreen(
+                chartsUiState = chartsUiState,
+                contentType = chartsScreenContentType,
+                controllerType = chartControllerType,
+                chartEntryModelProducer = chartsViewModel.chartEntryModelProducer,
+                axisExtraKey = chartsViewModel.axisExtraKey,
+                currencies = (currenciesUiState as CurrenciesUiState.Success).currencies,
+                chartsScreenActions = constructChartsScreenActions(chartsViewModel)
+            )
+        }
     }
 }
