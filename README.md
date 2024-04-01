@@ -18,7 +18,7 @@ User data is cached locally (using DataStore), so then the data is visible to th
 
 ## Built with
 **[Jetpack Compose UI App Development Toolkit](https://developer.android.com/develop/ui/compose)**
-#### External libraries
+### External libraries
 - [Retrofit](https://github.com/square/retrofit)
 - [OkHttp](https://github.com/square/okhttp)
 - [Hilt](https://dagger.dev/hilt/)
