@@ -58,33 +58,16 @@ The application follows Material 3 design guidelines and was created to work sea
 
 - Expanded width (tablet in landscape mode)
 <img src="https://github.com/AdamSzL/CurrencyConverterApp/assets/59572422/ad20b308-5563-420f-a871-cd31fd8c699f" alt="converter screen on tablet" width="500">
-<img src="https://github.com/AdamSzL/CurrencyConverterApp/assets/59572422/f831d746-c276-48af-92fa-d5b14fa4029f" alt="charts screen on tablet" width="500">
 <img src="https://github.com/AdamSzL/CurrencyConverterApp/assets/59572422/5753ed79-18a5-4666-8d6d-6648f6fef443" alt="watchlist screen on tablet" width="500">
-
-- Medium width (unfolded foldable)
-<img src="https://github.com/AdamSzL/CurrencyConverterApp/assets/59572422/364d7634-c5cd-413d-8d24-00beecff05e3" alt="converter screen on unfolded foldable" width="300">
 
 - - -
 
 # Additional features
 
-## **Splash screen**
-  
-https://github.com/AdamSzL/CurrencyConverterApp/assets/59572422/01c9c456-50cf-4f51-b585-91a52063ca8c
-
 ## **Notifications permission workflow**
 <br> The application asks for a notification permission when adding a watchlist item. If the user declines the permission, next time the app will show a permission rationale when adding an item. After the permission is declined two times, user will be shown an intent with a link to application setting so that the user can grant the permission.
-
-https://github.com/AdamSzL/CurrencyConverterApp/assets/59572422/d28ed235-7a13-4f1c-93ea-444c77caadd9
 
 https://github.com/AdamSzL/CurrencyConverterApp/assets/59572422/096c7947-9b87-4ecb-b231-649fff887983
 
 ## **Offline functionality**
-<br> The app caches user data. If the application is launched when offline, it will display saved data. Some of the functionality will be disabled.
-
-https://github.com/AdamSzL/CurrencyConverterApp/assets/59572422/01bf6ad8-fc75-4205-9255-b71c16d55d84
-
-
-
-
-
+<br> The app caches user data. If the application is launched when offline, it will display saved data. Some parts of the application won't be available.
