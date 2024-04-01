@@ -5,7 +5,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.currencyconverterapp.R
 import com.example.currencyconverterapp.core.presentation.CurrenciesUiState
-import com.example.currencyconverterapp.core.presentation.util.FabSize
 import com.example.currencyconverterapp.core.presentation.util.FloatingActionButtonType
 import com.example.currencyconverterapp.core.presentation.util.WatchlistEntrySize
 import com.example.currencyconverterapp.core.presentation.util.WatchlistItemScreenContentType

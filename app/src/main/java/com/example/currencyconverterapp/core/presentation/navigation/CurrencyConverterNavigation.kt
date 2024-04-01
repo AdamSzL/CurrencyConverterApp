@@ -1,34 +1,16 @@
 package com.example.currencyconverterapp.core.presentation.navigation
 
-import androidx.compose.foundation.layout.Row
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import androidx.navigation.navArgument
-import com.example.currencyconverterapp.R
-import com.example.currencyconverterapp.charts.presentation.ChartsScreen
-import com.example.currencyconverterapp.charts.presentation.ChartsViewModel
-import com.example.currencyconverterapp.charts.presentation.util.constructChartsScreenActions
-import com.example.currencyconverterapp.converter.presentation.ConverterScreenWrapper
-import com.example.currencyconverterapp.converter.presentation.ConverterViewModel
-import com.example.currencyconverterapp.converter.presentation.util.constructConverterScreenActions
 import com.example.currencyconverterapp.core.presentation.CurrenciesUiState
-import com.example.currencyconverterapp.core.presentation.components.ScreenAdaptiveNavigationWrapper
 import com.example.currencyconverterapp.core.presentation.util.AdaptiveContentTypes
 import com.example.currencyconverterapp.core.presentation.util.CurrencyConverterNavigationType
-import com.example.currencyconverterapp.core.presentation.util.WatchlistScreenContentType
-import com.example.currencyconverterapp.watchlist.presentation.item.WatchlistItemScreen
-import com.example.currencyconverterapp.watchlist.presentation.item.WatchlistItemViewModel
-import com.example.currencyconverterapp.watchlist.presentation.list.WatchlistScreenWrapper
-import com.example.currencyconverterapp.watchlist.presentation.list.WatchlistViewModel
-import com.example.currencyconverterapp.watchlist.presentation.util.constructWatchlistItemProps
 
 @Composable
 fun CurrencyConverterNavigation(

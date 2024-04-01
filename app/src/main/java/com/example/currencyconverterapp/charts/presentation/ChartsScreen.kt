@@ -1,6 +1,5 @@
 package com.example.currencyconverterapp.charts.presentation
 
-import android.util.Log
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight

@@ -25,7 +25,6 @@ import com.example.currencyconverterapp.core.presentation.util.ConversionResults
 import com.example.currencyconverterapp.core.presentation.util.ConverterAddCurrencyContainerType
 import com.example.currencyconverterapp.core.presentation.util.FabSize
 import com.example.currencyconverterapp.core.presentation.util.FloatingActionButtonType
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)

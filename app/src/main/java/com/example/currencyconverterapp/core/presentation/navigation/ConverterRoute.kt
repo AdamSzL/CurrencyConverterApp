@@ -1,7 +1,6 @@
 package com.example.currencyconverterapp.core.presentation.navigation
 
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.currencyconverterapp.converter.presentation.ConverterScreenWrapper

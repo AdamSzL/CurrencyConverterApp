@@ -1,6 +1,5 @@
 package com.example.currencyconverterapp.converter.presentation.conversion_results
 
-import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
