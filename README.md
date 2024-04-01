@@ -10,11 +10,11 @@ Currency Converter Application
 User data is cached locally (using DataStore), so then the data is visible to the user even if there is no internet connection.
 
 ## Screenshots
-<img src="https://github.com/AdamSzL/CurrencyConverterApp/assets/59572422/06f60a90-d23d-40ce-82d8-8a30576dd6a9" alt="converter screen" width="180">
-<img src="https://github.com/AdamSzL/CurrencyConverterApp/assets/59572422/41823a08-fd18-4998-8761-545a0bced112" alt="charts screen" width="180">
-<img src="https://github.com/AdamSzL/CurrencyConverterApp/assets/59572422/15f5b8df-33d5-4e0b-8fa7-9daf5f51452e" alt="watchlist items screen" width="180">
-<img src="https://github.com/AdamSzL/CurrencyConverterApp/assets/59572422/756a3900-2aa0-490d-9b99-ba5ebe15d823" alt="watchlist add item screen" width="180">
-<img src="https://github.com/AdamSzL/CurrencyConverterApp/assets/59572422/bf621bc6-d2b5-4201-aa3a-3099ba1b64fd" alt="watchlist items condition fulfilled" width="180">
+<img src="https://github.com/AdamSzL/CurrencyConverterApp/assets/59572422/06f60a90-d23d-40ce-82d8-8a30576dd6a9" alt="converter screen" width="300">
+<img src="https://github.com/AdamSzL/CurrencyConverterApp/assets/59572422/41823a08-fd18-4998-8761-545a0bced112" alt="charts screen" width="300">
+<img src="https://github.com/AdamSzL/CurrencyConverterApp/assets/59572422/15f5b8df-33d5-4e0b-8fa7-9daf5f51452e" alt="watchlist items screen" width="300">
+<img src="https://github.com/AdamSzL/CurrencyConverterApp/assets/59572422/756a3900-2aa0-490d-9b99-ba5ebe15d823" alt="watchlist add item screen" width="300">
+<img src="https://github.com/AdamSzL/CurrencyConverterApp/assets/59572422/bf621bc6-d2b5-4201-aa3a-3099ba1b64fd" alt="watchlist items condition fulfilled" width="300">
 
 
 ## Built with
