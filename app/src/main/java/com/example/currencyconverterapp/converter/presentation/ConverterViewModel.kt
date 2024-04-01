@@ -60,7 +60,7 @@ class ConverterViewModel @Inject constructor(
                     exchangeRates = exchangeRates
                 )
                 EXCHANGE_RATES_UPDATED_MESSAGE
-            } catch (e: IOException) {
+            } catch (e: Exception) {
                 delay(REQUEST_ERROR_DELAY)
                 _converterUiState.update {
                     it.copy(

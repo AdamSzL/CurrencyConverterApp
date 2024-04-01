@@ -120,7 +120,7 @@ class ChartsViewModel @Inject constructor(
                         selectedTimePeriodType
                     )
                     HistoricalExchangeRatesUiState.Success
-                } catch (e: IOException) {
+                } catch (e: Exception) {
                     restoreToLoadingState()
                     delay(200)
                     if (shouldShowError) HistoricalExchangeRatesUiState.Error else HistoricalExchangeRatesUiState.ErrorButCached

@@ -152,7 +152,7 @@ class WatchlistItemViewModel @Inject constructor(
                     exchangeRate!!,
                     lastUpdatedAt
                 )
-            } catch (e: IOException) {
+            } catch (e: Exception) {
                 delay(200)
                 LatestExchangeRateUiState.Error
             }

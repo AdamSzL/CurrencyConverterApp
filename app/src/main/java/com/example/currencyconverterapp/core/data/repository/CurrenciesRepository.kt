@@ -1,5 +1,6 @@
 package com.example.currencyconverterapp.core.data.repository
 
+import android.util.Log
 import androidx.datastore.core.DataStore
 import com.example.currencyconverterapp.core.data.model.CurrenciesCachedData
 import com.example.currencyconverterapp.core.data.model.Currency

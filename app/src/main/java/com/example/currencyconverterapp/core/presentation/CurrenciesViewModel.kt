@@ -38,7 +38,7 @@ class CurrenciesViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 currenciesRepository.refreshCurrencies()
-            } catch (e: IOException) {
+            } catch (e: Exception) {
                 delay(200)
                 _currenciesUiState.update {
                     CurrenciesUiState.Error
