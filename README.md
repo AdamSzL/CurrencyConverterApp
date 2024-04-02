@@ -35,20 +35,17 @@ User data is cached locally (using DataStore), so then the data is visible to th
 # Functionality
 
 ## Converter
-
-### The Converter screen allows users to select a base currency, change the base currency value, add and delete (with undo) target currencies.
+The Converter screen allows users to select a base currency, change the base currency value, add and delete (with undo) target currencies.
 
 https://github.com/AdamSzL/CurrencyConverterApp/assets/59572422/70026b07-8ea1-47fe-aa9b-13179331d7a0
 
 ## Charts
-
-### The Charts screen lets the user select base and target currencies to be included in the chart, choose chart type (line, column) and select a recent time period of date range (with a date range picker).
+The Charts screen lets the user select base and target currencies to be included in the chart, choose chart type (line, column) and select a recent time period of date range (with a date range picker).
 
 https://github.com/AdamSzL/CurrencyConverterApp/assets/59572422/9e6a02f8-2d00-4e3c-9a65-d0069bf04ae4
 
 ## Watchlist
-
-### The Watchlist Screen (and watchlist add item screen) allows the user to add a watchlist item that will be used to track currency value and notify the user when a certain condition is met. Users can add, update and delete watchlist items.
+The Watchlist Screen (and watchlist add item screen) allows the user to add a watchlist item that will be used to track currency value and notify the user when a certain condition is met. Users can add, update and delete watchlist items.
 
 https://github.com/AdamSzL/CurrencyConverterApp/assets/59572422/26986f45-2258-449f-b474-c4ff9efc86fc
 
