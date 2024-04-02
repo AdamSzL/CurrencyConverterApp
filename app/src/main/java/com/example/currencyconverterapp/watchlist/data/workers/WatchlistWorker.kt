@@ -15,8 +15,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.withContext
 
-private const val TAG = "WatchlistWorker"
-
 @HiltWorker
 class WatchlistWorker @AssistedInject constructor(
     @Assisted ctx: Context,
