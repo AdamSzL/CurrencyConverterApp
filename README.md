@@ -27,6 +27,7 @@ User data is cached locally (using DataStore), so then the data is visible to th
 ### Notable Android APIs
 - Proto DataStore
 - WorkManager
+- Notifications API
 - SplashScreen API
 
 - - -
@@ -70,4 +71,4 @@ The application follows Material 3 design guidelines and was created to work sea
 https://github.com/AdamSzL/CurrencyConverterApp/assets/59572422/096c7947-9b87-4ecb-b231-649fff887983
 
 ## **Offline functionality**
-<br> The app caches user data. If the application is launched when offline, it will display saved data. Some parts of the application won't be available.
+<br> The application caches user data. If launched when offline, it will display saved data. Some parts of the application won't be available.
