@@ -5,7 +5,7 @@ Currency Converter Application
 
 # Overview
 
-**Currency Converter Application** was built entirely with Kotlin and Jetpack Compose. It was designed using latest Material 3 guildelines and follows the best practices of Android development. The application is fully responsive, it can be used on every device - a phone, a foldable or a tablet.
+**Currency Converter Application** was built entirely with Kotlin and Jetpack Compose. It was designed using latest Material 3 guidelines and follows the best practices of Android development. The application is fully responsive, it can be used on every device - a phone, a foldable or a tablet.
 <br><br> **Currency Converter Application** provides a lot of different features. Users can see latest exchange rates between currencies, check historical exchange rates in form of a chart with selectable date ranges. Users can also add items to the watchlist with a certain condition that they would like to be notified as soon as it is fulfilled.
 User data is cached locally (using DataStore), so then the data is visible to the user even if there is no internet connection.
 
@@ -63,7 +63,7 @@ The application follows Material 3 design guidelines and was created to work sea
 # Additional features
 
 ## **Notifications permission workflow**
-<br> The application asks for a notification permission when adding a watchlist item. If the user declines the permission, next time the app will show a permission rationale when adding an item. After the permission is declined two times, user will be shown an intent with a link to application setting so that the user can grant the permission.
+<br> The application asks for a notification permission when adding a watchlist item. If the user declines the permission, next time the app will show a permission rationale when adding an item. After the permission was declined two times, user will be shown an intent with a link to application settings so that the user can grant the permission.
 
 https://github.com/AdamSzL/CurrencyConverterApp/assets/59572422/096c7947-9b87-4ecb-b231-649fff887983
 
