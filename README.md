@@ -69,3 +69,9 @@ https://github.com/AdamSzL/CurrencyConverterApp/assets/59572422/096c7947-9b87-4e
 
 ## **Offline functionality**
 <br> The application caches user data. If launched when offline, it will display saved data. Some parts of the application won't be available.
+
+# Running the application
+**Currency Converter Application** uses [currencyapi](https://currencyapi.com/) as the remote data source. To run the application, you need to create a __gradle.properties__ file in the root of the project and add the following line to it:
+```
+API_KEY="your_api_key"
+```
